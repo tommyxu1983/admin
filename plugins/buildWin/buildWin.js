@@ -765,18 +765,31 @@
 
                                     var moduelAdptData=_this.modulesAdptData[index];
                                     $.each(module.winmodfields,function(i){
-                                        if(i==13){
-                                            var kk;
-                                        }
+                                        //if(i==13){
+                                        //    var kk;
+                                        //}
                                         if(module.winmodfields[i].FDefName == moduelAdptData.controlList[i].dataID){
-                                            if(module.winmodfields[i].dataType=="22" && moduelAdptData.controlList[i].dataType=="multi"){
-                                                module.winmodfields[i].Flinks=moduelAdptData.controlList[i]
+
+                                            if(module.winmodfields[i].FDefType=="22" && moduelAdptData.controlList[i].dataType=="multi"){
+                                                // 22 multi 多选 配对
+                                                if($.isArray(module.winmodfields[i].FLinks) && $.isArray(moduelAdptData.controlList[i].dataOption) ){
+                                                    $.each( module.winmodfields[i].FLinks,function(index,FLink){
+                                                        if(FLink.uid==moduelAdptData.controlList[i].dataOption[index].id){
+                                                            FLink.checked=moduelAdptData.controlList[i].dataOption[index].checked;
+                                                        }else{
+                                                            logError('FLink.uid 和 moduelAdptData.controlList[i].dataOption(index).id 不匹配')
+                                                        }
+
+
+                                                    });
+                                                }else logError('Flink for multi selector is not array')
+                                                // 22 multi 多选 配对
                                             }else{
-                                                module.winmodfields[i].FValueX= moduelAdptData.controlList[i].dataType;
+                                                module.winmodfields[i].FValueX= moduelAdptData.controlList[i].data;
                                             }
 
                                         }else{
-                                            logError('module.winmodfields['+index+'].FDefName和 _this.modulesAdptData.controlist['+index+'].dataID 不匹配')
+                                            logError('module.winmodfields['+index+'].FDefName 和 _this.modulesAdptData.controlist['+index+'].dataID 不匹配')
                                         }
 
                                     });
