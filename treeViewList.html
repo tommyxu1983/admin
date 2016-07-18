@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .a{
+            display: inline-block;
+            height: 50px;
+            width:11px;
+            line-height: 50px;
+            margin-left:10px;
+            border-left:1px black dotted;
+        }
+        .b{
+            display: inline-block;
+            line-height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+
+            <ul style="font-size: 15px">
+                <li style="background-color: yellowgreen">
+                    <span class="a">
+                        <span style="display:inline-block;vertical-align:middle;height: 1px; width: 10px; border-top: 1px black dotted;"></span>
+                    </span>
+                    <span class="b">
+                        系统
+                    </span>
+                </li>
+            </ul>
+
+
+
+
+            <div class="tableView-paginationContainer" style="display: inline-block;">
+                <div class="pull-left" style="margin-top: 10px; margin-bottom: 10px;">
+                    <select>
+                        <option value="5">5条/页</option>
+                        <option value="10">10条/页</option>
+                        <option value="25">25条/页</option>
+                        <option value="50">50条/页</option>
+                        <option value="100">100条/页</option>
+                    </select>
+                </div>
+                <div class="pull-right pagination" style="margin-top: 10px; margin-bottom: 10px; display: inline-block">
+                    <ul class="pagination">
+                        <li><a href="javascript:void(0)">&lt;&lt;</a></li>
+                        <li><a href="javascript:void(0)">...</a></li>
+                        <li><a href="javascript:void(0)">&gt;&gt;</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+
+</body>
+</html>

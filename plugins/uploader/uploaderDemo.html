@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript" src="../../jsLib/jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="uploader.js"></script>
+
+
+</head>
+
+
+    <input id="fileUploader" type="file" multiple >
+
+    <div id="process">
+
+    </div>
+
+<a href="../../../JavaScriptMap.pdf" download="">xiazai</a>
+
+<script>
+
+    $(function(){
+        $('#fileUploader').uploader({url:'http://192.168.10.201:86/lngyes/bin/uploads.php',
+
+            onBeforeUploading:function(evt,data){
+
+                //data.fileUID
+                $('#process').append('<div>'+data.file.name + ':  <progress></progress></div>');
+            },
+
+            onUploadingProgress:function(evt,data){
+              //  var progress= data.percent===100?'完成': (data.percent+'%');
+               // $('#process').children().last().html(data.file.name +' '+progress);
+                $('#process').children().last().find('progress').attr('value',data.percent);
+            }
+
+
+        });
+
+
+    });
+
+
+</script>
+
+
+
+
+<!--<script type="text/javascript" src="../uploader-master/demos/upload.php"></script>-->
+
+
+
+</body>
+</html>

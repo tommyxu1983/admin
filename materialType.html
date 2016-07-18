@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>材料分类</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <!--Icon Css-->
+    <link rel="stylesheet" href="css/Font-Awesome/css/font-awesome.css">
+    <!--百名项目 css-->
+    <link rel="stylesheet" href="css/BM-style.css">
+    <!--插件 css-->
+    <link rel="stylesheet" href="plugins/dMenu/dMenu.css">
+    <link rel="stylesheet" href="plugins/treeView/bootstrap-treeview.css">
+    <link rel="stylesheet" href="plugins/dialog/css/bootstrap-dialog.css">
+</head>
+<body>
+
+    <div class="l-mainWrap" style="height:100%; width:100%">
+        <!--头部导航-->
+        <nav class="l-header">
+            <div>
+
+            </div>
+        </nav><!--头部导航-->
+        <!--中间部-->
+        <div class="l-middle">
+
+            <!--左部菜单-->
+            <div id="menu-LeftPush" >
+
+
+                <div  class="l-menu-wrapper" >
+                    <div style="margin-bottom:10px"> <button class="btn btn-block btn-primary" id="btn-addNode">增加节点<i class="glyphicon glyphicon-plus-sign"></i></button></div>
+                    <!--树菜单 插件 在js里初始化-->
+                    <div id="left-menu-tree"></div>
+                </div>
+            </div> <!--左部菜单-->
+
+            <!--中间内容-->
+            <div  class="l-middle-content"  id="l-middle-content">
+                <!--左部菜单开关键-->
+                <div class="row">
+                    <div class="col-md-offset-0 col-md-1">
+                        <button id="menuToggleBtn-LeftPush"><i class="icon-th-list icon-large"></i></button>
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-offset-2 col-md-8">
+                        <div ms-controller="vm1_LoadNodeInfoPage">
+                            <div ms-include-src="url">
+                                <!--读取模板 modules/showEditNodeInfo.html-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!--中间内容 -->
+
+        </div><!--中间部-->
+        <div class="l-footer">
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="jsLib/jquery-2.2.3.js"></script>
+
+    <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+    <!--插件 js-->
+    <script type="text/javascript" src="plugins/dMenu/jquery.dMenu.js"></script>
+    <script type="text/javascript" src="plugins/treeView/bootstrap-treeview.js"></script>
+    <script type="text/javascript" src="plugins/dialog/js/bootstrap-dialog.js"></script>
+
+    <!--页面主 js-->
+    <script type="text/javascript" src="jsLib/avalon.js"></script>
+    <script type="text/javascript" src="materialType.js"></script>
+
+
+</body>
+</html>

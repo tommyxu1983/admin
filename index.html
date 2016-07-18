@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        var globalSetting={};
+        globalSetting.token=getCookie('eaosoft_token_lngyes');
+
+        if(! globalSetting.token){
+            window.location.href='../index.html';
+        }
+        function getCookie(name)
+        {
+            var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+            if(arr=document.cookie.match(reg))
+                return decodeURI(arr[2]);
+            else
+                return null;
+        }
+    </script>
+
+    <meta charset="UTF-8">
+    <title></title>
+
+
+
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <!--Icon Css-->
+    <link rel="stylesheet" href="css/Font-Awesome/css/font-awesome.css">
+    <!--百名项目 css-->
+    <link rel="stylesheet" href="css/BM-style.css">
+    <!--插件 css-->
+    <link rel="stylesheet" href="plugins/dMenu/dMenu.css">
+    <link rel="stylesheet" href="plugins/treeView/bootstrap-treeview.css">
+    <link rel="stylesheet" href="plugins/dialog/css/bootstrap-dialog.css">
+    <link href="plugins/datepicker/datepicker3.css"rel="stylesheet" type="text/css"/>
+
+
+</head>
+<style>
+
+
+
+    .tabViewContainer {
+        width:100%;
+        height:100%;
+        background-color: gainsboro;
+        position:relative;
+        overflow:hidden;
+        /*padding-top: 1px;*/
+        /*border: 2px black dashed;*/
+    }
+
+
+    .tabViewContainer .messageTip{
+
+        position:absolute;
+        top:49%;
+        right:48%;
+        max-width: 250px;
+        border-radius: 50%;
+        text-align: center;
+        padding: 10px;
+        background-color:#000000;
+        background-color: rgba(0, 0, 0, 0.49);
+        z-index:10000;
+        color:whitesmoke;
+    }
+
+    .tabViewContainer ul{
+        /* don't set height property, tabview js has done*/
+    }
+
+    .tabViewContainer ul li{
+        position:relative;
+        min-width:118px ;
+    }
+    .tabViewContainer ul li>a{
+        margin-top:2px;
+        background-color:white;
+        color:black;
+        text-align: center;
+    }
+    .tabViewContainer ul li>span{
+        position:absolute;
+        right: 5px;
+        top:2px;
+        z-index:50;
+        color:#3C8DBC;
+    }
+    .tabViewContainer ul li>span:hover{
+        color:black;
+        cursor: pointer;
+
+        transition:All 0.4s ease-in-out;
+        -webkit-transition:All 0.4s ease-in-out;
+        -moz-transition:All 0.4s ease-in-out;
+        -o-transition:All 0.4s ease-in-out;
+
+        transform:rotate(180deg);
+        -webkit-transform:rotate(180deg);
+        -moz-transform:rotate(180deg);
+        -o-transform:rotate(180deg);
+        -ms-transform:rotate(180deg);
+    }
+    .tabViewContainer ul li.active>a{
+        margin-top:2px;
+        background-color:#3C8DBC;
+        color:whitesmoke;
+        text-align: center;
+    }
+    .tabViewContainer ul li.active>a:hover{
+        background-color: #3285bc;
+        color:whitesmoke;
+    }
+    .tabViewContainer ul li.active>span{
+        position:absolute;
+        right: 5px;
+        top:2px;
+        z-index:50;
+        color:whitesmoke;
+    }
+    .tabViewContainer ul li.active>span:hover{
+             color:indianred;
+            cursor: pointer;
+
+
+
+            transition:All 0.4s ease-in-out;
+            -webkit-transition:All 0.4s ease-in-out;
+            -moz-transition:All 0.4s ease-in-out;
+            -o-transition:All 0.4s ease-in-out;
+
+            transform:rotate(180deg);
+            -webkit-transform:rotate(180deg);
+            -moz-transform:rotate(180deg);
+            -o-transform:rotate(180deg);
+            -ms-transform:rotate(180deg);
+         }
+
+    .tabViewContainer > .tabView-panelsHolder{
+        /* don't set height property, tabview js has done*/
+        background-color:#3C8DBC;
+
+        width:100%;
+
+        overflow: hidden;
+
+
+    }
+
+    .tabViewContainer > .tabView-panelsHolder > .tabView-panel{
+        background-color: whitesmoke;
+        height:97%;
+        margin-top: 0.5%;
+        padding-bottom: 1%;
+        margin-left:0.5%;
+        width:99%;
+        overflow-y: auto ;
+        /*overflow-x:hidden;*/
+    }
+
+    .win-buttonGrid{
+        width:250px;
+        max-width: 300px;
+        display: inline-block;
+        vertical-align: middle;
+        padding-left: 10px;
+        float:right;
+
+    }
+
+
+
+    /*tableView*/
+/*    .table-responsive{
+        padding:3px 10px;
+    }
+
+    .table-responsive .tableView-paginationContainer{
+        background-color: #00CCFF;
+    }
+    .table-responsive .tableView-paginationContainer .pull-left{
+
+    }
+    .table-responsive .tableView-paginationContainer  .pull-left select{
+        border: 1px solid #cccccc;
+        border-radius: 5px;
+        padding:6px 12px;
+        color: #797979;
+        text-align: left;
+    }
+    .table-responsive .tableView-paginationContainer  .pull-left select:hover{
+        border: 1px solid cornflowerblue;
+        background-color: #ededed;
+
+    }*/
+
+ /*------------------------------------------------------------------------------*/
+    .table-responsive{
+        padding:3px 10px;
+    }
+    .table-responsive .tableView-paginationContainer{
+        /*background-color: #00CCFF;*/
+
+
+        width:100%;
+        height:80px;
+        line-height:80px;
+    }
+
+    .table-responsive .tableView-paginationContainer-floatNav{
+        position:absolute;
+        bottom:0;
+        left:0;
+        z-index:20000;
+
+    }
+
+
+    .table-responsive .tableView-paginationContainer .tableView-paginationRowsPerPage{
+        display: inline-block;
+
+        /*  border: 1px solid #cccccc;
+          border-radius: 5px;*/
+
+        height:40px;
+        line-height: 40px;
+    }
+    .table-responsive .tableView-paginationContainer  .tableView-paginationRowsPerPage select{
+        height:40px;
+        border: 1px solid #cccccc;
+        border-radius: 5px;
+        padding:6px 12px;
+        color: #797979;
+        text-align: left;
+    }
+    .table-responsive .tableView-paginationContainer  .tableView-paginationRowsPerPage select:hover{
+        border: 1px solid cornflowerblue;
+        background-color: #ededed;
+
+        /*border-radius: 5px;*/
+        /*padding:6px 12px;*/
+        /*color: #797979;*/
+        /*text-align: left;*/
+    }
+    .table-responsive .tableView-paginationContainer .tableView-paginationDetail{
+        display: inline-block;
+
+        /*border: 1px solid #cccccc;
+        border-radius: 5px;*/
+        margin-left:50px;
+        /*  padding:6px 12px;*/
+        height:40px;
+        line-height: 40px;
+
+        color: #797979;
+        text-align: left;
+    }
+
+
+
+
+
+    .table-responsive .tableView-paginationContainer .tableView-paginationDetail span{
+        display: inline-block;
+        /*
+         border: 1px solid #cccccc;
+         border-radius: 5px;
+         padding:6px 12px;
+         color: #797979;
+         text-align: left;*/
+    }
+
+    .table-responsive .tableView-paginationContainer .tableView-paginationChange{
+        display: inline-block;
+
+        position:relative;
+        float:right;
+
+        top:20px;
+        margin-right:5px;
+        height:40px;
+        line-height:40px;
+    }
+
+    .table-responsive .tableView-paginationContainer .tableView-paginationChange ul{
+        height:40px;
+        line-height: 40px;
+    }
+
+    .table-responsive .tableView-paginationContainer .tableView-paginationChange ul>li{
+        display: inline-block;
+        height:40px;
+        width:40px;
+        /*       		border: 1px solid #cccccc;
+                           border-radius: 5px;*/
+        display:inline-block;
+    }
+
+    .table-responsive .tableView-paginationContainer .tableView-paginationChange ul>li>a{
+        display: inline-block;
+        height:38px;
+        width:38px;
+        border: 1px solid #cccccc;
+        border-radius: 5px;
+        text-align:center;
+
+    }
+
+    .table-responsive .tableView-paginationContainer .tableView-paginationChange ul>li>a:hover{
+        background-color: lightgrey;
+        display: inline-block;
+    }
+
+
+    /*---------------------------------------------------------------------------*/
+
+
+    /*chart */
+    .chartContainer{
+        display: none;
+        position: fixed;
+        top:5%;
+        left:5%;
+        width:90%;
+        height:90%;
+        background-color:lightgray;
+        z-index:100000;
+        overflow:auto;
+    }
+    .chartContainer .chartModule{
+        position:relative;
+        margin-top:100px;
+        margin-left:50px;
+        width:1000px;
+        height:700px;
+    }
+    .chartContainer span{
+        font-size:1.5em;
+        position:absolute;
+        right: 5px;
+        top:2px;
+        z-index:50;
+        color:#3C8DBC;
+    }
+    .chartContainer span:hover{
+        color:black;
+        cursor: pointer;
+
+        transition:All 0.4s ease-in-out;
+        -webkit-transition:All 0.4s ease-in-out;
+        -moz-transition:All 0.4s ease-in-out;
+        -o-transition:All 0.4s ease-in-out;
+
+        transform:rotate(180deg);
+        -webkit-transform:rotate(180deg);
+        -moz-transform:rotate(180deg);
+        -o-transform:rotate(180deg);
+        -ms-transform:rotate(180deg);
+    }
+
+</style>
+<body>
+
+<div class="l-mainWrap" style="height:100%; width:100%">
+
+
+
+
+
+    <!--头部导航-->
+    <div class="l-header">
+
+        <!--左上部缩进菜单-->
+        <div id="menu-LeftTopPush" > <!--此id 为 dMenu.js 资源-->
+            <div  class="l-logo-wrapper l-vCenter-parent " >
+                    <div class="l-vCenter-child logo l-nav_item"><strong id="globalSetting_title"></strong></div>
+
+            </div>
+        </div>
+
+
+        <div class="l-headerContent" id="l-header-Content" > <!--此id 为 dMenu.js 资源，如要改动请到index.js 一起改动-->
+            <nav class="l-navbar">
+                <!--左部菜单开关键-->
+                <ul class="l-navbar-nav">
+                    <li id="menuToggleBtn-LeftPush"><span class="icon-th-list icon-large icon-light"></span></li> <!--此id 为 dMenu.js 资源，如要改动请到index.js 一起改动-->
+                </ul>
+
+                <ul class="l-navbar-nav-right">
+                    <li>
+                        <a>
+                            <span class="icon-envelope icon-2x icon-light"></span>
+                            <i class="l-label label-success" style="color: white" id="globalSetting_emailCount"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <span class="icon-comment-alt icon-2x icon-light"></span>
+                            <i class="l-label label-danger" style="color: white" id="globalSetting_msgCount"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false">
+                            <img class="l-userImg" src="img/userImg.jpg" alt="" id="globalSetting_opimag">
+                            <span style="color: white;font-size: 20px" id="globalSetting_opiname"></span>
+                        </a>
+                        <!--<ul class="dropdown-menu" >-->
+                            <!--<li><a href="#">Action</a></li>-->
+                            <!--<li><a href="#">Another action</a></li>-->
+                            <!--<li><a href="#">Something else here</a></li>-->
+                            <!--<li role="separator" class="divider"></li>-->
+                            <!--<li><a href="#">Separated link</a></li>-->
+                            <!--<li role="separator" class="divider"></li>-->
+                            <!--<li><a href="#">One more separated link</a></li>-->
+                        <!--</ul>-->
+                    </li>
+                    <li>
+                        <a>
+                            <span style="color: white;font-size: 20px" id="globalSetting_opdept"></span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+        <!--style="position:absolute;top:50px;right:10px; left:auto; z-index:9990"-->
+
+    </div><!--头部导航-->
+    <!--中间部-->
+    <div class="l-middle">
+
+        <!--左部菜单-->
+        <div id="menu-LeftPush" >
+
+
+            <div  class="l-menu-wrapper"  >
+
+                <!--树菜单 插件 在js里初始化-->
+                <div id="left-menu-tree"></div>
+
+
+            </div>
+        </div> <!--左部菜单-->
+
+        <!--中间内容-->
+        <div  class="l-middle-content"  id="l-middle-content"> <!--此id 为 dMenu.js 资源，如要改动请到index.js 一起改动-->
+
+            <div class="tabViewContainer">
+                <!--<div style="height: 400px; width:500px;"><canvas id="BarChart" width="400" height="400"></canvas></div>-->
+                <!--<div style="height: 600px; width:600px;"><canvas id="LineChart" width="500" height="600"></canvas></div>-->
+            </div>
+
+
+        </div> <!--中间内容 -->
+
+    </div><!--中间部-->
+    <div class="l-footer">
+
+        <button id="getForm">get form</button>
+        <!--<button id="getReport">get report</button>-->
+    </div>
+</div>
+
+<div class="chartContainer"><span class="chartContainer_close">X</span></div><!---->
+<!--<script type="text/javascript" src="jsLib/jquery-2.2.3.js"></script>-->
+
+<!--<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>-->
+<!--&lt;!&ndash;插件 js&ndash;&gt;-->
+<!--<script type="text/javascript" src="plugins/slimScroll/jquery.slimscroll.js"></script>-->
+<!--<script type="text/javascript" src="plugins/dMenu/jquery.dMenu.js"></script>-->
+<!--<script type="text/javascript" src="plugins/treeView/bootstrap-treeview.js"></script>-->
+<!--<script type="text/javascript" src="plugins/dialog/js/bootstrap-dialog.js"></script>-->
+<!--<script type="text/javascript" src="plugins/ListView/jquery.listview.js"></script>-->
+<!--<script type="text/javascript" src="plugins/formView/jquery.formview.js"></script>-->
+<!--<script type="text/javascript" src="plugins/datepicker/bootstrap-datepicker.js"></script>-->
+<!--<script type="text/javascript" src="plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>-->
+<!--<script type="text/javascript" src="plugins/tableView/tableView.js"></script>-->
+<!--<script type="text/javascript" src="plugins/buildWin/buildWin.js"></script>-->
+<!--页面主 js-->
+<!--<script type="text/javascript" src="plugins/echart/echarts.js"></script>-->
+<script type="text/javascript" src="jsLib/require-2.1.1.js"></script>
+<script type="text/javascript" src="index.js" data-main="js/main"></script>
+
+
+<!--<script type="text/javascript" src="jsLib/avalon.js"></script>-->
+</body>
+</html>

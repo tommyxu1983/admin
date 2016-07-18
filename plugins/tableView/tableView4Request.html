@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+
+    <style type="text/css">
+        .tableView{
+            postion:relative;
+            margin-top:50px;
+            margin-left: 50px;
+            width:1000px;
+            height:600px;
+            border: dashed 2px black ;
+            padding:3px 10px;
+
+        }
+        .tableView .tableView-paginationContainer{
+            /*background-color: #00CCFF;*/
+
+            
+            width:100%;
+            height:80px;
+            line-height:80px;
+        }
+
+        .tableView .tableView-paginationContainer-floatNav{
+            position:absolute;
+            bottom:0;
+            left:0;
+            z-index:20000;
+
+        }
+
+
+        .tableView .tableView-paginationContainer .tableView-paginationRowsPerPage{
+            display: inline-block;
+
+          /*  border: 1px solid #cccccc;
+            border-radius: 5px;*/
+
+          	height:40px;
+          	line-height: 40px;
+        }
+        .tableView .tableView-paginationContainer  .tableView-paginationRowsPerPage select{
+            height:40px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            padding:6px 12px;
+            color: #797979;
+            text-align: left;
+        }
+        .tableView .tableView-paginationContainer  .tableView-paginationRowsPerPage select:hover{
+            border: 1px solid cornflowerblue;
+            background-color: #ededed;
+
+            /*border-radius: 5px;*/
+            /*padding:6px 12px;*/
+            /*color: #797979;*/
+            /*text-align: left;*/
+        }
+        .tableView .tableView-paginationContainer .tableView-paginationDetail{
+            display: inline-block;
+
+            /*border: 1px solid #cccccc;
+            border-radius: 5px;*/
+            margin-left:50px;
+          /*  padding:6px 12px;*/
+          	height:40px;
+          	line-height: 40px;
+
+            color: #797979;
+            text-align: left;
+        }
+
+
+
+
+
+        .tableView .tableView-paginationContainer .tableView-paginationDetail span{
+           display: inline-block;
+           /* 
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            padding:6px 12px;
+            color: #797979;
+            text-align: left;*/
+        }
+
+        .tableView .tableView-paginationContainer .tableView-paginationChange{
+                display: inline-block;
+
+                	position:relative;
+           		 	float:right;
+
+           		top:20px;
+                margin-right:5px;
+                height:40px;
+                line-height:40px;
+        }
+
+        .tableView .tableView-paginationContainer .tableView-paginationChange ul{
+            height:40px;
+            line-height: 40px;
+        }
+
+        .tableView .tableView-paginationContainer .tableView-paginationChange ul>li{
+        		display: inline-block;
+        		height:40px;
+        		width:40px;
+ /*       		border: 1px solid #cccccc;
+           		 border-radius: 5px;*/
+                display:inline-block;
+        }
+
+		.tableView .tableView-paginationContainer .tableView-paginationChange ul>li>a{
+        		display: inline-block;
+        		height:38px;
+        		width:38px;
+        		border: 1px solid #cccccc;
+           		border-radius: 5px;
+           		text-align:center;
+               
+        }
+
+        .tableView .tableView-paginationContainer .tableView-paginationChange ul>li>a:hover{
+        		background-color: lightgrey;  
+        		display: inline-block;   
+        }
+
+
+    </style>
+</head>
+<body>
+
+
+<div class="tableView"></div>
+
+<script type="text/javascript" src="../../jsLib/require-2.1.1.js"></script>
+<script type="text/javascript" src="../../jsLib/jquery-1.12.3.js"></script>
+<script type="text/javascript" src="tableView4Request.js" data-main="js/main"></script>
+
+</body>
+</html>

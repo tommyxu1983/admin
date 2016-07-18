@@ -1,0 +1,47 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tree</title>
+    <!--<link rel="stylesheet" href="../bootstrap/css/bootstrap.css">-->
+
+
+
+</head>
+<body>
+    <div ms-controller="vm2_NodeInfo">
+        <form ms-if="userPower.read" class="form-horizontal" ms-class="">
+            <div class="form-group" >
+               <div class="col-xs-offset-2 col-md-offset-2 col-xs-4 col-md-4 vCenter"><h3><strong>{{formAction}}   {{formType}}</strong></h3></div>
+                <div class="col-xs-offset-3 col-md-offset-3 col-xs-2 col-md-2 vCenter">
+                    <button ms-click="enableEdit($event)" class="btn btn btn-primary  btn-block" ms-visible="userPower.show" >修改</button>
+                    <button ms-click="deleteNode($event)" class="btn btn-warning  btn-block " ms-visible="userPower.edit" ms-attr-disabled="!userPower.delete">删除</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-2 col-md-2" ms-class="disabled:!userPower.edit">
+                    <label class="x-registerBox-FloatRight18px"><span class="glyphicon glyphicon-asterisk" style="color:red"></span>节点名</label>
+                </div>
+                <div class="col-xs-7 col-md-7" >
+                    <input  ms-duplex-string="data.nodeName"  type="text" class="form-control" ms-attr-disabled="!userPower.edit">
+                </div>
+                <div class="col-xs-3 col-md-3 x-registerBox-errorContainer"></div>
+            </div>
+
+            <div class="form-group" ms-visible="!!data.upNodeName">
+                <div class="col-xs-2 col-md-2" ms-class="{{!userPower.edit? 'disabled':''}}">
+                    <label class="x-registerBox-FloatRight18px"><span class="glyphicon glyphicon-asterisk" style="color:red"></span>上级节点</label>
+                </div>
+                <div class="col-xs-7 col-md-7" ms-class="{{!userPower.edit? 'disabled':''}}">
+                    <button ms-click="getAllNodes($event)" class="btn btn-default  btn-block " ms-attr-disabled="!userPower.edit"  >{{data.upNodeName}}</button>
+                    <!--<input ms-duplex-string="data.upNodeName" type="text" class="form-control" required>-->
+                </div>
+                <div class="col-xs-3 col-md-3 x-registerBox-errorContainer"></div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

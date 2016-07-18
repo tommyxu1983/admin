@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FormView</title>
+    <script type="text/javascript" src="../../jsLib/jquery-1.12.3.js"></script>
+    <script type="text/javascript" src="jquery.formview.js"></script>
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <link href="../datepicker/datepicker3.css"rel="stylesheet" type="text/css"/>
+
+    <style>
+        html, body{width:100%}
+        #formViewContainer{
+            margin-top:100px;
+            margin-left:15%;
+
+            width:70%;
+            border: 2px black dashed;
+            text-align: center;
+            :2em
+        }
+
+    </style>
+</head>
+<body>
+    <div id="formViewContainer" class=""></div>
+    <!--<div id="formViewContainer">-->
+    <!--<form class="form-horizontal" id="员工表">-->
+        <!--<div class="form-group"><label for="123456789-name" class="col-sm-2 control-label">姓名</label><div class="col-sm-8"><input class="form-control" id="123456789-name" placeholder="请填写姓名" type="text"></div></div><div class="form-group"><label for="123456789-userName" class="col-sm-2 control-label">用户名</label><div class="col-sm-8"><input class="form-control" id="123456789-userName" placeholder="请填写用户名" type="text"></div></div><div class="form-group"><label for="123456789-nickName" class="col-sm-2 control-label">称昵</label><div class="col-sm-8"><input class="form-control" id="123456789-nickName" placeholder="请填写称昵" type="text"></div></div><div class="form-group"><label for="123456789-email" class="col-sm-2 control-label">邮箱</label><div class="col-sm-8"><input class="form-control" id="123456789-email" placeholder="请填写邮箱" type="email"></div></div>-->
+
+        <!--<div class="form-group">-->
+            <!--<label for="123456789-password" class="col-md-2 control-label">密码</label>-->
+            <!--<div class="col-md-8">-->
+                <!--<div class="input-group">-->
+                    <!--<input class="form-control" id="123456789-password" type="password">-->
+                    <!--<span class="input-group-btn" style="font-size:5px"><button class="btn btn-default  "></button></span>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+
+
+        <!--<div class="form-group"><label for="123456789-passwordC" class="col-sm-2 control-label">确认密码</label><div class="col-sm-8"><div class="input-group"><input class="form-control" id="123456789-passwordC" type="password"><span class="input-group-btn"><button class="btn btn-default glyphicon glyphicon-eye-close showPSW"></button></span></div></div></div><div class="form-group"><label for="123456789-gender" class="col-sm-2 control-label">性别</label><div class="col-sm-8"><label for="123456789-gender-male"><input type="radio" name="gender" value="male" id="123456789-gender-male">男</label><label for="123456789-gender-female"><input type="radio" name="gender" value="female" id="123456789-gender-female">女</label></div></div><div class="form-group"><label for="123456789-profession" class="col-sm-2 control-label">工种</label><div class="col-sm-8"></div></div><div class="form-group"><label for="123456789-" class="col-sm-2 control-label">生日</label><div class="col-sm-8"></div></div><div class="form-group"><div class="form-group"><button class="btn btn-primary">发送</button></div><div class="form-group"><button class="btn btn-danger">重置</button></div></div></form>-->
+
+    <!--</div>-->
+    <script type="text/javascript" src="../datepicker/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
+</body>
+<script>
+    function jsonData(){
+        return {
+
+        formID:'123456789', formTitle:'员工表',
+
+
+            controlList:[
+                {label:'姓名', isLabelDisplay:true, dataType:'text',placeholder:'请填写姓名',dataID:'name',data:'张三',dataOption:'',required:true,readonly:1, multiline:1},
+                {label:'用户名', isLabelDisplay:true, dataType:'text',placeholder:'请填写用户名',dataID:'userName',data:'',dataOption:'',required:true},
+                {label:'称昵', isLabelDisplay:true, dataType:'text',placeholder:'请填写称昵',dataID:'nickName',data:'',dataOption:'',required:false},
+                {label:'邮箱', isLabelDisplay:true, dataType:'email',placeholder:'请填写邮箱',dataID:'email',data:'',dataOption:'',required:true},
+                {label:'密码', isLabelDisplay:true, dataType:'psw',placeholder:'',dataID:'password',data:'',dataOption:'',required:true},
+                {label:'确认密码', isLabelDisplay:true, dataType:'psw',placeholder:'',dataID:'passwordC',data:'',dataOption:'',required:true},
+                {label:'性别', isLabelDisplay:true, dataType:'bool',placeholder:'male',dataID:'gender',data:'male',dataOption:[{id:'male',caption:'男'},{id:'female',caption:'女'}],required:true},
+                {label:'工种', isLabelDisplay:true, dataType:'option',placeholder:'worker',dataID:'profession',data:'writer',dataOption:[{id:'teacher',caption:'老师'},{id:'worker',caption:'工人'},{id:'writer',caption:'作家'}],required:true},
+                {label:'工种', isLabelDisplay:true, dataType:'multi',placeholder:'worker',dataID:'profession',data:'writer',dataOption:[{id:'teacher',caption:'老师',checked:1},{id:'worker',caption:'工人',checked:0},{id:'writer',caption:'作家',checked:1}],required:true},
+                {label:'生日', isLabelDisplay:true, dataType:'date',placeholder:'',dataID:'birthday',data:'1986/04/08',dataOption:'',required:true},
+                {label:'部门', isLabelDisplay:true,dataType:'custom',placeholder:'',dataID:'department',data:'',dataOption:{},required:true},
+                {label:'注册资金', isLabelDisplay:true,dataType:'currency',currencyType:'',placeholder:'',dataID:'companyRegister',data:'2000',dataOption:{},required:true},
+            ]
+
+
+        }
+    }
+
+
+
+    $(function(){
+        console.time('test');
+
+            $('#formViewContainer').formview(
+                    {
+                        data:jsonData(),
+                        buttons:[
+                            {
+                                label:'重置',
+                                cssClass:'btn-warning',
+                                action:function(formView){
+                                    formView.restoreForm();
+                                }
+                            },
+                            {
+                                label:'发送',
+                                cssClass:'btn-primary',
+                                action:function(formView) {
+                                    var strResult='';
+                                    $.each(formView.settings.data.controlList,function(index,item){
+                                        strResult=strResult+item.label+': '+item.data+',';
+                                    });
+                                    alert(strResult);
+                                }
+                            }
+                        ]
+
+
+                    }
+            );
+
+        console.timeEnd('test');
+
+
+    });
+
+
+</script>
+
+</html>

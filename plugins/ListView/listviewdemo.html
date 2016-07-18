@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../../jsLib/jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="jquery.listview.js"></script>
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <style type="text/css">
+
+
+
+        .changeListStyle{
+            width:800px;
+            height:200px;
+            margin-left: 50px;
+            overflow-y:auto;
+            border: 2px black dashed;
+            overflow: hidden;
+        }
+
+        .changeListStyle > ul{
+            list-style: circle;
+            background-color: green;
+            padding:8px;
+            height:200px;
+            overflow-y: auto;
+        }
+
+        .changeListStyle > ul >li{
+            width:250px;
+            display:inline-block;
+            background-color: mediumpurple;
+            padding:8px;
+        }
+        .changeListStyle > ul >li:first-child{
+            background-color: yellow;
+            padding:8px;
+        }
+
+
+
+        .tabViewContainer{
+            width:1200px;
+            height:380px;
+            background-color: gainsboro;
+            margin-left: 50px;
+            overflow-y:auto;
+            border: 2px black dashed;
+        }
+
+    </style>
+</head>
+<body>
+
+
+    <div id="ListViewContainer1"></div>
+    <div class="changeListStyle"></div>
+    <br>
+    <button id="insertList"> 点我加东西</button>
+    <button id="deleteList"> 点我减东西</button>
+    <br>
+    <div class="tabViewContainer"></div>
+
+<script>
+
+$(function(){
+
+
+
+   var list1= $('#ListViewContainer1').listview({data:['haha1','haha1',{title:'haha1',cssClass:'',id:''},{title:'haha1',cssClass:'',id:''}]});
+
+    var jj=$('.changeListStyle').listview({data:['haha1']});
+
+
+
+
+    $('#insertList').click(function(){
+        jj.find('ul').hide();
+        jj.listview('insert',{title:'new1', id:'1'});
+        jj.listview('insert',{title:'new2', id:'1'});
+        jj.find('ul').slideDown();
+
+    });
+
+
+    $('#ListViewContainer1').listview('insert',{title:'new1', id:'1'});
+    $('#ListViewContainer1').listview('insert',{title:'new2', id:'1'});
+
+
+
+
+    $('.tabViewContainer').tabview({
+        hasClose:true,
+        data:[{ id:'tabView1',isActive:true,tab:'title1',panel:list1},
+            { id:'tabView2',tab:'title2',panel:jj},
+            { id:'tabView3',tab:'title3',panel:'Panel-3',isActive:true}
+
+        ]
+    });
+
+    $('.tabViewContainer').tabview( 'insert',  { data:[
+        { id:'tabView4',tab:'title4',panel:'panel4',isActive:true},
+        { id:'tabView5',tab:'title5',panel:5},
+        { id:'tabView6',tab:'title6',panel:6,isActive:true},] }
+    );
+
+
+});
+
+</script>
+
+</body>
+</html>
