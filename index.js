@@ -33,10 +33,10 @@ require.config({
             exports:'$.fn.treeview'
         },
 
-        'tabview':{
-            deps:['jquery'],
-            exports:'$.fn.tabview'
-        },
+        //'tabview':{
+        //    deps:['jquery'],
+        //    exports:'$.fn.tabview'
+        //},
 
         'datepicker':{
             deps:['jquery'],
@@ -73,17 +73,20 @@ require.config({
         'bootstrap':'bootstrap/js/bootstrap',
         //插件路径
         'bootstrap-dialog': 'plugins/dialog/js/bootstrap-dialog',
+        'tableView':'plugins/tableView/tableView',
+        'tabview':'plugins/tabView/tabView',
+
                 //没有按 AMD 规范写的插件，需要在 require.config shim 里定义依赖和输出
         'uploader': 'plugins/uploader/uploader',
         'slimscroll':'plugins/slimScroll/jquery.slimscroll',
         'dMenu':'plugins/dMenu/jquery.dMenu',
         'treeview':'plugins/treeView/bootstrap-treeview',
-        'tabview':'plugins/ListView/jquery.listview',
+
         'datepicker':'plugins/datepicker/bootstrap-datepicker',
         'datepickerCN':'plugins/datepicker/locales/bootstrap-datepicker.zh-CN',
         'Chartjs':'plugins/chart/Chart',
         'formview':'plugins/formView/jquery.formview',
-        'tableView':'plugins/tableView/tableView',
+
         'BuildWin':'plugins/buildWin/buildWin',
         'echarts':'plugins/echart/echarts'
 

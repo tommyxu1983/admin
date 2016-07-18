@@ -661,7 +661,7 @@
 
 
     if(typeof define==='function' && define.amd){
-        define(['jquery',Window],factory);
+        define(['jquery'],factory);
     }else if(typeof window !=='undefined' && window.jQuery){
         factory(jQuery,window)
     }

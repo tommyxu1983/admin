@@ -3,10 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <!--<link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">-->
+    <link rel="stylesheet" href="tabView.css">
     <script type="text/javascript" src="../../jsLib/jquery-1.12.3.js"></script>
     <script type="text/javascript" src="tabView.js"></script>
+
 </head>
 <body>
 
+<div class="tabViewContainer"></div>
+
+<script>
+
+$(function(){
+
+
+
+
+
+
+
+
+
+    $('.tabViewContainer').tabview({
+        hasClose:true,
+        data:[{ id:'tabView1',isActive:true,tab:'title1',panel:'tabView 1'},
+            { id:'tabView2',tab:'title2',panel:'tabview 2'},
+            { id:'tabView3',tab:'title3',panel:'Panel-3',isActive:true}
+        ]
+    });
+
+    $('.tabViewContainer').tabview( 'insert',  { data:[
+        { id:'tabView4',tab:'title4',panel:'panel4',isActive:true},
+        { id:'tabView5',tab:'title5',panel:5},
+        { id:'tabView6',tab:'title6',panel:6,isActive:true},] }
+    );
+
+
+});
+
+
+</script>
 </body>
 </html>
