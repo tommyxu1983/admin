@@ -661,15 +661,16 @@
 
 
     if(typeof define==='function' && define.amd){
-        define(['jquery'],factory);
+        define(['jquery',Window],factory);
     }else if(typeof window !=='undefined' && window.jQuery){
         factory(jQuery,window)
     }
 
 
 
-}(Window,function($,window,undefined){
+}(Window,function($,win,undefined){
 
+    win=win || window;
 
     var pluginName='tableView';
 
@@ -1327,8 +1328,8 @@
 
 
     var logError = function (message) {
-        if (window.console) {
-            window.console.error(message);
+        if (win.console) {
+            win.console.error(message);
         }
     };
 
