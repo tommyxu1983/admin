@@ -25,6 +25,13 @@
 
 	var pluginName = 'treeview';
 
+	/*internal use only for handling the click dblClick collision*/
+	var _clickSetting={
+		DELAY:300,
+		clicks:0,
+		timmer:null
+	};
+
 	var _default = {};
 
 	_default.settings = {
@@ -92,6 +99,8 @@
 		exactMatch: false,
 		revealResults: true
 	};
+
+
 
 	var Tree = function (element, options) {
 
@@ -254,6 +263,7 @@
 		this.unsubscribeEvents();
 
 		this.$element.on('click', $.proxy(this.clickHandler, this))
+			.on('dblclick', function(event){event.preventDefault();})
 		//xul added
 		.on('mouseover', $.proxy(this.mouseOverHandler,this))
 		//xul added
@@ -373,50 +383,93 @@
 	};
 
 	Tree.prototype.clickHandler = function (event) {
+		var _this=this;
 
-		if (!this.options.enableLinks) event.preventDefault();
+		_clickSetting.clicks++;
 
-		var target = $(event.target);
-		var node = this.findNode(target);
-		if (!node || node.state.disabled) return;
-
-		var classList = target.attr('class') ? target.attr('class').split(' ') : [];
-		if ((classList.indexOf('expand-icon') !== -1)) {
-
-			this.toggleExpandedState(node, _default.options);
-			this.render();
-		}
-		else if ((classList.indexOf('check-icon') !== -1)) {
-			
-			this.toggleCheckedState(node, _default.options);
-			this.render();
-		}
-			//xul added
-		else if((classList.indexOf('upAndDownIcon') !== -1)){
-			if((classList.indexOf('up') !== -1)){
+		if(_clickSetting.clicks===1){
 
 
-				this.moveUpAndDown(node,0);
+			_clickSetting.timmer=setTimeout(function(){
 
-				this.render();
+				//handle single-click events
+				if (!_this.options.enableLinks) event.preventDefault();
 
+				 var target = $(event.target);
+				 var node = _this.findNode(target);
+				 if (!node || node.state.disabled) return;
+
+				 var classList = target.attr('class') ? target.attr('class').split(' ') : [];
+				 if ((classList.indexOf('expand-icon') !== -1)) {
+
+					 _this.toggleExpandedState(node, _default.options);
+					 _this.render();
+				 }
+				 else if ((classList.indexOf('check-icon') !== -1)) {
+
+					 _this.toggleCheckedState(node, _default.options);
+					 _this.render();
+				 }
+				 //xul added
+				 else if((classList.indexOf('upAndDownIcon') !== -1)){
+					 if((classList.indexOf('up') !== -1)){
+
+
+						 _this.moveUpAndDown(node,0);
+
+						 _this.render();
+
+					 }
+					 else if ((classList.indexOf('down') !== -1)){
+						 _this.moveUpAndDown(node,1);
+						 _this.render();
+					 }
+				 }
+				 else {
+
+					 if (node.selectable) {
+						 _this.toggleSelectedState(node, _default.options);
+					 } else {
+						 _this.toggleExpandedState(node, _default.options);
+					 }
+
+					 _this.render();
+				 }
+
+				//handle single-click events
+
+				_clickSetting.clicks=0;
+
+			},_clickSetting.DELAY);
+		}else{
+			//handle double-click events
+			var target = $(event.target);
+			var node = _this.findNode(target);
+			if($.isArray(node.nodes)){
+				_this.toggleExpandedState(node, _default.options);
+				_this.render();
 			}
-			else if ((classList.indexOf('down') !== -1)){
-				this.moveUpAndDown(node,1);
-				this.render();
-			}
-		}
-		else {
-			
-			if (node.selectable) {
-				this.toggleSelectedState(node, _default.options);
-			} else {
-				this.toggleExpandedState(node, _default.options);
-			}
 
-			this.render();
+
+
+
+
+
+
+			//handle double-click events
+			clearTimeout(_clickSetting.timmer);
+			_clickSetting.clicks=0;
 		}
+
+
+
+
+
+
+
 	};
+
+
 	//xul added
 	Tree.prototype.mouseOverHandler = function (event){
 		if(this.options.enableUpDown){
