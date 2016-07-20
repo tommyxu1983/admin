@@ -55,7 +55,8 @@
             modulePanel:'modulePanel',
             buttonDiv:'buttonPanel',
             buttonGrid:'win-buttonGrid',
-            button:'win-button'
+            button:'win-button',
+            panelContent:'win-panelContent'
         };
 
         var logError = function (message) {
@@ -257,6 +258,7 @@
 
             //包含 按钮和 模块（form 或 report） 'overflow-x':'hidden',overflow: auto;
             var $panelContent=$(_html.div)
+                .addClass(_cssClass.panelContent)
                 .css({'background-color': '#ededed'})
                 .append($modules_Div)
                 .append($buttons_Div);

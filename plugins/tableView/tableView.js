@@ -263,15 +263,30 @@
             }
 
         });
-        //内部事件 -->scoll
-        this.$element.parents().each(function(index,item){
-            var kk=0;
-        });
-        if(scrollableParent){
-            $(scrollableParent).on('scroll', function(){
-                _this.floatPagination();
-            });
-        }
+        //内部事件 -->scoll, 采用间歇调用，原因是有可能会 tableView还没有被系上 html
+        var intervalID=setInterval(function(){
+            if(_this.$element.parents().length>0){
+                clearInterval(intervalID);
+                _this.$element.parents().each(function(index,item){
+                    //祖先里是不是出现滚动条,而且是要第一个出现滚动条
+
+                    if(item.scrollHeight>this.clientHeight && !scrollableParent ){
+                        console.log($(item).attr('class')+'   ');
+                        scrollableParent=item;
+                    }
+                });
+
+                if(scrollableParent){
+                    $(scrollableParent).on('scroll', function(){
+                        _this.floatPagination(scrollableParent);
+                    });
+                }
+            }
+
+        },100);
+
+
+
 
 
         //外部事件
@@ -703,7 +718,7 @@
         this.floatPagination();
     };
 
-    TableView.prototype.floatPagination=function(){
+    TableView.prototype.floatPagination=function(scrollableParent){
         //var eleHeight=this.$element.height(),
         //    totalChildrenHeight=0;
         //this.$element.children().each(function(){

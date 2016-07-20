@@ -5,7 +5,30 @@
     <title>Title</title>
 </head>
 <body>
-<script src="../jsLib/jquery-1.11.3.js"></script>
+<script src="../jsLib/jquery-1.12.3.js"></script>
 <script src="test222.js"></script>
+
+<div id="scroll" style="width:600px; height: 500px; overflow: auto; background-color: blue">
+    <div  style="width:500px; height: 500px; background-color: red">
+
+    </div>
+    <div  style="width:500px; height: 500px; background-color: olive">
+
+    </div>
+    <div style="width:500px; height: 500px; background-color: green">
+
+    </div>
+</div>
+
+
+<script>
+    $('#scroll').scroll(function(){
+        alert('haha');
+    });
+
+    $(window).on('scroll',function(){
+        alert("1")
+    })
+</script>
 </body>
 </html>
