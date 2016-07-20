@@ -449,14 +449,8 @@
 				_this.toggleExpandedState(node, _default.options);
 				_this.render();
 			}
-
-
-
-
-
-
-
 			//handle double-click events
+
 			clearTimeout(_clickSetting.timmer);
 			_clickSetting.clicks=0;
 		}

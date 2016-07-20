@@ -126,8 +126,10 @@
             var buttons=[];
             if ($.isArray(winData.buttons)){
                 $.each(winData.buttons, function(index,button){
-                    (button.styleex>0)
-                    && ( [].push.call(buttons,{innerHTML:button.caption,id:button.ctrlid,data:button}) )
+                    if(button.styleex>0){
+                        [].push.call(buttons,{innerHTML:button.caption,id:button.ctrlid,icon:button.icon,data:button})
+                    }
+
 
                 });
             }
@@ -368,15 +370,37 @@
         };
 
         BuildWin.prototype.buildReport=function(module,$moduleDiv){
-            var _this=this;
-            var tableHeader=module.winmodfields.Body.Head;
-            var tableData=module.winmodfields.Body.Data;
-            var detailWinID=module.DetailWinID;
+            var _this=this,
+                tableHeader=module.winmodfields.Body.Head,
+                tableData=module.winmodfields.Body.Data,
+                detailWinID=module.DetailWinID,
+                pSetting= {
+                    pageCount:module.winmodfields.Body.pageCount,
+                    pageIndex:module.winmodfields.Body.pageIndex,
+                    rowEnd:module.winmodfields.Body.rowEnd,
+                    rowStart:module.winmodfields.Body.rowStart,
+                    rows:module.winmodfields.Body.rows,
+                    totalPages:module.winmodfields.Body.totalPages,
+                    totalRows:module.winmodfields.Body.totalRows,
+                    funModName:_this.data.name,
+                    url:module.winmodfields.Body.uurl,
+
+                    onGoToPageClick:function(evt,goToPageIndex,pSetting){
+                        if(goToPageIndex != pSetting.pageIndex){
+                            var reqGotoPage={
+                                url:'http://'+pSetting.url+'?fmname='+pSetting.funModName+'&fmctrlid=3033&fmpageindex='+goToPageIndex
+                            }
+                            _this.sendAjax( reqGotoPage, $.proxy(_this.onGotoPageSuccess,_this) , undefined , undefined,{tableContainer:$moduleDiv});
+                        }
+
+                    }
+                };
 
             $moduleDiv.tableView({
                 tableID:'ms-table',
                 Head:tableHeader,
                 Data:tableData,
+                paginationSetting:pSetting,
                 rowSettings:{
                     buttons: _this.getButtonsForTableRow(_this.winData),
                     onRowButtonClick: function (evt,rowIndex ,$row,rowData,buttonData) {
@@ -412,10 +436,7 @@
                         if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
                         _this.sendAjax( req, $.proxy(_this.onRowButtonSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData.ctrlid});
                     }
-
-
                 }
-
 
             });
         };
@@ -733,6 +754,10 @@
 
             }else(logError('onRowButtonSuccess: data.windows object does not exist'))
         };
+
+        BuildWin.prototype.onGotoPageSuccess=function(data,beforeAjaxData){
+            this.update(data,0);
+        }
 
         BuildWin.prototype.winTip=function(msg){
             // var _this=this;
