@@ -754,7 +754,7 @@
 
                 }
                 //button ctrlID>3032
-                else if(parseInt(beforeAjaxData.action.ctrlid)>3032 && parseInt(beforeAjaxData.action)<4000){
+                else if(parseInt(beforeAjaxData.action.ctrlid)>3032 && parseInt(beforeAjaxData.action.ctrlid)<4000){
                     new BuildWin(data,0);
 
                 }else if(parseInt(beforeAjaxData.action.ctrlid)>=4000){

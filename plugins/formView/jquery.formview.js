@@ -18,6 +18,7 @@ if (typeof jQuery === 'undefined') {
     var pluginName='formview';
     _default.options={
         data:{},
+        noInputsInRow:2, //一行摆几个 input
         style:{},
         isDataWritable:false
     };
@@ -28,9 +29,13 @@ if (typeof jQuery === 'undefined') {
             form_Group:'form-group',
             inputGroup:'input-group',
             inputGroupAddon:'input-group-addon',
-            col_first:'col-sm-2',
+            row:'row',
+            col_part:'col-sm-',
+
+            col_first:'col-sm-3',
             col_second:'col-sm-8',
             offset_2col:'col-sm-offset-2',
+
             label:'control-label',
             form_control:'form-control',
             input_group:'input-group',
@@ -178,6 +183,7 @@ if (typeof jQuery === 'undefined') {
         this.buildForm(this.settings);
     };
     FormView.prototype.buildForm=function(settings){
+        this.$element.css({'padding-right':'20px'});
         this.$form=$(_html.form);
         //创建 form title
         $(_html.div)
@@ -192,8 +198,57 @@ if (typeof jQuery === 'undefined') {
                 .appendTo(this.$element);
 
         //创建 row (label +input)
+        var rowItemCount= 0, $row=$(_html.div).addClass(_defaultStyle.bs.row),row=0;
+
         $.each( settings.data.controlList, $.proxy(function(index,item){
-            this.$form.append(this.buildControlItem(item));
+            console.log('行: '+row + '  列：' + rowItemCount + '   index: ' +index + '   name:'+item.label );
+            if(index>17){
+                var jj=0;
+            }
+
+            // 12/settings.noInputsInRow 因为 boostrap 栅格系统分为12等分，请将 noInputsInRow设为12的公约数
+
+
+
+            //如果是文件， 多选， textarea,直接占一行
+            if(item.dataType==_dataType.file || item.dataType==_dataType.multi ||(item.dataType==_dataType.text && item.inputMultiLine && item.inputMultiLine>0)){
+               //把上一行的 row 系上 form
+                if(rowItemCount>0){this.$form.append($row.clone(true)); }
+                $row=null;
+                $row=$(_html.div).addClass(_defaultStyle.bs.form_Group);
+                //var $part=$(_html.div).append();
+                //$part.addClass(_defaultStyle.bs.col_part + (12).toString() );
+                $row.append(this.buildControlItem(item,1));
+                this.$form.append($row.clone(true));
+                rowItemCount=0;
+            }else{
+                //var $part=$(_html.div).append(this.buildControlItem(item,itemsPerRow));
+                //$part.addClass(_defaultStyle.bs.col_part + (12/settings.noInputsInRow).toString() );
+                if(rowItemCount==0){
+                    //创建新的 row
+                    $row=null;
+                    $row=$(_html.div).addClass(_defaultStyle.bs.form_Group);
+                    $row.append(this.buildControlItem(item,settings.noInputsInRow));
+                    rowItemCount++;
+                }
+                else if (0<rowItemCount && rowItemCount< settings.noInputsInRow-1){
+                    //小于设置的列数
+                    $row.append(this.buildControlItem(item,settings.noInputsInRow));
+                    rowItemCount++;
+                }
+                else{
+
+                    $row.append(this.buildControlItem(item,settings.noInputsInRow));
+                    rowItemCount++;
+
+                    this.$form.append($row.clone(true));
+                    rowItemCount=0;
+
+                }
+            }
+
+
+
         },this) );
 
         //创建 button
@@ -211,21 +266,46 @@ if (typeof jQuery === 'undefined') {
     FormView.prototype.empty=function(){
         this.$element.empty();
     };
-    FormView.prototype.buildControlItem=function(ctlListItem){
+
+    FormView.prototype.buildControlItem=function(ctlListItem,itemsPerRow){
         //创建 label
+        var iCol= 1, jCol=1;
+
+        //label占的 col-sm-iCol
+        iCol={1:2,2:2,3:2,4:1}[itemsPerRow];
+        // input 占的 col-sm-jCol
+        jCol={1:10,2:4,3:2,4:2}[itemsPerRow];
+
+
         var $label=$(_html.label)
                 .attr('for',this.settings.data.formID+'-'+ctlListItem.dataID)
-                .addClass(_defaultStyle.bs.col_first+ ' ' +_defaultStyle.bs.label) //style
+                //.css('text-align','left')
+                .addClass('col-sm-'+iCol +' ' +_defaultStyle.bs.label) //style
                 .append((ctlListItem.isLabelDisplay)&& ctlListItem.label); // data
 
-        //创建 row
+        //创建 temp div, 返回 label 和 input
         return $(_html.div)
-                .addClass(_defaultStyle.bs.form_Group)//style
                 .append($label)                   // attach label
-                .append(  $(_html.div).addClass(_defaultStyle.bs.col_second).append(this.buildInput(ctlListItem)) ); // attach input
+                .append(  $(_html.div).addClass('col-sm-'+ jCol).append(this.buildInput(ctlListItem)) )
+                .children(); // attach input
+    }
 
+    FormView.prototype.buildControlItemSpec=function(ctlListItem){
+        //创建 label
+        var $label=$(_html.label)
+            .attr('for',this.settings.data.formID+'-'+ctlListItem.dataID)
+            .css('text-align','left')
+            .addClass('col-sm-2'+ ' ' +_defaultStyle.bs.label) //style
+            .append((ctlListItem.isLabelDisplay)&& ctlListItem.label); // data
 
+        //创建 div, input
+        return $(_html.div)
+            .addClass(_defaultStyle.bs.form_Group)//style
+            .append($label)                   // attach label
+            .append(  $(_html.div).addClass('col-sm-10').append(this.buildInput(ctlListItem)) ); // attach input
     };
+
+
 
     FormView.prototype.buildInput=function(ctlListItem){
         (!ctlListItem.dataType)&&(window.console) &&console.log('请检查数据是否传输正确，data.data.dataType 不正确或不存在');
@@ -358,12 +438,14 @@ if (typeof jQuery === 'undefined') {
                 break;
 
             case _dataType.date:
+                setTimeout(function(){
+                    $input.datepicker({
+                        format: "yyyy/mm/dd",
+                        todayBtn: "linked",
+                        language: "zh-CN"
+                    });
+                },500);
 
-                $input.datepicker({
-                    format: "yyyy/mm/dd",
-                    todayBtn: "linked",
-                    language: "zh-CN"
-                });
 
                 $result=$input;
                 break;
