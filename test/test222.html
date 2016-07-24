@@ -7,28 +7,119 @@
 <body>
 <script src="../jsLib/jquery-1.12.3.js"></script>
 <script src="test222.js"></script>
+<style>
 
-<div id="scroll" style="width:600px; height: 500px; overflow: auto; background-color: blue">
-    <div  style="width:500px; height: 500px; background-color: red">
+    .bottomDiv{
+        display: none;
+        position:absolute;
 
-    </div>
-    <div  style="width:500px; height: 500px; background-color: olive">
+        width:100%;
+        height:50px;
+        bottom: 0px;
+        background-color: rgba(99, 99, 99, 0.46);
 
-    </div>
-    <div style="width:500px; height: 500px; background-color: green">
+    }
 
-    </div>
+    .hide{
+        display: none;
+        transition: 1s ease-out;
+
+        /*-moz-transition: 0.75s ease-out; !* Firefox 4 *!*/
+        /*-webkit-transition: 0.75s ease-out; !* Safari and Chrome *!*/
+        /*-o-transition: 0.75s ease-out; !* Opera *!*/
+
+    }
+    .show{
+        display: block;
+        margin-bottom: -50px;
+
+
+        /*-moz-transition: 0.75s ease-out; !* Firefox 4 *!*/
+        /*-webkit-transition: 0.75s ease-out; !* Safari and Chrome *!*/
+        /*-o-transition: 0.75s ease-out; !* Opera *!*/
+    }
+    .translateUp{
+        transform: translateY(-50px);
+        transition: 1s ease-out;
+    }
+    .translateDown{
+        transform: translateY(50px);
+        transition: 1s ease-out;
+    }
+
+
+</style>
+
+
+<div id="scroll" style="position:relative;margin:100px auto auto 100px;width:600px; height: 400px; overflow: auto; background-color: blue">
+    <div  style="margin:100px auto auto 100px; width:100px; height: 200px; background-color: red"></div>
+
+
+
+    <div id="condition" class="bottomDiv"> </div>
+</div>
+
+<div>
+    <div id="clientX"></div>
+    <div id="clientY"></div>
+    <div id="pageX"></div>
+    <div id="pageY"></div>
+
+    <div id="offsetX"></div>
+    <div id="offsetY"></div>
+
+
+    <br/>
+    <div>----------------------------</div>
+    <br>
+
+    <div id="offsetTop"></div>
+    <div id="ClientTop"></div>
+    <div id="ClientHeight"></div>
+    <div id="scrollHeight"></div>
+
 </div>
 
 
 <script>
     $('#scroll').scroll(function(){
-        alert('haha');
+
+    });
+    $('#scroll').mouseover(function(event){
+        $('#scroll').mousemove(function(event){
+            $('#clientX').html('clientX:' + event.clientX);
+            $('#clientY').html('clientY:' + event.clientY);
+            $('#pageX').html('pageX:' + event.pageX);
+            $('#pageY').html('pageY:' + event.pageY);
+
+
+            $('#offsetX').html('offsetX:' + event.offsetX);
+            $('#offsetY').html('offestY:' + event.offsetY);
+
+            var _this=$('#scroll')
+            $('#offsetTop').html('div offsetTop:'+ _this[0].offsetTop);
+            $('#ClientTop').html('div ClientTop:'+  _this[0].clientTop);
+
+            $('#ClientHeight').html('div ClientHeight: '+ _this[0].clientHeight);
+            $('#scrollHeight').html('div scrollHeight: '+ _this[0].scrollHeight);
+
+            if(  _this[0].offsetTop+ _this[0].clientHeight-50< event.clientY && event.clientY<  _this[0].offsetTop+ _this[0].clientHeight &&
+                    _this[0].offsetLeft <event.clientX && event.clientX<_this[0].offsetLeft+ _this[0].clientWidth)
+            {
+                $('#condition').removeClass('hide').addClass('show');
+               setTimeout(function(){$('#condition').addClass('translateUp');},20) ;
+
+            }else{
+                $('#condition').removeClass('show').removeClass('translateUp').addClass('hide');
+              //  $('#condition');
+            }
+        });
     });
 
-    $(window).on('scroll',function(){
-        alert("1")
-    })
+    $('#scroll').mouseout(function(){
+        $('#condition').removeClass('show').removeClass('translateUp').addClass('hide');
+    });
+
 </script>
 </body>
 </html>
