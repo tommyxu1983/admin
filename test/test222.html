@@ -23,7 +23,18 @@
 
 <script>
     $('#scroll').scroll(function(){
-        alert('haha');
+
+    });
+    $('#scroll').on('click',function(event){
+        console.log('X: '+event.clientX);
+        console.log('Y: '+event.clientY);
+        console.log('---------------------------');
+    });
+
+    $('#scroll').on('mouseover',function(event){
+        console.log('X: '+event.clientX);
+        console.log('Y: '+event.clientY);
+        console.log('---------------------------');
     });
 
     $(window).on('scroll',function(){

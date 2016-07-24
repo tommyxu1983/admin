@@ -16,6 +16,10 @@
 
 }(Window,function($,win,undefined){
 
+
+
+
+
     win=win || window;
 
     var pluginName='tableView';
@@ -178,7 +182,8 @@
             this.$tHead=undefined;
             this.$tBody=undefined;
             this.$div_PageContainer= undefined;
-
+            this.$temptHead = undefined;
+            this.$tempPageContainer=undefined;
             this.dataRowNow=0;
 
             this.dataSplit=[]; //经过 rowsPerPage 计算出来的每一页有多少数据
@@ -201,7 +206,7 @@
     };
 
     TableView.prototype.subEvents=function(){
-        var scrollableParent;
+
        this.unsubEvnts();
         var _this=this;
         //内部事件 --> row 操作 Button
@@ -263,27 +268,10 @@
             }
 
         });
-        //内部事件 -->scoll, 采用间歇调用，原因是有可能会 tableView还没有被系上 html
-        var intervalID=setInterval(function(){
-            if(_this.$element.parents().length>0){
-                clearInterval(intervalID);
-                _this.$element.parents().each(function(index,item){
-                    //祖先里是不是出现滚动条,而且是要第一个出现滚动条
 
-                    if(item.scrollHeight>this.clientHeight && !scrollableParent ){
-                        console.log($(item).attr('class')+'   ');
-                        scrollableParent=item;
-                    }
-                });
+        //内部事件 --> 有滚动条的祖先: 1.页码悬浮 2.表头固定（未实现）
+        this.getScrollableParent();
 
-                if(scrollableParent){
-                    $(scrollableParent).on('scroll', function(){
-                        _this.floatPagination(scrollableParent);
-                    });
-                }
-            }
-
-        },100);
 
 
 
@@ -300,6 +288,83 @@
 
 
     };
+
+    TableView.prototype.getScrollableParent=function(){
+        var _this=this, scrollableParent=undefined;
+
+        //寻找出现滚动条的祖先: 采用间歇调用，原因是有可能会 tableView还没有被系上 html
+        var intervalID=setInterval(function(){
+            if(_this.$element.parents().length>0){
+                clearInterval(intervalID);
+                _this.$element.parents().each(function(index,item){
+                    //寻找祖先里出现滚动条,而且是要第一个出现滚动条
+                    if(item.scrollHeight>this.clientHeight && !scrollableParent ){
+                        scrollableParent=item;
+                    }
+                });
+                //如果找到 有滚动条的祖先
+                if(scrollableParent){
+                    $(scrollableParent).on('scroll', function(){
+                        /*
+                        //表头固定
+                        if(_this.settings.isfixingHead){_this.floatHead(scrollableParent);}
+                        */
+
+                        _this.floatPagination(scrollableParent,'scroll');
+                    });
+
+
+
+                    $(scrollableParent).on('mouseover',function(){
+                        //如果鼠标出现在有滚动条的祖先的范围内，检测鼠标移动
+                        var dist2Top =  scrollableParent.getBoundingClientRect().top,
+                            dist2Left = scrollableParent.getBoundingClientRect().left,
+                            eleHeight= scrollableParent.offsetHeight,
+                            eleWidth= scrollableParent.offsetWidth,
+                            paginationHeight= _this.$div_PageContainer[0].offsetHeight;
+
+                        $(scrollableParent).on('mousemove',function(event){
+
+                           // 检测 在底部 到 底部+翻页器高度的范围内，激发 floatPagination
+                            if(  (dist2Top + eleHeight - paginationHeight)<event.clientY  &&
+                                event.clientY< (dist2Top + eleHeight) &&
+                                dist2Left < event.clientX &&
+                                event.clientX< (dist2Left+eleWidth)
+                            ){
+                                _this.floatPagination(scrollableParent,'onTarget');
+                            }
+                            else{
+                                _this.floatPagination(scrollableParent,'offTarget');
+                            }
+
+                            //$('#monitor').html(
+                            //    'Top:'+(dist2Top + eleHeight - paginationHeight) + '<br>'+
+                            //    'bottom: '+(dist2Top + eleHeight) + '<br>'+
+                            //        //'p-offSetHeight:' + scrollableParent.offsetHeight + '<br>'+
+                            //    'clientY: ' + event.clientY +'<br>'+
+                            //    'left: ' + dist2Left +'<br>'+
+                            //    'right: ' + (dist2Left+eleWidth) +'<br>'+
+                            //    'clientX: ' + event.clientX +'<br>'+
+                            //    '------------------==== '+ result +' =====------------------'+'<br>'+
+                            //    ''
+                            //
+                            //)
+                        });
+
+                    });
+
+
+
+                }
+            }
+
+        },100);
+
+        return scrollableParent
+
+    };
+
+
 
     TableView.prototype.unsubEvnts=function(){
         this.$element.off('click');
@@ -715,28 +780,127 @@
 
         this.$element.append(this.$div_PageContainer);
 
-        this.floatPagination();
+        //this.floatPagination();
     };
 
-    TableView.prototype.floatPagination=function(scrollableParent){
-        //var eleHeight=this.$element.height(),
-        //    totalChildrenHeight=0;
-        //this.$element.children().each(function(){
-        //    totalChildrenHeight+=this.offsetHeight;
-        //
-        //});
+    TableView.prototype.floatPagination=function(scrollableParent,event){
+        var  _this=this;
 
-        var scrollTop=this.$element.scrollTop(),
-         clientHeight=this.$element.innerHeight(),
-            scrollHeight = this.$element[0].scrollHeight;
-        if(scrollTop+clientHeight<scrollHeight){
-            this.$div_PageContainer.addClass('tableView-paginationContainer-floatNav');
-        }else{
-            this.$div_PageContainer.removeClass('tableView-paginationContainer-floatNav');
+
+       if(   ! this.$tempPageContainer ){
+           //初始化 悬浮翻页
+           this.$tempPageContainer=this.$div_PageContainer.clone(true);
+
+           $(scrollableParent).append(this.$tempPageContainer );
+           this.$tempPageContainer.addClass('paginationFixBottomMid');
+            setTimeout(function(){
+                _this.$tempPageContainer.addClass('hidePagination');
+            },1000);
+
+       }else if( this.$tempPageContainer instanceof jQuery){
+
+
+
+           if(event=='scroll'){
+
+               this.$tempPageContainer.removeClass('hidePagination');
+               this.$tempPageContainer.addClass('showPagination');
+
+               setTimeout(function(){
+                   _this.$tempPageContainer.removeClass('showPagination');
+                   _this.$tempPageContainer.addClass('hidePagination');
+               },1000);
+           }else if(event == 'onTarget'){
+               this.$tempPageContainer.removeClass('hidePagination');
+               this.$tempPageContainer.addClass('showPagination');
+           }
+           else if(event=='offTarget' ){
+               this.$tempPageContainer.removeClass('showPagination');
+               this.$tempPageContainer.addClass('hidePagination');
+           }
+
+
+       }
+
+
+    };
+
+
+    TableView.prototype.floatHead=function(scrollableParent){
+        //表头绝对定位小于父元素绝对定位，就让表头悬浮。
+     //console.log('scroll-Top:'+scrollableParent.scrollTop);
+        console.log('-->Parent:'+ $(scrollableParent).offset().top);
+        console.log('-->Head:' + this.$tHead.offset().top);
+        console.log('-->Table:' + this.$table.offset().top);
+
+
+        if( $(scrollableParent).offset().top >=this.$tHead.offset().top )
+        {
+            //this.$tHead.addClass('tableView-trHeadFloat');
+            //this.$tHead.css({'position':'fixed','top':$(scrollableParent).offset().top });
+
+
+
+            if( this.$temptHead ==undefined){
+                this.$temptHead=this.$tHead.clone(true);
+                $(scrollableParent).append(this.$temptHead);
+                var style=cssCopy(this.$tHead);
+                this.$temptHead.addClass('tableView-trHeadFloat');
+               // this.$temptHead.css({'position':'fixed','top':$(scrollableParent).offset().top,'visibility': 'visible','z-index':'100000' });
+                this.$tHead.css({'visibility': 'hidden'});
+            }
+
+            console.log('浮动');
+
         }
+        else if( $(scrollableParent).offset().top < this.$table.offset().top)
+        {
+            //this.$tHead.css({'visibility':'visible'});
 
+            if(this.$temptHead instanceof jQuery){
+                console.log('不浮动');
+                this.$tHead.css({'visibility':'visible'})
+                this.$temptHead.remove();
+                this.$temptHead=undefined;
+            }
+        }
+        console.log(this.$tHead.css('visibility'));
+        console.log('---------------------------------------------------------------');
     };
 
+
+
+/*    function cssCopy(a) {
+        var sheets = document.styleSheets, o = {};
+        for (var i in sheets) {
+            var rules = sheets[i].rules || sheets[i].cssRules;
+            for (var r in rules) {
+                if (a.is(rules[r].selectorText)) {
+                    o = $.extend(o, css2json(rules[r].style), css2json(a.attr('style')));
+                }
+            }
+        }
+        return o;
+    }
+
+    function css2json(css) {
+        var s = {};
+        if (!css) return s;
+        if (css instanceof CSSStyleDeclaration) {
+            for (var i in css) {
+                if ((css[i]).toLowerCase) {
+                    s[(css[i]).toLowerCase()] = (css[css[i]]);
+                }
+            }
+        } else if (typeof css == "string") {
+            css = css.split("; ");
+            for (var i in css) {
+                var l = css[i].split(": ");
+                s[l[0].toLowerCase()] = (l[1]);
+            }
+        }
+        return s;
+    }*/
 
 
     TableView.prototype.getCheckedRow=function(){
@@ -810,7 +974,7 @@
         //var $div_RowsPerPage=$(_html.div);
         var $div_ChangePage=$(_html.div);
         var $div_PageDetial=$(_html.div);
-        var $ul_pages=$(_html.ul)
+        var $ul_pages=$(_html.ul);
 
 
         if(!this.hasOwnStyle){
@@ -869,7 +1033,7 @@
 
         this.$element.append(this.$div_PageContainer);
 
-        this.floatPagination();
+        //this.floatPagination();
     };
 
 

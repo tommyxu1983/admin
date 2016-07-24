@@ -212,7 +212,17 @@
     .table-responsive .tableView-trHead{
         background-color: #337AB7;
         color:white;
+
     }
+
+
+    .tableView-trHeadFloat{
+        position: fixed;
+        top:100px;
+
+    }
+
+
 
     .table-responsive td{
         vertical-align: middle !important;
@@ -232,6 +242,8 @@
         color: #797979;
         text-align: left;
     }
+
+
 
     .table-responsive .tableView-paginationContainer .tableView-paginationDetail span{
         display: inline-block;
@@ -287,20 +299,14 @@
     }
 
 
-    .table-responsive .tableView-paginationContainer-floatNav{
-        position:absolute;
-        bottom:0;
-        left:0;
-        z-index:20000;
-    }
+
+    /*让图标按钮不换行*/
     .table-responsive .tableView-buttonContainer{
         white-space:nowrap;
     }
-    /*.table-responsive .tableView-trButtons{*/
-        /*display: inline-block;*/
-    /*}*/
 
 
+/*
     .table-responsive .tableView-paginationContainer .tableView-paginationRowsPerPage{
         display: inline-block;
 
@@ -320,13 +326,111 @@
         border: 1px solid cornflowerblue;
         background-color: #ededed;
 
-        /*border-radius: 5px;*/
-        /*padding:6px 12px;*/
-        /*color: #797979;*/
-        /*text-align: left;*/
+        !*border-radius: 5px;*!
+        !*padding:6px 12px;*!
+        !*color: #797979;*!
+        !*text-align: left;*!
+    }*/
+
+
+
+    /*悬浮 翻页 开始*/
+
+    .paginationFixBottomMid{
+        position:absolute;
+        bottom:0;
+        left:0;
+        width:100%;
+        text-align: center;
+        background-color: rgba(119, 119, 119, 0.75);
+
+
     }
 
-    /*---------------------------------------------------------------------------*/
+    .hidePagination{
+        visibility: hidden;
+    }
+
+    .showPagination{
+        visibility:visible;
+    }
+
+
+
+    /*翻页 div */
+
+    .paginationFixBottomMid .tableView-paginationChange{
+        display: inline-block;
+        position:relative;
+        margin-right:5px;
+        height:40px;
+        line-height:40px;
+    }
+
+
+    .paginationFixBottomMid .tableView-paginationChange>ul{
+
+        display: inline-block;
+        height:40px;
+        line-height: 40px;
+    }
+    .paginationFixBottomMid .tableView-paginationChange>ul>li{
+        display: inline-block;
+        height:40px;
+        margin-right: 2px;
+        display:inline-block;
+    }
+
+    .paginationFixBottomMid  .tableView-paginationChange>ul>li>a{
+        display: inline-block;
+        height:38px;
+        padding-left: 15px;
+        padding-right:15px;
+        min-width:38px;
+        border: 1px solid #cccccc;
+        border-radius: 5px;
+        text-align:center;
+    }
+
+    .paginationFixBottomMid  .tableView-paginationChange>ul>li>a:hover{
+        background-color: lightgrey;
+        display: inline-block;
+    }
+
+    .paginationFixBottomMid  .tableView-paginationChange>ul>li>a.tableView-activePage {
+        background-color: #337AB7;
+        color:white;
+    }
+    .paginationFixBottomMid .tableView-paginationChange>ul>li>a.tableView-activePage:hover {
+        background-color: #286090;
+
+    }
+
+    /*翻页 div */
+
+
+
+
+    /*共多少页 div */
+    .paginationFixBottomMid .tableView-paginationDetail{
+        display: inline-block;
+        margin-left:2px;
+        height:40px;
+        line-height: 40px;
+        color: #797979;
+        text-align: left;
+    }
+
+    .paginationFixBottomMid .tableView-paginationDetail span{
+        display: inline-block;
+    }
+    /*共多少页 div */
+
+
+    /*悬浮 翻页 结束*/
+
+
+/*---------------------------------------------------------------------------*/
 
 
     /*chart */
@@ -475,6 +579,10 @@
         <!--<button id="getReport">get report</button>-->
     </div>
 </div>
+
+<!--<div id="monitor" style="position:fixed;top:300px;left:10px;height:500px; width:300px;background-color: whitesmoke; z-index: 1000000;">
+
+</div>-->
 
 <div class="chartContainer"><span class="chartContainer_close">X</span></div><!---->
 <!--<script type="text/javascript" src="jsLib/jquery-2.2.3.js"></script>-->
