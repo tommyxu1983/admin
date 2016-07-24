@@ -238,7 +238,7 @@
                             _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1);
                             break;
 
-                        //如果是 grid
+                        //如果是 grid(表格)
                         case _moduleType.report:
                             _this.buildReport(module,$module_Div);
                             break;
@@ -376,7 +376,7 @@
                 tableHeader=module.winmodfields.Body.Head,
                 tableData=module.winmodfields.Body.Data,
                 detailWinID=module.DetailWinID,
-                pSetting= {
+                paginationSetting= {
                     pageCount:module.winmodfields.Body.pageCount,
                     pageIndex:module.winmodfields.Body.pageIndex,
                     rowEnd:module.winmodfields.Body.rowEnd,
@@ -392,7 +392,7 @@
                             var reqGotoPage={
                                 url:'http://'+pSetting.url+'?fmname='+pSetting.funModName+'&fmctrlid=3033&fmpageindex='+goToPageIndex
                             }
-                            _this.sendAjax( reqGotoPage, $.proxy(_this.onGotoPageSuccess,_this) , undefined , undefined,{tableContainer:$moduleDiv});
+                            _this.sendAjax( reqGotoPage, $.proxy(_this.onGoToPageSuccess,_this) , undefined , undefined,{tableContainer:$moduleDiv});
                         }
 
                     }
@@ -402,7 +402,7 @@
                 tableID:'ms-table',
                 Head:tableHeader,
                 Data:tableData,
-                paginationSetting:pSetting,
+                paginationSetting:paginationSetting,
                 rowSettings:{
                     buttons: _this.getButtonsForTableRow(_this.winData),
                     onRowButtonClick: function (evt,rowIndex ,$row,rowData,buttonData) {
@@ -429,14 +429,18 @@
                                 req.url='http://'+_this.data.uurl+'?fmname='+detailWinID+'&fmctrlid='+_ctrl.create+'&fmdatauid='+''+'&fmtoken='+globalSetting.token;
                                 break;
                             default:
-                                if(parseInt(buttonData.ctrlid)>3032){
+                                if(parseInt(buttonData.ctrlid)>3032 && parseInt(buttonData.ctrlid)<4000){
                                     req.url='http://'+buttonData.uurl; //+'?fmname='+detailWinID+'&fmctrlid='+buttonData.ctrlid+'&fmdatauid='+''+'&fmtoken='+globalSetting.token;
+                                }else if(parseInt(buttonData.ctrlid)>=4000){
+                                    //req.url='http://'+buttonData.uurl +'?fmdatauid='+_this.data.DataGUID;
+                                    //Remove By JetLeeX 2016-07-21　uurl拼接错误,
+                                    req.url='http://'+buttonData.uurl +'&fmdatauid='+rowData[0];
                                 }
                                 break;
 
                         }
                         if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
-                        _this.sendAjax( req, $.proxy(_this.onRowButtonSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData.ctrlid});
+                        _this.sendAjax( req, $.proxy(_this.onRowButtonSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData});
                     }
                 }
 
@@ -703,15 +707,15 @@
 
             if(data.windows && $.isArray(data.windows )){
                 //查看
-                if(beforeAjaxData.action==_ctrl.open){
+                if(beforeAjaxData.action.ctrlid==_ctrl.open){
                     new BuildWin(data,0);
                 }
                 //新建
-                else if(beforeAjaxData.action==_ctrl.create){
+                else if(beforeAjaxData.action.ctrlid==_ctrl.create){
                     new BuildWin(data,0);
                 }
                 //删除
-                else if(beforeAjaxData.action==_ctrl.delete){
+                else if(beforeAjaxData.action.ctrlid==_ctrl.delete){
                     BootstrapDialog.show(
                         {
 
@@ -750,14 +754,17 @@
 
                 }
                 //button ctrlID>3032
-                else if(parseInt(beforeAjaxData.action)>3032){
+                else if(parseInt(beforeAjaxData.action.ctrlid)>3032 && parseInt(beforeAjaxData.action.ctrlid)<4000){
                     new BuildWin(data,0);
+
+                }else if(parseInt(beforeAjaxData.action.ctrlid)>=4000){
+                    //beforeAjaxData.action.uurl
                 }
 
             }else(logError('onRowButtonSuccess: data.windows object does not exist'))
         };
 
-        BuildWin.prototype.onGotoPageSuccess=function(data,beforeAjaxData){
+        BuildWin.prototype.onGoToPageSuccess=function(data, beforeAjaxData){
             this.update(data,0);
         }
 
