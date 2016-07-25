@@ -50,7 +50,8 @@ if (typeof jQuery === 'undefined') {
 
         formContainer: pluginName + 'Container',
         formTitle:pluginName + 'Title',
-        form:pluginName+'Form'
+        form:pluginName+'Form',
+        formCollapse:pluginName+'FormCollapse'
 
 
     };
@@ -72,7 +73,7 @@ if (typeof jQuery === 'undefined') {
     var _currency={
         rmb:'元',
         usd:'$'
-    }
+    };
 
 
     //定义所有 input type
@@ -174,6 +175,7 @@ if (typeof jQuery === 'undefined') {
 
         this.buildForm(settings);
     };
+
     FormView.prototype.resetData=function(){
         $.each(this.originalData, $.proxy(function(index,item){
             this.settings.data.controlList[index].data=item;
@@ -185,6 +187,7 @@ if (typeof jQuery === 'undefined') {
         this.resetData();
         this.buildForm(this.settings);
     };
+
     FormView.prototype.buildForm=function(settings){
         this.$element.addClass(_defaultStyle.formContainer)
         this.$form=$(_html.form);
@@ -194,7 +197,7 @@ if (typeof jQuery === 'undefined') {
         //创建 form
          this.$form.addClass(_defaultStyle.bs.form_horizontal) //style
                 .addClass(_defaultStyle.form)
-                .attr('id',settings.data.formTitle) // id
+                .attr('id',settings.data.formID) // id
                 .appendTo(this.$element);
 
         //创建 row (label +input)
@@ -243,6 +246,8 @@ if (typeof jQuery === 'undefined') {
 
         //创建 button
         $.isArray(settings.buttons)&&  this.$form.append(this.buildButton(settings.buttons));
+
+
         //系上 datepicker 插件
         this.$form.find('input[type="datepicker"]').datepicker({
                 format: "yyyy/mm/dd",
@@ -255,12 +260,31 @@ if (typeof jQuery === 'undefined') {
            $(evt.target).hasClass('showPSW')&& togglePassword(evt.target, _defaultStyle.bs.icon_eyeOpen,_defaultStyle.bs.icon_eyeClose);
         });
     };
+
     FormView.prototype.buildFormTitle=function(settings){
-        $(_html.div)
-            .addClass(_defaultStyle.formTitle)
-            .html('<strong>'+settings.data.formTitle +'</strong>') // data
-            .appendTo(this.$element);
-    }
+        var _this=this;
+        var $title=$(_html.div)
+                        .addClass(_defaultStyle.formTitle)
+                        .html('<span><strong>'+settings.data.formTitle +'</strong></span>') // data
+                        .appendTo(this.$element);
+
+        var $closeSpan=$(_html.span)
+            .addClass(_defaultStyle.formCollapse)
+            .append('+');
+
+        $title.append($closeSpan);
+
+        $closeSpan.on('click',function(){
+            if($(this).hasClass('formCollapsed') ){
+                _this.$form.show('slow');
+                $(this).removeClass('formCollapsed');
+            }else{
+                _this.$form.hide('slow');
+                $(this).addClass('formCollapsed');
+            }
+        });
+    };
+
 
     FormView.prototype.empty=function(){
         this.$element.empty();
@@ -287,8 +311,7 @@ if (typeof jQuery === 'undefined') {
                 .append($label)                   // attach label
                 .append(  $(_html.div).addClass('col-sm-'+ jCol).append(this.buildInput(ctlListItem)) )
                 .children(); // attach input
-    }
-
+    };
 
     FormView.prototype.buildInput=function(ctlListItem){
         (!ctlListItem.dataType)&&(window.console) &&console.log('请检查数据是否传输正确，data.data.dataType 不正确或不存在');
@@ -486,7 +509,6 @@ if (typeof jQuery === 'undefined') {
         return $result;
     };
 
-
     FormView.prototype.buildButton=function(buttons){
         !$.isArray(buttons)&& console.log('please make sure you buttons is passed in by array');
         var formView=this;
@@ -499,12 +521,13 @@ if (typeof jQuery === 'undefined') {
         $.each(buttons, $.proxy(function(index, item){
             var $button=$(_html.button)
                 .attr('type','button')
+                .css({'margin-right':'10px'})
                 .addClass(_defaultStyle.bs.btn_default+ ' ' +item.cssClass)
                 .html(item.label)
                 .appendTo($buttons_Div);
             if(typeof item.action==='function'){
                 $button.on('click',function(evt){
-                    item.action.call(this,formView,evt);
+                    item.action.call(this,evt,formView,item.data4Button);
                 });
             }
         },this));
@@ -515,8 +538,6 @@ if (typeof jQuery === 'undefined') {
     FormView.prototype.getData=function(){
         return this.settings.data.controlList;
     };
-
-
 
 
 

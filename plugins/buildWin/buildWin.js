@@ -97,8 +97,7 @@
                 logError('data.windows 不是 array 或 windowsIndex 超出数组范围');
             }
         };
-
-
+        
         BuildWin.prototype.init=function(winData, windowID ,selector){
             ((selector) && (typeof selector==='string' || selector instanceof jQuery) ) ? this.buildInTabView(winData,windowID,selector)  : this.buildInDialog(winData);
         };
@@ -143,6 +142,10 @@
             var _this=this;
             var $modules_Div=$(_html.div).addClass(_cssClass.modulesContainer);
 
+            var newDialog=new BootstrapDialog({
+                size: BootstrapDialog.SIZE_WIDE,
+                title: winData.caption
+            });
 
             //模块（form 或 report）
             var winmodules= winData.winmodules;
@@ -159,7 +162,7 @@
                            case _moduleType.form:
                                _this.modulesAdptData[_this.modulesAdptData.length-1].mtype=_moduleType.form;
                                //建立 表单
-                               _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1);
+                               _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1,newDialog);
                                break;
 
                            //如果是 grid
@@ -189,18 +192,18 @@
 
 
 
-            var newDialog=new BootstrapDialog({
-                size: BootstrapDialog.SIZE_WIDE,
-                title: winData.caption
-            });
+
 
             //窗口按钮
-            var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
-            this.buildButtons(winData.buttons,$buttons_Div,newDialog);
+           // var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
+           // this.buildButtons(winData.buttons,$buttons_Div,newDialog);
 
 
             //包含 按钮和 模块（form 或 report）
-            var $panelContent=$(_html.div).append($modules_Div).append($buttons_Div).css('overflow-x', 'auto');
+            var $panelContent=$(_html.div)
+                .append($modules_Div)
+               /* .append($buttons_Div)*/
+                .css('overflow-x', 'auto');
 
             $panelContent.slimScroll({
                 height:'100%',
@@ -252,8 +255,8 @@
 
 
             //窗口按钮
-            var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
-            this.buildButtons(winData.buttons,$buttons_Div);
+            //var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
+            //this.buildButtons(winData.buttons,$buttons_Div);
 
 
             //包含 按钮和 模块（form 或 report） 'overflow-x':'hidden',overflow: auto;
@@ -261,7 +264,7 @@
                 .addClass(_cssClass.panelContent)
                 .css({'background-color': '#ededed'})
                 .append($modules_Div)
-                .append($buttons_Div);
+                //.append($buttons_Div);
 
 
             var tabviewData=[];
@@ -295,7 +298,7 @@
             //  }
         };
 
-        BuildWin.prototype.buildForm=function(module,$moduleDiv,moduleIndex){
+        BuildWin.prototype.buildForm=function(module,$moduleDiv,moduleIndex,dialog){
             //  var formData={};
             var _this=this;
             (! module.uid)&& logError('form uid 缺少 module uid');
@@ -308,7 +311,7 @@
             }
 
             if($.isArray(module.winmodfields) ) {
-
+                //数据 适配
                 $.each(module.winmodfields, function (index, control) {
                     // console.log(index);
 
@@ -357,10 +360,14 @@
 
                 });
 
+                var formButtons= _this.winData.buttons? _this.buildFormButtons(_this.winData.buttons,dialog):[];
+
+
                 //用 formview 插件，formData建立data.
                 $moduleDiv.formview({
                     data: _this.modulesAdptData[moduleIndex],
-                    isDataWritable:true});
+                    isDataWritable:true,
+                    buttons:formButtons});
 
 
 
@@ -429,18 +436,19 @@
                                 req.url='http://'+_this.data.uurl+'?fmname='+detailWinID+'&fmctrlid='+_ctrl.create+'&fmdatauid='+''+'&fmtoken='+globalSetting.token;
                                 break;
                             default:
+                               var replaceURL =buttonData.uurl.replace(/_ROW_DATA_GUID_/g,rowData[0].toString());
                                 if(parseInt(buttonData.ctrlid)>3032 && parseInt(buttonData.ctrlid)<4000){
-                                    req.url='http://'+buttonData.uurl; //+'?fmname='+detailWinID+'&fmctrlid='+buttonData.ctrlid+'&fmdatauid='+''+'&fmtoken='+globalSetting.token;
+                                    req.url='http://'+replaceURL; //+'?fmname='+detailWinID+'&fmctrlid='+buttonData.ctrlid+'&fmdatauid='+''+'&fmtoken='+globalSetting.token;
                                 }else if(parseInt(buttonData.ctrlid)>=4000){
                                     //req.url='http://'+buttonData.uurl +'?fmdatauid='+_this.data.DataGUID;
                                     //Remove By JetLeeX 2016-07-21　uurl拼接错误,
-                                    req.url='http://'+buttonData.uurl +'&fmdatauid='+rowData[0];
+                                    req.url='http://'+replaceURL +'&fmdatauid='+rowData[0];
                                 }
                                 break;
 
                         }
                         if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
-                        _this.sendAjax( req, $.proxy(_this.onRowButtonSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData});
+                        _this.sendAjax( req, $.proxy(_this.onReportButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData});
                     }
                 }
 
@@ -569,7 +577,199 @@
 
         };
 
-        BuildWin.prototype.buildButtons=function(buttonsData,$buttons_Div,dialog){
+        BuildWin.prototype.buildFormButtons=function(buttonsData,dialog){
+
+            /*       {
+             label:'发送',
+             cssClass:'btn-primary',
+             action:function(formView) {
+             var strResult='';
+             $.each(formView.settings.data.controlList,function(index,item){
+             strResult=strResult+item.label+': '+item.data+',';
+             });
+             alert(strResult);
+             }
+             }*/
+
+           var  buttonsArray=[];
+
+
+
+            if($.isArray(buttonsData)){
+                var _this=this;
+                $.each(buttonsData, $.proxy(function(index, buttonData){
+                    var button={}
+                    if (buttonData.styleex<1){
+                        //var $buttonGrid=$(_html.div)
+                        //    .addClass(_cssClass.buttonGrid)
+                        //    .appendTo($buttons_Div);
+
+                        var buttonTypeCss='btn-default';
+                        switch(buttonData.ctrlid){
+                            case _ctrl.save:  //保存
+                                buttonTypeCss= 'btn-primary';
+                                break;
+
+                            case _ctrl.find: //查找
+                                buttonTypeCss= 'btn-primary';
+                                break;
+
+                            case _ctrl.create: // 创建
+                                buttonTypeCss= 'btn-primary';
+                                break;
+                            case _ctrl.delete: // 删除
+                                buttonTypeCss= 'btn-warning'
+                                break;
+                        }
+
+                        button={
+                            label:buttonData.caption,
+                            cssClass:buttonTypeCss,
+                            data4Button:buttonData,
+                            action:function(evt,formView,data4Button){
+                                _this.writeBack(); //读取表单里的文字
+                                _this.data.ctrlid= data4Button.ctrlid;
+
+                                var  url='http://';
+                                url += ( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)? data4Button.uurl:  _this.data.uurl;
+                                var data=( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)?  '': _this.data;
+                                data.token=globalSetting.token;
+                                var req={
+                                    url: url,//+'&fmtoken='+globalSetting.token
+                                    data:JSON.stringify(data)
+                                };
+
+                                if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
+                                _this.sendAjax( req, $.proxy(_this.onFormButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), dialog);
+                                if(!!dialog && dialog instanceof BootstrapDialog){
+                                    dialog.close();
+                                }
+                            }
+
+                        };
+
+                        //var $button=$(_html.button)
+                        //    .attr('type','button')
+                        //    .addClass( 'btn btn-block'+' '+ buttonTypeCss + ' '+_cssClass.button )
+                        //    .html(buttonData.caption)
+                        //    .appendTo($buttonGrid);
+
+                        /*$button.on('click',{buttonData:buttonData },function(evt){
+
+                            _this.writeBack(); //读取表单里的文字
+                            _this.data.ctrlid= evt.data.buttonData.ctrlid;
+
+                            var  url='http://';
+                            url += ( typeof evt.data.buttonData.uurl==='string' && !!evt.data.buttonData.uurl.length>0)? evt.data.buttonData.uurl:  _this.data.uurl;
+                            var data=( typeof evt.data.buttonData.uurl==='string' && !!evt.data.buttonData.uurl.length>0)?  '': _this.data;
+                            data.token=globalSetting.token;
+                            var req={
+                                url: url,//+'&fmtoken='+globalSetting.token
+                                data:JSON.stringify(data)
+                            };
+                            if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
+                            _this.sendAjax( req, $.proxy(_this.onFormButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), dialog);
+                            if(!!dialog && dialog instanceof BootstrapDialog){
+                                dialog.close();
+                            }
+                        });*/
+
+                        buttonsArray.push(button);
+                    }
+
+
+                },this));
+
+
+
+
+            }else {
+                logError('please make  function buildButtons  buttonsData is passed in by array');
+                buttonsArray=[];
+            }
+
+           return buttonsArray;
+
+        };
+        BuildWin.prototype.onFormButtonsSuccess=function(data,beforeAjaxData){
+            if(typeof data.DataGUID==='string' && data.DataGUID.length>0 ){
+                this.data=data;
+            }
+
+            if(!!data.code && data.code>0){
+                var msg='';
+
+                if(!!data.ctrlid){
+                    switch(data.ctrlid){
+                        case _ctrl.save:
+                            msg='保存/修改 ';
+                            this.winTip( msg+'成功');
+                            break;
+                        case _ctrl.find:
+                            msg='查询';
+                            this.winTip( msg+'成功');
+                            //如果是dialog 老的关掉，new  BuildWin 只传2个参数= buildWinInDialog
+                            if(!!beforeAjaxData && beforeAjaxData instanceof BootstrapDialog){
+                                beforeAjaxData.close();
+                                new BuildWin(data,0);
+                            }else{
+                                this.update(data,0);
+                            }
+
+
+                            break;
+
+                        case _ctrl.delete:
+                            msg='删除 ';
+                            if( this.closeTabView() ){
+                                this.data=null;
+                                this.WinData=null;
+                                this.winDataCopy=null;
+                                this.$selector=null;
+                                this.modulesAdptData=null;
+                                this.winTip( msg+'成功');
+                            }
+                            break;
+                        case _ctrl.create:
+                            new BuildWin(data,0 );
+                            break;
+                    }
+
+                }
+
+
+
+            }else{
+
+                this.winTip('操作失败');
+
+            }
+        };
+
+        /*BuildWin.prototype.buildButtons=function(buttonsData,$buttons_Div,dialog){
+
+     /!*       {
+                label:'发送',
+                    cssClass:'btn-primary',
+                action:function(formView) {
+                var strResult='';
+                $.each(formView.settings.data.controlList,function(index,item){
+                    strResult=strResult+item.label+': '+item.data+',';
+                });
+                alert(strResult);
+            }
+            }*!/
+
+
+
+
+
+
+
+
+
+
+
 
             if(!buttonsData) return;
             if($.isArray(buttonsData)){
@@ -630,15 +830,15 @@
                 },this));
 
 
-
+                    return buttonsArray
 
             }else {
                 logError('please make  function buildButtons  buttonsData is passed in by array');
             }
 
-        };
+        };*/
 
-        BuildWin.prototype.buttonCallBackSuccess=function(data,beforeAjaxData){
+        /*BuildWin.prototype.buttonCallBackSuccess=function(data,beforeAjaxData){
             if(typeof data.DataGUID==='string' && data.DataGUID.length>0 ){
                 this.data=data;
             }
@@ -691,7 +891,7 @@
                 this.winTip('操作失败');
 
             }
-        };
+        };*/
 
         BuildWin.prototype.buttonError=function(XMLHttpRequest, textStatus, errorThrown){
             var msg= "XMLHttpRequest Status:" + XMLHttpRequest.status +"\n"
@@ -703,7 +903,7 @@
 
         };
 
-        BuildWin.prototype.onRowButtonSuccess=function(data,beforeAjaxData){
+        BuildWin.prototype.onReportButtonsSuccess=function(data,beforeAjaxData){
 
             if(data.windows && $.isArray(data.windows )){
                 //查看
