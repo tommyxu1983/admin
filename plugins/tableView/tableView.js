@@ -269,7 +269,8 @@
 
         });
 
-        //内部事件 --> 有滚动条的祖先: 1.页码悬浮 2.表头固定（未实现）
+        //内部事件 --> 有滚动条的祖先: 1. 翻页悬浮 2.表头固定（未实现）
+
         this.getScrollableParent();
 
 
@@ -310,48 +311,37 @@
                         if(_this.settings.isfixingHead){_this.floatHead(scrollableParent);}
                         */
 
-                        _this.floatPagination(scrollableParent,'scroll');
+
+                /*        $('#monitor').html(
+                            'pageTop: ' + _this.$div_PageContainer[0].getBoundingClientRect().top + '<br>'+
+                            'parentTop: ' +scrollableParent.getBoundingClientRect().top + '<br>'+
+                                'ScrollTop: ' + scrollableParent.scrollTop + '<br>'+
+                                'parentHeight:' +  scrollableParent.clientHeight+ '<br>'+
+                                'parentTop +parentHeight:' +  (scrollableParent.getBoundingClientRect().top+scrollableParent.clientHeight)
+                        )*/
+
                     });
 
 
+                    $(scrollableParent).on('mousemove',function(event){
 
-                    $(scrollableParent).on('mouseover',function(){
-                        //如果鼠标出现在有滚动条的祖先的范围内，检测鼠标移动
-                        var dist2Top =  scrollableParent.getBoundingClientRect().top,
-                            dist2Left = scrollableParent.getBoundingClientRect().left,
-                            eleHeight= scrollableParent.offsetHeight,
-                            eleWidth= scrollableParent.offsetWidth,
-                            paginationHeight= _this.$div_PageContainer[0].offsetHeight;
+                           // 检测 在底部 到  底部+翻页器高度的范围内，激发 floatPagination
 
-                        $(scrollableParent).on('mousemove',function(event){
 
-                           // 检测 在底部 到 底部+翻页器高度的范围内，激发 floatPagination
-                            if(  (dist2Top + eleHeight - paginationHeight)<event.clientY  &&
-                                event.clientY< (dist2Top + eleHeight) &&
-                                dist2Left < event.clientX &&
-                                event.clientX< (dist2Left+eleWidth)
-                            ){
+                        if(  !_this.isPaginationAppears(scrollableParent,_this.$div_PageContainer[0])  )
+                        {
+                            if(  _this.isAtEleBottom(scrollableParent,_this.$div_PageContainer[0],event) ){
                                 _this.floatPagination(scrollableParent,'onTarget');
-                            }
-                            else{
+                            }else{
                                 _this.floatPagination(scrollableParent,'offTarget');
                             }
+                        }else{
+                            _this.floatPagination(scrollableParent,'offTarget');
+                        }
 
-                            //$('#monitor').html(
-                            //    'Top:'+(dist2Top + eleHeight - paginationHeight) + '<br>'+
-                            //    'bottom: '+(dist2Top + eleHeight) + '<br>'+
-                            //        //'p-offSetHeight:' + scrollableParent.offsetHeight + '<br>'+
-                            //    'clientY: ' + event.clientY +'<br>'+
-                            //    'left: ' + dist2Left +'<br>'+
-                            //    'right: ' + (dist2Left+eleWidth) +'<br>'+
-                            //    'clientX: ' + event.clientX +'<br>'+
-                            //    '------------------==== '+ result +' =====------------------'+'<br>'+
-                            //    ''
-                            //
-                            //)
-                        });
 
                     });
+
 
 
 
@@ -364,7 +354,50 @@
 
     };
 
+    TableView.prototype.isAtEleBottom=function(parentElement,childElement ,event){
+        //如果鼠标出现在有滚动条的祖先的范围内，检测鼠标移动，一般 childelement 出现在底部。
+        // true: 在 parentElement 底部 和 childElement顶部
+        // false： 在 childElement 顶部 到 parentElement 顶部
+        var dist2Top =  parentElement.getBoundingClientRect().top,
+            dist2Left = parentElement.getBoundingClientRect().left,
+            eleHeight= parentElement.offsetHeight,
+            eleWidth= parentElement.offsetWidth,
+            paginationHeight= childElement.offsetHeight,
+            result=false;
 
+        if(  (dist2Top + eleHeight - paginationHeight)<event.clientY  &&
+            event.clientY< (dist2Top + eleHeight) &&
+            dist2Left < event.clientX &&
+            event.clientX< (dist2Left+eleWidth)
+        ){
+          result =  true;
+        }
+        else{
+            result= false;
+        }
+
+/*        $('#monitor').html(
+         'Top:'+(dist2Top + eleHeight - paginationHeight) + '<br>'+
+         'bottom: '+(dist2Top + eleHeight) + '<br>'+
+         //'p-offSetHeight:' + scrollableParent.offsetHeight + '<br>'+
+         'clientY: ' + event.clientY +'<br>'+
+         'left: ' + dist2Left +'<br>'+
+         'right: ' + (dist2Left+eleWidth) +'<br>'+
+         'clientX: ' + event.clientX +'<br>'+
+         '------------------==== '+ result +' =====------------------'+'<br>'+ '');*/
+
+        return result;
+    };
+
+    TableView.prototype.isPaginationAppears=function(scrollableParent,paginationDiv){
+        if (paginationDiv.getBoundingClientRect().top <  (scrollableParent.getBoundingClientRect().top+scrollableParent.clientHeight))
+        {
+          return true;
+        }else
+        {
+            return false;
+        }
+    };
 
     TableView.prototype.unsubEvnts=function(){
         this.$element.off('click');
