@@ -46,7 +46,11 @@ if (typeof jQuery === 'undefined') {
             btn_default:'btn btn-default',
             checkbox_inline:'checkbox-inline'
 
-        }
+        },
+
+        formContainer: pluginName + 'Container',
+        formTitle:pluginName + 'Title',
+        form:pluginName+'Form'
 
 
     };
@@ -118,9 +122,8 @@ if (typeof jQuery === 'undefined') {
         button:'<button></button>',
         i:'<i></i>',
         textarea:'<textarea></textarea>',
-
-
     };
+
     var logError = function (message) {
         if (window.console) {
             window.console.error(message);
@@ -183,17 +186,14 @@ if (typeof jQuery === 'undefined') {
         this.buildForm(this.settings);
     };
     FormView.prototype.buildForm=function(settings){
-        this.$element.css({'padding-right':'20px'});
+        this.$element.addClass(_defaultStyle.formContainer)
         this.$form=$(_html.form);
         //创建 form title
-        $(_html.div)
-            //.addClass('') //style
-            .css({'width':'100%','text-align':' center','font-size':'2em'})// style
-            .html('<strong>'+settings.data.formTitle +'</strong>') // data
-            .appendTo(this.$element);
+       this.buildFormTitle(settings);
 
         //创建 form
          this.$form.addClass(_defaultStyle.bs.form_horizontal) //style
+                .addClass(_defaultStyle.form)
                 .attr('id',settings.data.formTitle) // id
                 .appendTo(this.$element);
 
@@ -202,11 +202,7 @@ if (typeof jQuery === 'undefined') {
 
         $.each( settings.data.controlList, $.proxy(function(index,item){
 
-
-
             // 12/settings.noInputsInRow 因为 boostrap 栅格系统分为12等分，请将 noInputsInRow设为12的公约数
-
-
 
             //如果是文件， 多选， textarea,直接占一行
             if(item.dataType==_dataType.file || item.dataType==_dataType.multi ||(item.dataType==_dataType.text && item.inputMultiLine && item.inputMultiLine>0)){
@@ -246,16 +242,25 @@ if (typeof jQuery === 'undefined') {
         },this) );
 
         //创建 button
-        $.isArray(settings.buttons)&&
-            this.$form.append(this.buildButton(settings.buttons));
-
+        $.isArray(settings.buttons)&&  this.$form.append(this.buildButton(settings.buttons));
+        //系上 datepicker 插件
+        this.$form.find('input[type="datepicker"]').datepicker({
+                format: "yyyy/mm/dd",
+                todayBtn: "linked",
+                language: "zh-CN"
+            });
 
         //show password 事件监听
         this.$form.on('click',function(evt){
            $(evt.target).hasClass('showPSW')&& togglePassword(evt.target, _defaultStyle.bs.icon_eyeOpen,_defaultStyle.bs.icon_eyeClose);
         });
     };
-
+    FormView.prototype.buildFormTitle=function(settings){
+        $(_html.div)
+            .addClass(_defaultStyle.formTitle)
+            .html('<strong>'+settings.data.formTitle +'</strong>') // data
+            .appendTo(this.$element);
+    }
 
     FormView.prototype.empty=function(){
         this.$element.empty();
@@ -283,22 +288,6 @@ if (typeof jQuery === 'undefined') {
                 .append(  $(_html.div).addClass('col-sm-'+ jCol).append(this.buildInput(ctlListItem)) )
                 .children(); // attach input
     }
-
-    FormView.prototype.buildControlItemSpec=function(ctlListItem){
-        //创建 label
-        var $label=$(_html.label)
-            .attr('for',this.settings.data.formID+'-'+ctlListItem.dataID)
-            .css('text-align','left')
-            .addClass('col-sm-2'+ ' ' +_defaultStyle.bs.label) //style
-            .append((ctlListItem.isLabelDisplay)&& ctlListItem.label); // data
-
-        //创建 div, input
-        return $(_html.div)
-            .addClass(_defaultStyle.bs.form_Group)//style
-            .append($label)                   // attach label
-            .append(  $(_html.div).addClass('col-sm-10').append(this.buildInput(ctlListItem)) ); // attach input
-    };
-
 
 
     FormView.prototype.buildInput=function(ctlListItem){
@@ -432,13 +421,13 @@ if (typeof jQuery === 'undefined') {
                 break;
 
             case _dataType.date:
-                setTimeout(function(){
-                    $input.datepicker({
-                        format: "yyyy/mm/dd",
-                        todayBtn: "linked",
-                        language: "zh-CN"
-                    });
-                },500);
+                $input.attr('type','datepicker');
+                //$input.datepicker({
+                //    format: "yyyy/mm/dd",
+                //    todayBtn: "linked",
+                //    language: "zh-CN"
+                //});
+
 
 
                 $result=$input;
