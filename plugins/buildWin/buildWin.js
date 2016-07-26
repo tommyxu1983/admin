@@ -23,8 +23,6 @@
         };
 
 
-
-
         if (typeof $ === 'undefined') {
             throw new Error( + 'buildWin\'s  requires jQuery');
         }
@@ -58,7 +56,19 @@
             button:'win-button',
             panelContent:'win-panelContent'
         };
+        var findItem=function(obj,key){
+            var item=undefined;
+            if( $.isArray(obj) ){
+                for(var i= 0, l=obj.length; i<l; i++){
+                   if( obj[i].key==key){
+                       return obj[i].element;
+                   }
+                }
+            }else{
 
+                return item;
+            }
+        }
         var logError = function (message) {
             if (window.console) {
                 window.console.error(message);
@@ -76,11 +86,11 @@
                 //直接传入 插件（formview）,任何 input 数据改动，都会直接改动 modulesAdptData 里的数据，等 writeBack()被调用时，再将这些值覆盖回 winmodules
                 // 1代表 form， 4代表 report（dataGrid）
                 this.modulesAdptData=[];
-
+                this.localCount=0;
 
                 this.getButtonsForTableRow(this.winData);
-
-
+                //用来局部更新，当刷新按钮trigger
+                this.updateElement=[];//{key:this.winData.uid, element: htmlElement}
 
 
                 this.init(this.winData, this.data.DataGUID ,selector);
@@ -99,12 +109,15 @@
         };
         
         BuildWin.prototype.init=function(winData, windowID ,selector){
-            ((selector) && (typeof selector==='string' || selector instanceof jQuery) ) ? this.buildInTabView(winData,windowID,selector)  : this.buildInDialog(winData);
+            ((selector) && ( typeof selector==='string' || (selector instanceof jQuery && selector.length ) ) ) ? this.buildInTabView(winData,windowID,selector)  : this.buildInDialog(winData);
+            var _this=this;
+            _this.localCount++;
+            globalSetting.count++;
         };
 
         BuildWin.prototype.update=function(data, windowsIndex) {
             if ($.isArray(data.windows) && data.windows[windowsIndex]) {
-                this.closeTabView();
+               // this.closeTabView();
                 this.data = data;
                 this.winData = data.windows[windowsIndex];
                 this.winDataCopy = $.extend({}, this.winData); // 请不要操作任何 winDataCopy 里的数据，用来覆盖 winData,当要重置时。
@@ -139,7 +152,7 @@
 
         //在dialog(跳出窗口) 建窗口
         BuildWin.prototype.buildInDialog=function(winData){
-            var _this=this;
+            var _this=this,hasForminModules=false;
             var $modules_Div=$(_html.div).addClass(_cssClass.modulesContainer);
 
             var newDialog=new BootstrapDialog({
@@ -163,6 +176,7 @@
                                _this.modulesAdptData[_this.modulesAdptData.length-1].mtype=_moduleType.form;
                                //建立 表单
                                _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1,newDialog);
+                               hasForminModules=true;
                                break;
 
                            //如果是 grid
@@ -181,6 +195,7 @@
                                break;
 
                        }
+
                        $modules_Div.append($module_Div);
                    }else{
                        logError('缺少 module.mtype 不能解析');
@@ -188,23 +203,18 @@
                }
            }
 
-
-
-
-
-
-
-            //窗口按钮
-           // var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
-           // this.buildButtons(winData.buttons,$buttons_Div,newDialog);
-
-
             //包含 按钮和 模块（form 或 report）
             var $panelContent=$(_html.div)
                 .append($modules_Div)
                /* .append($buttons_Div)*/
                 .css('overflow-x', 'auto');
 
+            //窗口按钮
+            if( ! hasForminModules){
+                var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
+                this.buildButtons(winData.buttons,$buttons_Div);
+                $panelContent.append($buttons_Div);
+            }
             $panelContent.slimScroll({
                 height:'100%',
                 width:'100%'
@@ -220,7 +230,7 @@
         BuildWin.prototype.buildInTabView=function(winData,windowID,selector){
             $(selector).length<1 && logError('buildInTabView 没有元素被选中哇');
 
-            var _this=this;
+            var _this=this, hasFormInModules=false;
 
 
             var $modules_Div=$(_html.div).addClass(_cssClass.modulesContainer);
@@ -237,13 +247,17 @@
                         //如果是表单
                         case _moduleType.form:
                             _this.modulesAdptData[_this.modulesAdptData.length-1].mtype=_moduleType.form;
+                            hasFormInModules=true;
                             //建立 表单
                             _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1);
                             break;
 
                         //如果是 grid(表格)
                         case _moduleType.report:
+
                             _this.buildReport(module,$module_Div);
+
+
                             break;
 
                     }
@@ -254,9 +268,8 @@
             });
 
 
-            //窗口按钮
-            //var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
-            //this.buildButtons(winData.buttons,$buttons_Div);
+
+
 
 
             //包含 按钮和 模块（form 或 report） 'overflow-x':'hidden',overflow: auto;
@@ -264,8 +277,14 @@
                 .addClass(_cssClass.panelContent)
                 .css({'background-color': '#ededed'})
                 .append($modules_Div)
-                //.append($buttons_Div);
 
+
+            //窗口按钮
+            if( ! hasFormInModules){
+                var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
+                this.buildButtons(winData.buttons,$buttons_Div);
+                $panelContent.append($buttons_Div);
+            }
 
             var tabviewData=[];
             tabviewData.push({
@@ -404,6 +423,16 @@
 
                     }
                 };
+
+            var element=findItem( this.updateElement,this.winData.uid);
+            if( element ){
+                $moduleDiv=element;
+            }
+            else{
+                this.updateElement.push({key:this.winData.uid, element: $moduleDiv,title:module.caption});
+            }
+
+            $moduleDiv.empty();
 
             $moduleDiv.tableView({
                 tableID:'ms-table',
@@ -578,31 +607,13 @@
         };
 
         BuildWin.prototype.buildFormButtons=function(buttonsData,dialog){
-
-            /*       {
-             label:'发送',
-             cssClass:'btn-primary',
-             action:function(formView) {
-             var strResult='';
-             $.each(formView.settings.data.controlList,function(index,item){
-             strResult=strResult+item.label+': '+item.data+',';
-             });
-             alert(strResult);
-             }
-             }*/
-
-           var  buttonsArray=[];
-
-
+            var  buttonsArray=[];
 
             if($.isArray(buttonsData)){
                 var _this=this;
                 $.each(buttonsData, $.proxy(function(index, buttonData){
                     var button={}
                     if (buttonData.styleex<1){
-                        //var $buttonGrid=$(_html.div)
-                        //    .addClass(_cssClass.buttonGrid)
-                        //    .appendTo($buttons_Div);
 
                         var buttonTypeCss='btn-default';
                         switch(buttonData.ctrlid){
@@ -648,32 +659,6 @@
 
                         };
 
-                        //var $button=$(_html.button)
-                        //    .attr('type','button')
-                        //    .addClass( 'btn btn-block'+' '+ buttonTypeCss + ' '+_cssClass.button )
-                        //    .html(buttonData.caption)
-                        //    .appendTo($buttonGrid);
-
-                        /*$button.on('click',{buttonData:buttonData },function(evt){
-
-                            _this.writeBack(); //读取表单里的文字
-                            _this.data.ctrlid= evt.data.buttonData.ctrlid;
-
-                            var  url='http://';
-                            url += ( typeof evt.data.buttonData.uurl==='string' && !!evt.data.buttonData.uurl.length>0)? evt.data.buttonData.uurl:  _this.data.uurl;
-                            var data=( typeof evt.data.buttonData.uurl==='string' && !!evt.data.buttonData.uurl.length>0)?  '': _this.data;
-                            data.token=globalSetting.token;
-                            var req={
-                                url: url,//+'&fmtoken='+globalSetting.token
-                                data:JSON.stringify(data)
-                            };
-                            if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
-                            _this.sendAjax( req, $.proxy(_this.onFormButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), dialog);
-                            if(!!dialog && dialog instanceof BootstrapDialog){
-                                dialog.close();
-                            }
-                        });*/
-
                         buttonsArray.push(button);
                     }
 
@@ -691,6 +676,7 @@
            return buttonsArray;
 
         };
+
         BuildWin.prototype.onFormButtonsSuccess=function(data,beforeAjaxData){
             if(typeof data.DataGUID==='string' && data.DataGUID.length>0 ){
                 this.data=data;
@@ -746,30 +732,7 @@
             }
         };
 
-        /*BuildWin.prototype.buildButtons=function(buttonsData,$buttons_Div,dialog){
-
-     /!*       {
-                label:'发送',
-                    cssClass:'btn-primary',
-                action:function(formView) {
-                var strResult='';
-                $.each(formView.settings.data.controlList,function(index,item){
-                    strResult=strResult+item.label+': '+item.data+',';
-                });
-                alert(strResult);
-            }
-            }*!/
-
-
-
-
-
-
-
-
-
-
-
+        BuildWin.prototype.buildButtons=function(buttonsData,$buttons_Div,dialog){
 
             if(!buttonsData) return;
             if($.isArray(buttonsData)){
@@ -819,7 +782,7 @@
                                 data:JSON.stringify(data)
                             };
                             if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
-                            _this.sendAjax( req, $.proxy(_this.buttonCallBackSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), dialog);
+                            _this.sendAjax( req, $.proxy(_this.onButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), dialog);
                             if(!!dialog && dialog instanceof BootstrapDialog){
                                 dialog.close();
                             }
@@ -829,16 +792,13 @@
 
                 },this));
 
-
-                    return buttonsArray
-
             }else {
                 logError('please make  function buildButtons  buttonsData is passed in by array');
             }
 
-        };*/
+        };
 
-        /*BuildWin.prototype.buttonCallBackSuccess=function(data,beforeAjaxData){
+        BuildWin.prototype.onButtonsSuccess=function(data,beforeAjaxData){
             if(typeof data.DataGUID==='string' && data.DataGUID.length>0 ){
                 this.data=data;
             }
@@ -891,7 +851,7 @@
                 this.winTip('操作失败');
 
             }
-        };*/
+        };
 
         BuildWin.prototype.buttonError=function(XMLHttpRequest, textStatus, errorThrown){
             var msg= "XMLHttpRequest Status:" + XMLHttpRequest.status +"\n"

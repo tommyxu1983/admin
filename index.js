@@ -226,7 +226,7 @@ require(['jquery','bootstrap-dialog','BuildWin','echarts','dMenu','slimscroll','
                 multiSelect:false,
                 selectedColor: '#FFFFFF',
                 selectedBackColor: '#428bca',
-                onNodeSelected:function(event, node){
+                onNodeClick:function(event, node){
                     var req={};
                     req.url=globalSetting.uurl+'?fmname='+node.name+'&fmtoken='+globalSetting.token;
                     getAjax(req,getMenuContentSuccess);

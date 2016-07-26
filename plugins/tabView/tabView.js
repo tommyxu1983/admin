@@ -208,7 +208,7 @@
 
             //如果是新插入的数据: 只有一条，并tabview id 已经存在
             if(InsertData.data.length=1){
-                for(var i= 0, l=this.settings.data.length; i<l;i++)
+                for(var i= 0, l=this.settings.data.length; i<l;i++){
                     if(this.settings.data[i].id==InsertData.data[0].id){
 
 
@@ -220,9 +220,9 @@
                         _this.$panels_DIV.find('#panel-'+this.settings.data[i].id).addClass('active');
                         return;
                     }
+                }
 
             }
-
 
             // 拼接 原有  tabview里数据 和 新插入的数据
             var tempArr=[].concat.call(this.settings.data,InsertData.data);
@@ -248,12 +248,7 @@
             {
                 this.render([InsertData]);
             }
-
-
-
         }
-
-
         this.initActive();
     };
 

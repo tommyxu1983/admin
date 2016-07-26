@@ -290,6 +290,21 @@
 
     };
 
+
+    TableView.prototype.unsubEvnts=function(){
+        var events=$._data( this.$element[0],"events");
+        for(var key in events){
+            this.$element.off(key);
+        }
+
+        //用上边的自动消除 event 来消除event
+        //this.$element.off('click');
+        //this.$element.off('onRowButtonClick', this.settings.onRowButtonClick);
+        //this.$element.off('onGoToPageClick');
+        //this.$div_PageContainer.off('click');
+
+    };
+
     TableView.prototype.getScrollableParent=function(){
         var _this=this, scrollableParent=undefined;
 
@@ -399,10 +414,7 @@
         }
     };
 
-    TableView.prototype.unsubEvnts=function(){
-        this.$element.off('click');
-        this.$element.off('onRowCURD', this.settings.onRowButtonClick);
-    };
+
 
     //初始化表
     TableView.prototype.initTable=function(){

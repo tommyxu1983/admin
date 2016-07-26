@@ -87,6 +87,7 @@
 		// xul added
 		onNodeMoveUp:undefined,
 		onNodeMoveDown:undefined,
+		onNodeClick:undefined,
 	};
 
 	_default.options = {
@@ -246,6 +247,7 @@
 		this.$element.off('click');
 		//xul added
 		this.$element.off('mouseover').off('mouseout');
+		this.$element.off('nodeClick');
 		this.$element.off('nodeChecked');
 		this.$element.off('nodeCollapsed');
 		this.$element.off('nodeDisabled');
@@ -268,6 +270,10 @@
 		.on('mouseover', $.proxy(this.mouseOverHandler,this))
 		//xul added
 		.on('mouseout', $.proxy(this.mouseOutHandler,this));
+
+		if(typeof (this.options.onNodeClick)==='function'){
+			this.$element.on('nodeClick',this.options.onNodeClick)
+		}
 
 		if(typeof (this.options.onNodeMoveUp)==='function'){
 			this.$element.on('onNodeMoveUp',this.options.onNodeMoveUp)
@@ -393,10 +399,13 @@
 			_clickSetting.timmer=setTimeout(function(){
 
 				//handle single-click events
+
 				if (!_this.options.enableLinks) event.preventDefault();
 
 				 var target = $(event.target);
 				 var node = _this.findNode(target);
+				_this.$element.trigger('nodeClick',node);
+
 				 if (!node || node.state.disabled) return;
 
 				 var classList = target.attr('class') ? target.attr('class').split(' ') : [];
