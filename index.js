@@ -47,21 +47,22 @@ require.config({
             //exports:'$.fn.datepicker.dates.zh-CN'
         },
 
+        /*
         'formview':{
             deps:['jquery','datepicker','datepickerCN'],
             exports:'$.fn.formview'
         },
 
-        //'tableView':{
-        //    deps:['jquery'],
-        //    exports:'$.fn.tableView'
-        //},
+        'tableView':{
+            deps:['jquery'],
+            exports:'$.fn.tableView'
+        },
 
-        //'BW':{
-        //    deps:['jquery','formview','tabview','bootstrap-dialog','slimscroll'],
-        //    exports:'BW'
-        //}
-
+        'BW':{
+            deps:['jquery','formview','tabview','bootstrap-dialog','slimscroll'],
+            exports:'BW'
+        }
+        */
     },
 
     paths: {
@@ -75,7 +76,8 @@ require.config({
         'bootstrap-dialog': 'plugins/dialog/js/bootstrap-dialog',
         'tableView':'plugins/tableView/tableView',
         'tabview':'plugins/tabView/tabView',
-
+        'formview':'plugins/formView/jquery.formview',
+        'validateX':'plugins/validate/jquery.validateX',
                 //没有按 AMD 规范写的插件，需要在 require.config shim 里定义依赖和输出
         'uploader': 'plugins/uploader/uploader',
         'slimscroll':'plugins/slimScroll/jquery.slimscroll',
@@ -85,7 +87,7 @@ require.config({
         'datepicker':'plugins/datepicker/bootstrap-datepicker',
         'datepickerCN':'plugins/datepicker/locales/bootstrap-datepicker.zh-CN',
         'Chartjs':'plugins/chart/Chart',
-        'formview':'plugins/formView/jquery.formview',
+
 
         'BuildWin':'plugins/buildWin/buildWin',
         'echarts':'plugins/echart/echarts'

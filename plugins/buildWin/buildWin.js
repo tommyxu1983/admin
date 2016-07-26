@@ -5,7 +5,7 @@
 +(
     function(window,factory){
     if(typeof define==='function' && define.amd){
-        define('BuildWin',["jquery",'bootstrap-dialog','Chartjs','tabview','slimscroll','tableView','formview'],factory);
+        define('BuildWin',["jquery",'bootstrap-dialog','Chartjs','tabview','slimscroll','tableView','formview','validateX'],factory);
     }else if( typeof window !=='undefined' && !!window.jQuery){
        return  factory(window,jQuery);
     }
@@ -86,7 +86,7 @@
                 //直接传入 插件（formview）,任何 input 数据改动，都会直接改动 modulesAdptData 里的数据，等 writeBack()被调用时，再将这些值覆盖回 winmodules
                 // 1代表 form， 4代表 report（dataGrid）
                 this.modulesAdptData=[];
-                this.localCount=0;
+
 
                 this.getButtonsForTableRow(this.winData);
                 //用来局部更新，当刷新按钮trigger
@@ -95,6 +95,11 @@
 
                 this.init(this.winData, this.data.DataGUID ,selector);
 
+                var validator=this.$selector.validateX({
+                    onkeyup:function(a,b,c){
+                    var kk=0;
+                    }
+                });
 
                 return {
 
@@ -110,9 +115,6 @@
         
         BuildWin.prototype.init=function(winData, windowID ,selector){
             ((selector) && ( typeof selector==='string' || (selector instanceof jQuery && selector.length ) ) ) ? this.buildInTabView(winData,windowID,selector)  : this.buildInDialog(winData);
-            var _this=this;
-            _this.localCount++;
-            globalSetting.count++;
         };
 
         BuildWin.prototype.update=function(data, windowsIndex) {
@@ -416,7 +418,7 @@
                     onGoToPageClick:function(evt,goToPageIndex,pSetting){
                         if(goToPageIndex != pSetting.pageIndex){
                             var reqGotoPage={
-                                url:'http://'+pSetting.url+'?fmname='+pSetting.funModName+'&fmctrlid=3033&fmpageindex='+goToPageIndex
+                                url:'http://'+pSetting.url+'?fmname='+pSetting.funModName+'&fmctrlid=3033&fmpageindex='+goToPageIndex+'&fmtoken='+globalSetting.token
                             }
                             _this.sendAjax( reqGotoPage, $.proxy(_this.onGoToPageSuccess,_this) , undefined , undefined,{tableContainer:$moduleDiv});
                         }

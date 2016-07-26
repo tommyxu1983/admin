@@ -5,13 +5,17 @@
  * Created by Administrator on 2016/6/1.
  */
 
++function(factory){
 
-
-if (typeof jQuery === 'undefined') {
-    throw new Error('Form\'s JavaScript requires jQuery');
-}
-
-(function($,window,document,undefined){
+    //模块化
+    if(typeof define==='function' && define.amd){
+        define(['jquery','datepicker','datepickerCN'],factory);
+    }else if(typeof module === "object" && module.exports){
+        module.exports = factory( require( "jquery" ) );
+    }else{
+        factory(jQuery);
+    }
+}(function($,undefined){
 
     var _default={};
 
@@ -595,6 +599,4 @@ if (typeof jQuery === 'undefined') {
     //    $.fn[pluginName] = old;
     //    return this;
     //}
-
-
-})(jQuery, window,document);
+});

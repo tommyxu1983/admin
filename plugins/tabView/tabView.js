@@ -5,9 +5,9 @@
 
 +function(window,factory){
     if(typeof define ==='function' && define.amd){
-        define(['jquery'],factory)
+        define(['jquery'],factory);
     }else if(typeof window !=='undefined' && window.jQuery){
-        factory(jQuery,window)
+        factory(jQuery,window);
     }
 }(window, function($,win,undefined){
 
