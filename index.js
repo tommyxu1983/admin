@@ -117,8 +117,6 @@ require(['jquery','bootstrap-dialog','BuildWin','echarts','dMenu','slimscroll','
     });
 
 
-    //$('.dropdown-toggle').dropdown();
-
 
     $('.l-menu-wrapper').slimScroll({
         height:'100%',

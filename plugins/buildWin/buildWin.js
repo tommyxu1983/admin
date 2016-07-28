@@ -56,7 +56,7 @@
             button:'win-button',
             panelContent:'win-panelContent'
         };
-        var findItem=function(obj,key){
+        /*var findItem=function(obj,key){
             var item=undefined;
             if( $.isArray(obj) ){
                 for(var i= 0, l=obj.length; i<l; i++){
@@ -68,7 +68,7 @@
 
                 return item;
             }
-        }
+        }*/
         var logError = function (message) {
             if (window.console) {
                 window.console.error(message);
@@ -90,22 +90,22 @@
 
                 this.getButtonsForTableRow(this.winData);
                 //用来局部更新，当刷新按钮trigger
-                this.updateElement=[];//{key:this.winData.uid, element: htmlElement}
+              /*  this.updateElement=[];*///{key:this.winData.uid, element: htmlElement}
 
 
                 this.init(this.winData, this.data.DataGUID ,selector);
 
-                var validator=this.$selector.validateX({
+               /* var validator=this.$selector.validateX({
                     onkeyup:function(a,b,c){
                     var kk=0;
                     }
-                });
+                });*/
 
-                return {
+                /*return {
 
                     writeBack: $.proxy(this.writeBack,this)
 
-                };
+                };*/
 
 
             }else{
@@ -117,7 +117,11 @@
             ((selector) && ( typeof selector==='string' || (selector instanceof jQuery && selector.length ) ) ) ? this.buildInTabView(winData,windowID,selector)  : this.buildInDialog(winData);
         };
 
-        BuildWin.prototype.update=function(data, windowsIndex) {
+        BuildWin.prototype.update=function(data, windowsIndex, $updateModuleDiv) {
+            //$updateModuleDiv table
+
+            var _this=this;
+
             if ($.isArray(data.windows) && data.windows[windowsIndex]) {
                // this.closeTabView();
                 this.data = data;
@@ -132,7 +136,18 @@
 
                 this.getButtonsForTableRow(this.winData);
 
-                this.init(this.winData, this.data.DataGUID, this.$selector);
+                if($updateModuleDiv){
+                    $.each( data.windows[windowsIndex].winmodules,function(index,winmodule){
+                        if(winmodule.mtype==_moduleType.report){
+                            _this.buildReport(winmodule,$updateModuleDiv)
+
+                        }
+
+                    });
+                }else{
+                    this.init(this.winData, this.data.DataGUID, this.$selector);
+                }
+
             }
 
         };
@@ -214,7 +229,7 @@
             //窗口按钮
             if( ! hasForminModules){
                 var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
-                this.buildButtons(winData.buttons,$buttons_Div);
+                this.buildModuleButtons(winData.buttons,$buttons_Div);
                 $panelContent.append($buttons_Div);
             }
             $panelContent.slimScroll({
@@ -281,10 +296,10 @@
                 .append($modules_Div)
 
 
-            //窗口按钮
+            //窗口按钮: 如果数据里有form,就不进入。
             if( ! hasFormInModules){
                 var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
-                this.buildButtons(winData.buttons,$buttons_Div);
+                this.buildModuleButtons(winData.buttons,$buttons_Div);
                 $panelContent.append($buttons_Div);
             }
 
@@ -375,7 +390,8 @@
                         dataID: control.FDefName,
                         data: control.FValueX,
                         dataOption: dataOption,
-                        required: true
+                        validateRules: control.valivalue
+
                     });
 
 
@@ -389,6 +405,19 @@
                     data: _this.modulesAdptData[moduleIndex],
                     isDataWritable:true,
                     buttons:formButtons});
+
+                //用 validate 插件， 来校验
+                if($moduleDiv.find('form').length>0){
+
+                    var vRules=$moduleDiv.formview('getVRules');
+
+                    $moduleDiv.find('form').validateX({
+                        rules: vRules,
+                    });
+
+
+
+                }
 
 
 
@@ -426,13 +455,13 @@
                     }
                 };
 
-            var element=findItem( this.updateElement,this.winData.uid);
+/*            var element=findItem( this.updateElement,this.winData.uid);
             if( element ){
                 $moduleDiv=element;
             }
             else{
                 this.updateElement.push({key:this.winData.uid, element: $moduleDiv,title:module.caption});
-            }
+            }*/
 
             $moduleDiv.empty();
 
@@ -455,7 +484,6 @@
                         switch(buttonData.ctrlid){
                             case _ctrl.delete:
                                 //_this.data.ctrlid='3005';
-
                                 req.url='http://'+_this.data.uurl+'?fmname='+_this.data.name+'&fmctrlid='+_ctrl.delete+'&fmdatauid='+rowData[0]+'&fmtoken='+globalSetting.token;
                                 break;
                             case _ctrl.open:
@@ -471,7 +499,6 @@
                                 if(parseInt(buttonData.ctrlid)>3032 && parseInt(buttonData.ctrlid)<4000){
                                     req.url='http://'+replaceURL; //+'?fmname='+detailWinID+'&fmctrlid='+buttonData.ctrlid+'&fmdatauid='+''+'&fmtoken='+globalSetting.token;
                                 }else if(parseInt(buttonData.ctrlid)>=4000){
-                                    //req.url='http://'+buttonData.uurl +'?fmdatauid='+_this.data.DataGUID;
                                     //Remove By JetLeeX 2016-07-21　uurl拼接错误,
                                     req.url='http://'+replaceURL +'&fmdatauid='+rowData[0];
                                 }
@@ -479,7 +506,39 @@
 
                         }
                         if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
-                        _this.sendAjax( req, $.proxy(_this.onReportButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData});
+                        if(buttonData.ctrlid==_ctrl.delete){
+                            BootstrapDialog.show(
+                                {
+
+                                    title: '删除',
+                                    size: BootstrapDialog.SIZE_SMALL,
+                                    message: '<span style="font-size:2em; margin-left: 35%">确认删除</span>',
+
+                                    buttons: [
+
+                                        {
+                                            label: '确认',
+                                            cssClass: 'btn-warning',
+                                            action: function(dialog) {
+                                                _this.sendAjax( req, $.proxy(_this.onReportButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData});
+                                                dialog.close();
+                                            }
+                                        },
+                                        {
+                                            label: '取消',
+                                            cssClass: 'btn-primary',
+                                            action: function(dialog) {
+                                                dialog.close();
+                                            }
+                                        }
+
+                                    ]
+                                }
+                            );
+                        }else{
+                            _this.sendAjax( req, $.proxy(_this.onReportButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData});
+                        }
+
                     }
                 }
 
@@ -643,20 +702,43 @@
                                 _this.writeBack(); //读取表单里的文字
                                 _this.data.ctrlid= data4Button.ctrlid;
 
-                                var  url='http://';
-                                url += ( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)? data4Button.uurl:  _this.data.uurl;
-                                var data=( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)?  '': _this.data;
-                                data.token=globalSetting.token;
-                                var req={
-                                    url: url,//+'&fmtoken='+globalSetting.token
-                                    data:JSON.stringify(data)
-                                };
-
-                                if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
-                                _this.sendAjax( req, $.proxy(_this.onFormButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), dialog);
-                                if(!!dialog && dialog instanceof BootstrapDialog){
-                                    dialog.close();
+                                //用 validate 插件， 来校验
+                                var validateX;
+                                if(formView.$form.validateX() instanceof $.validator){
+                                    validateX=formView.$form.validateX();
+                                }else{
+                                    //初始化validate 插件
+                                    formView.$form.validateX({rules:formView.vRules});
+                                    validateX=formView.$form.validateX();
                                 }
+
+                                //如果校验不成功
+                                if(! validateX.isAllValid()){
+                                    validateX.showOremoveAllErrorOnPage();
+                                }//如果校验成功，发送请求
+                                else{
+
+                                    var  url='http://';
+                                    url += ( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)? data4Button.uurl:  _this.data.uurl;
+                                    var data=( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)?  '': _this.data;
+                                    data.token=globalSetting.token;
+                                    var req={
+                                        url: url,//+'&fmtoken='+globalSetting.token
+                                        data:JSON.stringify(data)
+                                    };
+
+                                    if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
+                                    _this.sendAjax( req, $.proxy(_this.onFormButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), dialog);
+
+                                    //如果传过来参数 dialog 存在，则关闭 dialog
+                                    if(!!dialog && dialog instanceof BootstrapDialog){
+                                        dialog.close();
+                                    }
+
+
+                                }
+
+
                             }
 
                         };
@@ -671,7 +753,7 @@
 
 
             }else {
-                logError('please make  function buildButtons  buttonsData is passed in by array');
+                logError('please make  function buildModuleButtons  buttonsData is passed in by array');
                 buttonsArray=[];
             }
 
@@ -691,11 +773,11 @@
                     switch(data.ctrlid){
                         case _ctrl.save:
                             msg='保存/修改 ';
-                            this.winTip( msg+'成功');
+
                             break;
                         case _ctrl.find:
                             msg='查询';
-                            this.winTip( msg+'成功');
+
                             //如果是dialog 老的关掉，new  BuildWin 只传2个参数= buildWinInDialog
                             if(!!beforeAjaxData && beforeAjaxData instanceof BootstrapDialog){
                                 beforeAjaxData.close();
@@ -715,26 +797,29 @@
                                 this.winDataCopy=null;
                                 this.$selector=null;
                                 this.modulesAdptData=null;
-                                this.winTip( msg+'成功');
+
                             }
                             break;
                         case _ctrl.create:
                             new BuildWin(data,0 );
                             break;
                     }
-
+                    this.winTip('操作成功： '+ data.msg);
                 }
 
 
 
             }else{
-
-                this.winTip('操作失败');
-
+                if(parseInt(this.code)<= -10000 ){
+                    this.winTip('操作失败: ' + data.msg);
+                    window.location.href='../index.html';
+                }else{
+                    this.winTip('操作失败: '+ data.msg);
+                }
             }
         };
 
-        BuildWin.prototype.buildButtons=function(buttonsData,$buttons_Div,dialog){
+        BuildWin.prototype.buildModuleButtons=function(buttonsData,$buttons_Div,dialog){
 
             if(!buttonsData) return;
             if($.isArray(buttonsData)){
@@ -784,7 +869,7 @@
                                 data:JSON.stringify(data)
                             };
                             if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
-                            _this.sendAjax( req, $.proxy(_this.onButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), dialog);
+                            _this.sendAjax( req, $.proxy(_this.onModuleButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), dialog);
                             if(!!dialog && dialog instanceof BootstrapDialog){
                                 dialog.close();
                             }
@@ -795,12 +880,12 @@
                 },this));
 
             }else {
-                logError('please make  function buildButtons  buttonsData is passed in by array');
+                logError('please make  function buildModuleButtons  buttonsData is passed in by array');
             }
 
         };
 
-        BuildWin.prototype.onButtonsSuccess=function(data,beforeAjaxData){
+        BuildWin.prototype.onModuleButtonsSuccess=function(data,beforeAjaxData){
             if(typeof data.DataGUID==='string' && data.DataGUID.length>0 ){
                 this.data=data;
             }
@@ -812,11 +897,11 @@
                     switch(data.ctrlid){
                         case _ctrl.save:
                             msg='保存/修改 ';
-                            this.winTip( msg+'成功');
+
                             break;
                         case _ctrl.find:
                             msg='查询';
-                            this.winTip( msg+'成功');
+
                             //如果是dialog 老的关掉，new  BuildWin 只传2个参数= buildWinInDialog
                             if(!!beforeAjaxData && beforeAjaxData instanceof BootstrapDialog){
                                 beforeAjaxData.close();
@@ -836,7 +921,6 @@
                                 this.winDataCopy=null;
                                 this.$selector=null;
                                 this.modulesAdptData=null;
-                                this.winTip( msg+'成功');
                             }
                             break;
                         case _ctrl.create:
@@ -846,11 +930,16 @@
 
                 }
 
-
+                this.winTip('操作成功： '+ data.msg);
 
             }else{
 
-                this.winTip('操作失败');
+                if(parseInt(this.code)<= -10000 ){
+                    this.winTip('操作失败: ' + data.msg);
+                    window.location.href='../index.html';
+                }else{
+                    this.winTip('操作失败: '+ data.msg);
+                }
 
             }
         };
@@ -878,7 +967,7 @@
                 }
                 //删除
                 else if(beforeAjaxData.action.ctrlid==_ctrl.delete){
-                    BootstrapDialog.show(
+                    /*BootstrapDialog.show(
                         {
 
                             title: '删除',
@@ -886,13 +975,7 @@
                             message: '<span style="font-size:2em; margin-left: 35%">确认删除</span>',
 
                             buttons: [
-                                {
-                                    label: '取消',
-                                    cssClass: 'btn-primary',
-                                    action: function(dialog) {
-                                        dialog.close();
-                                    }
-                                },
+
                                 {
                                     label: '确认',
                                     cssClass: 'btn-warning',
@@ -908,10 +991,24 @@
 
 
                                     }
+                                },
+                                {
+                                    label: '取消',
+                                    cssClass: 'btn-primary',
+                                    action: function(dialog) {
+                                        dialog.close();
+                                    }
                                 }
+
                             ]
                         }
-                    );
+                    );*/
+                    // 确认是否是 tableContianer, 里面有没有 table domElement
+                    if(beforeAjaxData.tableContainer && beforeAjaxData.tableContainer.length>0 && beforeAjaxData.tableContainer.has('table') ){
+                        this.update(data,0,beforeAjaxData.tableContainer);
+                    }else{
+                        this.update(data,0);
+                    }
 
 
                 }
@@ -923,11 +1020,39 @@
                     //beforeAjaxData.action.uurl
                 }
 
-            }else(logError('onRowButtonSuccess: data.windows object does not exist'))
+
+
+            }
+            else {
+                logError('onRowButtonSuccess: data.windows object does not exist')
+            }
+
+
+            if(!!data.code && data.code>0){
+
+                this.winTip('操作成功： '+ data.msg);
+            }else{
+
+                if(parseInt(this.code)<= -10000 ){
+                    this.winTip('操作失败: ' + data.msg);
+                    window.location.href='../index.html';
+                }else{
+                    this.winTip('操作失败: '+ data.msg);
+                }
+
+            }
+
+
+
         };
 
         BuildWin.prototype.onGoToPageSuccess=function(data, beforeAjaxData){
-            this.update(data,0);
+
+            if(beforeAjaxData.tableContainer && beforeAjaxData.tableContainer.length>0 && beforeAjaxData.tableContainer.has('table') ){
+                this.update(data,0,beforeAjaxData.tableContainer);
+            }else{
+               console.log('onGoToPageSuccess, must have beforeAjaxData.tableContainer');
+            }
         }
 
         BuildWin.prototype.winTip=function(msg){
@@ -935,8 +1060,8 @@
             if(!!msg && !!this.$selector){
 
                 var $msgDiv=$(_html.div).append(msg).addClass('messageTip');
-                this.$selector.append($msgDiv);
-                window.setTimeout(function(){$msgDiv.remove()},3000);
+                $('body').append($msgDiv);
+                window.setTimeout(function(){$msgDiv.remove()},2000);
             }
 
         };

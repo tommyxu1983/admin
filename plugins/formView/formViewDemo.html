@@ -5,12 +5,14 @@
     <title>FormView</title>
     <script type="text/javascript" src="../../jsLib/jquery-1.12.3.js"></script>
     <script type="text/javascript" src="jquery.formview.js"></script>
+    <script text="text/javascript" src="../validate/jquery.validateX.js"></script>
+<!--    <script text="text/javascript" src="../validate/locales/messages_zh.js"></script>-->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
     <link href="../datepicker/datepicker3.css"rel="stylesheet" type="text/css"/>
 
     <style>
         html, body{width:100%}
-        #formViewContainer{
+/*        #formViewContainer{
             margin-top:100px;
             margin-left:15%;
 
@@ -18,12 +20,75 @@
             border: 2px black dashed;
             text-align: center;
             :2em
+        }*/
+
+
+        /*---------formView------End--------------------*/
+
+        .formviewContainer{
+            padding:0px 0px 5px 0px;
+            margin: 10px;
+            border:2px rgba(166, 166, 166, 0.56) solid;
+            border-radius: 5px;
         }
+
+        .formviewContainer .formviewTitle{
+            background-color: #3C8DBC;
+            margin: 0px 0px 10px 0px;
+            padding:5px;
+            width:100%;
+            text-align:center;
+            color:whitesmoke;
+            font-size:1.2em;
+        }
+
+        .formviewContainer .formviewForm{
+            padding-right:5%;
+        }
+
+
+        .formviewContainer .formviewFormCollapse{
+
+
+            font-size:1.2em;
+            float:right;
+            cursor:pointer;
+            width:30px;
+            color:whitesmoke;
+
+        }
+        .formviewContainer .formviewFormCollapse:hover{
+
+
+
+            color:indianred;
+
+            transition:All 0.4s ease-in-out;
+            -webkit-transition:All 0.4s ease-in-out;
+            -moz-transition:All 0.4s ease-in-out;
+            -o-transition:All 0.4s ease-in-out;
+
+            transform:rotate(180deg);
+            -webkit-transform:rotate(180deg);
+            -moz-transform:rotate(180deg);
+            -o-transform:rotate(180deg);
+            -ms-transform:rotate(180deg);
+        }
+
+
+        .errorPlacement{
+            padding-top:2px;
+            color: red;
+        }
+        .errorInput{
+            border:1px solid red;
+        }
+        /*---------formView------End--------------------*/
 
     </style>
 </head>
 <body>
-    <div id="formViewContainer" class=""></div>
+    <div class="formViewContainer"></div>
     <!--<div id="formViewContainer">-->
     <!--<form class="form-horizontal" id="员工表">-->
         <!--<div class="form-group"><label for="123456789-name" class="col-sm-2 control-label">姓名</label><div class="col-sm-8"><input class="form-control" id="123456789-name" placeholder="请填写姓名" type="text"></div></div><div class="form-group"><label for="123456789-userName" class="col-sm-2 control-label">用户名</label><div class="col-sm-8"><input class="form-control" id="123456789-userName" placeholder="请填写用户名" type="text"></div></div><div class="form-group"><label for="123456789-nickName" class="col-sm-2 control-label">称昵</label><div class="col-sm-8"><input class="form-control" id="123456789-nickName" placeholder="请填写称昵" type="text"></div></div><div class="form-group"><label for="123456789-email" class="col-sm-2 control-label">邮箱</label><div class="col-sm-8"><input class="form-control" id="123456789-email" placeholder="请填写邮箱" type="email"></div></div>-->
@@ -54,18 +119,18 @@
 
 
             controlList:[
-                {label:'姓名', isLabelDisplay:true, dataType:'text',placeholder:'请填写姓名',dataID:'name',data:'张三',dataOption:'',required:true,readonly:1, multiline:1},
-                {label:'用户名', isLabelDisplay:true, dataType:'text',placeholder:'请填写用户名',dataID:'userName',data:'',dataOption:'',required:true},
-                {label:'称昵', isLabelDisplay:true, dataType:'text',placeholder:'请填写称昵',dataID:'nickName',data:'',dataOption:'',required:false},
-                {label:'邮箱', isLabelDisplay:true, dataType:'email',placeholder:'请填写邮箱',dataID:'email',data:'',dataOption:'',required:true},
-                {label:'密码', isLabelDisplay:true, dataType:'psw',placeholder:'',dataID:'password',data:'',dataOption:'',required:true},
-                {label:'确认密码', isLabelDisplay:true, dataType:'psw',placeholder:'',dataID:'passwordC',data:'',dataOption:'',required:true},
-                {label:'性别', isLabelDisplay:true, dataType:'bool',placeholder:'male',dataID:'gender',data:'male',dataOption:[{id:'male',caption:'男'},{id:'female',caption:'女'}],required:true},
-                {label:'工种', isLabelDisplay:true, dataType:'option',placeholder:'worker',dataID:'profession',data:'writer',dataOption:[{id:'teacher',caption:'老师'},{id:'worker',caption:'工人'},{id:'writer',caption:'作家'}],required:true},
-                {label:'工种', isLabelDisplay:true, dataType:'multi',placeholder:'worker',dataID:'profession',data:'writer',dataOption:[{id:'teacher',caption:'老师',checked:1},{id:'worker',caption:'工人',checked:0},{id:'writer',caption:'作家',checked:1}],required:true},
-                {label:'生日', isLabelDisplay:true, dataType:'date',placeholder:'',dataID:'birthday',data:'1986/04/08',dataOption:'',required:true},
-                {label:'部门', isLabelDisplay:true,dataType:'custom',placeholder:'',dataID:'department',data:'',dataOption:{},required:true},
-                {label:'注册资金', isLabelDisplay:true,dataType:'currency',currencyType:'',placeholder:'',dataID:'companyRegister',data:'2000',dataOption:{},required:true},
+                {label:'姓名', isLabelDisplay:true, dataType:'text',placeholder:'请填写姓名',dataID:'name',data:'张三',dataOption:'',readonly:1, multiline:1,validateRules:{required:true,maxlength:'4'}},
+                {label:'用户名', isLabelDisplay:true, dataType:'text',placeholder:'请填写用户名',dataID:'userName',data:'',dataOption:'',validateRules:{required:true,'minlength':'2',maxlength:5}},
+                {label:'称昵', isLabelDisplay:true, dataType:'text',placeholder:'请填写称昵',dataID:'nickName',data:'',dataOption:''},
+                {label:'邮箱', isLabelDisplay:true, dataType:'email',placeholder:'请填写邮箱',dataID:'email',data:'',dataOption:''},
+                {label:'密码', isLabelDisplay:true, dataType:'psw',placeholder:'',dataID:'password',data:'',dataOption:''},
+                {label:'确认密码', isLabelDisplay:true, dataType:'psw',placeholder:'',dataID:'passwordC',data:'',dataOption:''},
+                {label:'性别', isLabelDisplay:true, dataType:'bool',placeholder:'male',dataID:'gender',data:'male',dataOption:[{id:'male',caption:'男'},{id:'female',caption:'女'}]},
+                {label:'工种', isLabelDisplay:true, dataType:'option',placeholder:'worker',dataID:'profession',data:'writer',dataOption:[{id:'teacher',caption:'老师'},{id:'worker',caption:'工人'},{id:'writer',caption:'作家'}]},
+                {label:'工种', isLabelDisplay:true, dataType:'multi',placeholder:'worker',dataID:'profession',data:'writer',dataOption:[{id:'teacher',caption:'老师',checked:1},{id:'worker',caption:'工人',checked:0},{id:'writer',caption:'作家',checked:1}]},
+                {label:'生日', isLabelDisplay:true, dataType:'date',placeholder:'',dataID:'birthday',data:'1986/04/08',dataOption:''},
+                {label:'部门', isLabelDisplay:true,dataType:'text',placeholder:'',dataID:'department',data:'',dataOption:{}},
+                {label:'注册资金', isLabelDisplay:true,dataType:'text',currencyType:'',placeholder:'',dataID:'companyRegister',data:'2000',dataOption:{}},
             ]
 
 
@@ -76,8 +141,7 @@
 
     $(function(){
         console.time('test');
-
-            $('#formViewContainer').formview(
+            $('.formViewContainer').formview(
                     {
                         data:jsonData(),
                         buttons:[
@@ -91,11 +155,32 @@
                             {
                                 label:'发送',
                                 cssClass:'btn-primary',
-                                action:function(formView) {
+                                action:function(event,formView) {
                                     var strResult='';
                                     $.each(formView.settings.data.controlList,function(index,item){
                                         strResult=strResult+item.label+': '+item.data+',';
                                     });
+
+                                   /* var vRules= formView.vRules;
+                                    var kk= formView.$form.validateX({
+                                        rules:vRules
+                                    });
+                                    var events=$._data(kk[0],'events');*/
+
+                                    var valideX=formView.$form.validateX();
+
+
+                                    if(! valideX.isAllValid()){
+                                        valideX.showOremoveAllErrorOnPage();
+                                    }
+                                    else{
+
+                                    }
+
+
+
+
+
                                     alert(strResult);
                                 }
                             }
@@ -105,7 +190,39 @@
                     }
             );
 
+        var vRules=$('.formViewContainer').formview('getVRules');
+
+       var valideX= $('.formViewContainer').find('form').validateX({
+            rules:vRules
+        });
+
+
+   
+
+
+
+/*        $('.formViewContainer').find('form').validate({
+            /!*onkeyup: null,*!/
+            rules:vRules,
+            errorPlacement: function(error, element) {
+                // Append error within linked label
+                $( element )
+                        .parent()
+                        .append(error[1] );
+            },
+            errorElement: "<div>",
+
+
+        });*/
+
+
+
+
+
         console.timeEnd('test');
+
+
+
 
 
     });

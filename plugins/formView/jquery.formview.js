@@ -159,6 +159,10 @@
     };
 
     FormView.prototype.init=function(options){
+
+        //校验规则缓存，有校验生成器维护
+        this.vRules={};
+
        // options.isDataWritable==true 直接操作 传进来的数据，任何input里的值改变都会直接改动传进的 option.data
         this.settings=$.extend({},_default.options,options);
         if(options.isDataWritable){
@@ -172,6 +176,8 @@
             this.originalData.push(item.data);
         },this));
         this.render(this.settings);
+
+
 
     };
 
@@ -205,8 +211,9 @@
                 .appendTo(this.$element);
 
         //创建 row (label +input)
-        var rowItemCount= 0, $row=$(_html.div).addClass(_defaultStyle.bs.row),row=0;
-
+        var rowItemCount= 0,
+            $row=$(_html.div).addClass(_defaultStyle.bs.row),
+            contoListLength= $.isArray(settings.data.controlList)? settings.data.controlList.length : 0 ;
         $.each( settings.data.controlList, $.proxy(function(index,item){
 
             // 12/settings.noInputsInRow 因为 boostrap 栅格系统分为12等分，请将 noInputsInRow设为12的公约数
@@ -223,25 +230,35 @@
             }else{
 
                 if(rowItemCount==0){
-                    //创建新的 row
+                    //第一个，创建新的 row（之前的row清零）
                     $row=null;
                     $row=$(_html.div).addClass(_defaultStyle.bs.form_Group);
                     $row.append(this.buildControlItem(item,settings.noInputsInRow));
                     rowItemCount++;
+                    //如果是最后一个 controlList item ,则把这个系上form
+                    if(index==contoListLength-1){
+                        this.$form.append($row.clone(true));
+                    }
                 }
                 else if (0<rowItemCount && rowItemCount< settings.noInputsInRow-1){
-                    //小于设置的列数
+                    //大于0（不是第一个），小于设置的最大列数,老的row 上系上 controList item
                     $row.append(this.buildControlItem(item,settings.noInputsInRow));
                     rowItemCount++;
+                    //如果是最后一个 controlList item ,则把这个系上form
+                    if(index==contoListLength-1){
+                        this.$form.append($row.clone(true));
+                    }
                 }
                 else{
-
+                    //最后行里的一个
                     $row.append(this.buildControlItem(item,settings.noInputsInRow));
                     rowItemCount++;
                     this.$form.append($row.clone(true));
                     rowItemCount=0;
 
                 }
+
+
             }
 
 
@@ -317,8 +334,56 @@
                 .children(); // attach input
     };
 
+    FormView.prototype.createVRules=function(ctlListItem){
+        if(ctlListItem.validateRules){
+            /* validateClassName= createValidateName(ctlListItem.validateRules, this.vRules);*/
+            this.vRules[ctlListItem.dataID]=ctlListItem.validateRules;
+            for(var key in this.vRules[ctlListItem.dataID]){
+                (  this.vRules[ctlListItem.dataID][key]==='true') && (  this.vRules[ctlListItem.dataID][key]=true);
+                ( $.isNumeric(this.vRules[ctlListItem.dataID][key]) ) && ( this.vRules[ctlListItem.dataID][key]=parseInt(this.vRules[ctlListItem.dataID][key]) )
+            }
+        }
+    };
+
     FormView.prototype.buildInput=function(ctlListItem){
         (!ctlListItem.dataType)&&(window.console) &&console.log('请检查数据是否传输正确，data.data.dataType 不正确或不存在');
+  /*      var validateClassName;
+
+        var createValidateName=function (newRules, ruleClassHolder){
+            //ruleClassHolder=[  {ruleClassName:'',rules:[] },{},{}  ]
+
+
+            var classNamePreFix='validate';
+
+            /!* for(var key in newRules){
+
+             var keyContain=true;
+
+             validate
+
+
+             }*!/
+            if(ruleClassHolder.length==0){
+                ruleClassHolder.push({name:classNamePreFix+'-0',rules:newRules});
+            }else{
+
+                for(var i=0, l1=ruleClassHolder.length; i<l1; i++){
+                    for(var key in newRules){
+
+                    }
+                    for(var j=0, l2=ruleClassHolder[i].rules; j<l2; j++ ){
+                        //if(ruleClassHolder[i].rules[j]==key)
+                    }
+                }
+            }
+
+            var kk=0;
+        };*/
+
+
+
+
+
 
         //创建 input
         var $result,$input=$(_html.input)
@@ -345,6 +410,9 @@
 
         $input.on('change',inputHandler);
 
+
+        //校验规则
+        this.createVRules(ctlListItem);
 
 
         switch(ctlListItem.dataType){
@@ -428,6 +496,7 @@
                 break;
 
             case _dataType.option:
+
                 var $select=$(_html.select)
                     .addClass(_defaultStyle.bs.form_control)
                     .attr('id',this.settings.data.formID+'-'+ctlListItem.dataID)
@@ -435,14 +504,18 @@
                        // var kk=$('option:selected',this);
                         ctlListItem.data= this.value;
                     });
+
                 $.each(ctlListItem.dataOption, $.proxy(function(index,item){
+                    //新建的时候，缺省为第一项
+                    if(!ctlListItem.data || ctlListItem.data.length<1   ){
+                        if(index==0 ) {ctlListItem.data= ctlListItem.dataOption[0].id;}
+                    }
                     var $option=$(_html.option)
                         .attr({'value':item.id, 'id':this.settings.data.formID+'-'+ctlListItem.dataID+'-'+item.id})
                         .html(item.caption);
                     (item.id==ctlListItem.data)&& $option.attr('selected','selected');
                     $select.append($option);
                 },this));
-
                 $result=$select;
 
                 break;
@@ -509,7 +582,7 @@
         if (!!ctlListItem.inputReadOnly && ctlListItem.dataType!=_dataType.multi && ctlListItem.inputReadOnly>0  ){
             $result.attr( 'disabled','disabled');
         }
-
+        $result.attr('name',ctlListItem.dataID);
         return $result;
     };
 
@@ -542,7 +615,9 @@
     FormView.prototype.getData=function(){
         return this.settings.data.controlList;
     };
-
+    FormView.prototype.getVRules=function(){
+        return this.vRules;
+    };
 
 
 
@@ -551,7 +626,7 @@
     $.fn[pluginName]=function(options,args){
         window.console &&(this.length<1)&& console.log('请排查一下，没有元素被选中');
         var existPlugin, result;
-        if(typeof options==='string' && options==='getData' ){
+        if(typeof options==='string' && (options==='getData' || options==='getVRules') ){
             this.each(function(){
                 existPlugin  = $.data(this,pluginName);
                 if(existPlugin){
