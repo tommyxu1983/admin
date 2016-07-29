@@ -216,7 +216,7 @@
 
                       }
                     }else{
-                        console.log('input[name='+ elementFromCache.ClassName4Rules +'] :无效的验证方法');
+                        console.log('input[name='+ elementFromCache.ClassName4Rules +'] :没有'+ rule+'此验证方法');
                     }
 
                 }
@@ -387,6 +387,21 @@
                 return  length <= param;
             },
 
+            largerthan: function(value, element, param){
+               var isNumber= /^-?\d+\.?\d*$/.test(value);
+                return (  isNumber && parseFloat(value)>parseFloat(param) );
+            },
+
+            lessthan: function(value, element, param){
+                var isNumber= /^-?\d+\.?\d*$/.test(value);
+                return (  isNumber && parseFloat(value)>parseFloat(param) );
+            },
+            numberInRange: function(value, element, param){
+                var isNumber= /^-?\d+\.?\d*$/.test(value);
+                {
+                    return (  isNumber && parseFloat(value)>parseFloat(param[0]) && parseFloat(value)>parseFloat(param[1]) );
+                }
+            }
 
 
 
@@ -401,12 +416,23 @@
             number: "Please enter a valid number.",
             digits: "Please enter only digits.",
             equalTo: "Please enter the same value again.",
-            maxlength: function(parameters){
-                return "请不要超过"+parameters+"个字"
+            maxlength: function(parameter){
+                return "请不要超过"+parameter+"个字";
             },
-            minlength: function(parameters){
-                return "请不要少于"+parameters+"个字"
+            minlength: function(parameter){
+                return "请不要少于"+parameter+"个字";
             },
+
+            largerthan: function(parameter){
+                return "请输入大于" +parameter + "数字";
+            },
+
+            lessthan: function(parameter){
+                return "请输入小于" +parameter + "数字";
+            },
+            numberInRange: function(parameter){
+                return "请输入 "+parameter[0]+' 和 '+parameter[1]+' 之间的数字'
+            }
 
         },
 
@@ -438,7 +464,6 @@
                     return;
                 }
 
-
                 // Add novalidate tag if HTML5.
                 $(eachDom).attr( "novalidate", "novalidate" );
 
@@ -449,7 +474,6 @@
                 }else{
                     result=old;
                 }
-
 
             });
 
