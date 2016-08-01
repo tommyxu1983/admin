@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../../jsLib/jquery-1.12.3.js"></script>
+    <script type="text/javascript" src="jquery.toolTip.js"></script>
+</head>
+
+
+<style>
+    .toolTipX{
+        height:20px;
+        line-height: 20px;
+        background-color: #00b3ee;
+    }
+</style>
+
+<body>
+
+<div style="width: 900px; margin-right: 100px">
+    <form>
+            <div class="form-group">
+                <label for="disabledTextInput">Disabled input</label>
+                <input type="text" id="disabledTextInput" class="form-control" placeholder="Disabled input">
+            </div>
+            <div class="form-group">
+                <label for="disabledSelect">Disabled select menu</label>
+                <select id="disabledSelect" class="form-control">
+                    <option>Disabled select</option>
+                    <option>Disabled select</option>
+                </select>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"> Can't check this
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary" data-control="toolTip" name="提交">Submit</button>
+    </form>
+
+</div>
+
+<script>
+    if(  $(document).find('[data-control="toolTip"]').length>0  ){
+        $(document).find('[data-control="toolTip"]').toolTip();
+    }
+
+</script>
+
+
+</body>
+</html>
