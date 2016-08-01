@@ -399,7 +399,7 @@
             numberInRange: function(value, element, param){
                 var isNumber= /^-?\d+\.?\d*$/.test(value);
                 {
-                    return (  isNumber && parseFloat(value)>parseFloat(param[0]) && parseFloat(value)>parseFloat(param[1]) );
+                    return (  isNumber && parseFloat(value)>parseFloat(param[0]) && parseFloat(value)<parseFloat(param[1]) );
                 }
             }
 
@@ -430,8 +430,8 @@
             lessthan: function(parameter){
                 return "请输入小于" +parameter + "数字";
             },
-            numberInRange: function(parameter){
-                return "请输入 "+parameter[0]+' 和 '+parameter[1]+' 之间的数字'
+            numberInRange: function(p1,p2){
+                return "请输入 "+p1+' 和 '+p2+' 之间的数字'
             }
 
         },

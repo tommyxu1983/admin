@@ -663,7 +663,7 @@
             });
         }
 
-        if(result) logError('FormView getData 有问题请检查' );
+        if(! result) logError('FormView getData 有问题请检查' );
         return result;
     };
 

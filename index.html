@@ -39,8 +39,41 @@
 </head>
 <style>
 
+    .messageTip{
 
-/*---------formView------End--------------------*/
+        position:fixed;
+        top:49%;
+        right:48%;
+        max-width: 250px;
+        border-radius: 5px;
+        text-align: center;
+        padding: 10px;
+        background-color:#000000;
+        background-color: rgba(47, 109, 166, 0.66);
+        z-index:1000000;
+        color:whitesmoke;
+    }
+
+    .errorPlacement{
+        padding-top:2px;
+
+        color: rgba(255, 0, 0, 0.8);
+    }
+    .errorInput{
+        border:1px solid rgba(255, 0, 0, 0.22);
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.65);
+    }
+
+    .loadingData{
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        z-index:100000;
+        background-color: rgba(0, 0, 0, 0.50);
+    }
+/*---------formView-----Begin--------------------*/
 
 .formviewContainer{
     padding:0px 0px 5px 0px;
@@ -94,30 +127,8 @@
 
 /*---------formView------End--------------------*/
 
-.messageTip{
 
-    position:fixed;
-    top:49%;
-    right:48%;
-    max-width: 250px;
-    border-radius: 5px;
-    text-align: center;
-    padding: 10px;
-    background-color:#000000;
-    background-color: rgba(47, 109, 166, 0.49);
-    z-index:1000000;
-    color:whitesmoke;
-}
-
-.errorPlacement{
-    padding-top:2px;
-    color: red;
-}
-.errorInput{
-    border:1px solid red;
-}
-
-/*---------taView------End--------------------*/
+/*---------taView------Begin--------------------*/
     .tabViewContainer {
         width:100%;
         height:100%;
@@ -244,7 +255,13 @@
 
 
 
-    /*tableView*/
+
+/*-------------------------tabView End----------------------------------------------------*/
+
+ /*-----------------------tableView Begin-------------------------------------------------------*/
+
+
+/*tableView*/
 /*    .table-responsive{
         padding:3px 10px;
     }
@@ -268,7 +285,6 @@
 
     }*/
 
- /*------------------------------------------------------------------------------*/
     .table-responsive{
         margin-top:10px;
         padding:3px 10px;
@@ -504,7 +520,7 @@
     /*---------------悬浮 翻页 结束*/
 
 
-/*---------------------------------------------------------------------------*/
+/*-------------------tableView----End------------------------------------------------*/
 
 
     /*chart */

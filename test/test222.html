@@ -86,7 +86,7 @@
 
 
 <script>
-    $('#scroll').scroll(function(){
+/*    $('#scroll').scroll(function(){
 
     });
     $('#scroll').mouseover(function(event){
@@ -122,7 +122,17 @@
 
     $('#scroll').mouseout(function(){
         $('#condition').removeClass('show').removeClass('translateUp').addClass('hide');
-    });
+    });*/
+
+
+
+
+var largerthan=function(value, element, param){
+    var isNumber= /^[1-9]\d*$/.test(value);
+    return (  isNumber && parseInt(value)>parseInt(param) );
+}
+
+
 
 </script>
 </body>

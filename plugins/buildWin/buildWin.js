@@ -85,7 +85,7 @@
                 //当传入表单（formview）modulesAdptData和 winModules 做数据匹配，从  winModules 拷贝一份数据  this.modulesAdptData=[{type:1, fields[]},{},{},{}]
                 //直接传入 插件（formview）,任何 input 数据改动，都会直接改动 modulesAdptData 里的数据，等 writeBack()被调用时，再将这些值覆盖回 winmodules
                 // 1代表 form， 4代表 report（dataGrid）
-                this.modulesAdptData=[];
+                this.modulesAdptData=undefined;
 
 
                 this.getButtonsForTableRow(this.winData);
@@ -132,7 +132,7 @@
                 //当传入表单（formview）modulesAdptData和 winModules 做数据匹配，从  winModules 拷贝一份数据  this.modulesAdptData=[{type:1, fields[]},{},{},{}]
                 //直接传入 插件（formview）,任何 input 数据改动，都会直接改动 modulesAdptData 里的数据，等 writeBack()被调用时，再将这些值覆盖回 winmodules
                 // 1代表 form， 4代表 report（dataGrid）
-                this.modulesAdptData = [];
+                //this.modulesAdptData = [];
 
                 this.getButtonsForTableRow(this.winData);
 
@@ -181,6 +181,8 @@
             var winmodules= winData.winmodules;
 
            if ($.isArray(winmodules)) {
+               // this.modulesAdptData 这里被初始化
+               _this.modulesAdptData=[];
                for( var index=0, length=winmodules.length; index<length; index++){
                    var module=winmodules[index];
                    var $module_Div=$(_html.div).addClass(_cssClass.modulePanel);
@@ -245,6 +247,7 @@
 
         //在 tab里建窗口
         BuildWin.prototype.buildInTabView=function(winData,windowID,selector){
+
             $(selector).length<1 && logError('buildInTabView 没有元素被选中哇');
 
             var _this=this, hasFormInModules=false;
@@ -254,35 +257,42 @@
 
             //模块（form 或 report）
             var winmodules= winData.winmodules;
-            ($.isArray(winmodules)) &&
-            $.each(winmodules, function(index,module){
-                var $module_Div=$(_html.div).addClass(_cssClass.modulePanel);
-                _this.modulesAdptData.push({uID:module.uid})
-                if(module.mtype){
-                    switch(module.mtype){
+            if ($.isArray(winmodules)){
+                //winmodule,这里被初始化；
+                _this.modulesAdptData=[];
+                $.each(winmodules, function(index,module){
+                    var $module_Div=$(_html.div).addClass(_cssClass.modulePanel);
+                    _this.modulesAdptData.push({uID:module.uid})
+                    if(module.mtype){
+                        switch(module.mtype){
 
-                        //如果是表单
-                        case _moduleType.form:
-                            _this.modulesAdptData[_this.modulesAdptData.length-1].mtype=_moduleType.form;
-                            hasFormInModules=true;
-                            //建立 表单
-                            _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1);
-                            break;
+                            //如果是表单
+                            case _moduleType.form:
+                                _this.modulesAdptData[_this.modulesAdptData.length-1].mtype=_moduleType.form;
+                                hasFormInModules=true;
+                                //建立 表单
+                                _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1);
+                                break;
 
-                        //如果是 grid(表格)
-                        case _moduleType.report:
+                            //如果是 grid(表格)
+                            case _moduleType.report:
 
-                            _this.buildReport(module,$module_Div);
+                                _this.buildReport(module,$module_Div);
 
 
-                            break;
+                                break;
 
+                        }
+                        $modules_Div.append($module_Div);
+                    }else{
+                        logError('缺少 module.mtype 不能解析');
                     }
-                    $modules_Div.append($module_Div);
-                }else{
-                    logError('缺少 module.mtype 不能解析');
-                }
-            });
+                });
+            }
+            else{
+                console.log('');
+            }
+
 
 
 
@@ -444,15 +454,19 @@
                     funModName:_this.data.name,
                     url:module.winmodfields.Body.uurl,
 
-                    onGoToPageClick:function(evt,goToPageIndex,pSetting){
+                    onGoToPageClick: $.proxy(function(evt,goToPageIndex,pSetting){
+                        //如果到达页码不等于当前页码，执行！
                         if(goToPageIndex != pSetting.pageIndex){
+                            this.writeBack();
                             var reqGotoPage={
-                                url:'http://'+pSetting.url+'?fmname='+pSetting.funModName+'&fmctrlid=3033&fmpageindex='+goToPageIndex+'&fmtoken='+globalSetting.token
+                                url:'http://'+pSetting.url+'?fmname='+pSetting.funModName+'&fmctrlid=3033&fmpageindex='+goToPageIndex+'&fmtoken='+globalSetting.token,
+                                data:JSON.stringify(_this.data)
                             }
                             _this.sendAjax( reqGotoPage, $.proxy(_this.onGoToPageSuccess,_this) , undefined , undefined,{tableContainer:$moduleDiv});
+                           // _this.addLoading($moduleDiv);
                         }
 
-                    }
+                    },_this)
                 };
 
 /*            var element=findItem( this.updateElement,this.winData.uid);
@@ -481,63 +495,95 @@
                         var req={
                             url:''
                         };
-                        switch(buttonData.ctrlid){
-                            case _ctrl.delete:
-                                //_this.data.ctrlid='3005';
-                                req.url='http://'+_this.data.uurl+'?fmname='+_this.data.name+'&fmctrlid='+_ctrl.delete+'&fmdatauid='+rowData[0]+'&fmtoken='+globalSetting.token;
-                                break;
-                            case _ctrl.open:
-                                //  _this.data.ctrlid='3006';
-                                req.url='http://'+_this.data.uurl+'?fmname='+detailWinID+'&fmctrlid='+_ctrl.open+'&fmdatauid='+rowData[0]+'&fmtoken='+globalSetting.token;
-                                break;
-                            case _ctrl.create:
-                                //_this.data.ctrlid:'3004'
-                                req.url='http://'+_this.data.uurl+'?fmname='+detailWinID+'&fmctrlid='+_ctrl.create+'&fmdatauid='+''+'&fmtoken='+globalSetting.token;
-                                break;
-                            default:
-                               var replaceURL =buttonData.uurl.replace(/_ROW_DATA_GUID_/g,rowData[0].toString());
-                                if(parseInt(buttonData.ctrlid)>3032 && parseInt(buttonData.ctrlid)<4000){
-                                    req.url='http://'+replaceURL; //+'?fmname='+detailWinID+'&fmctrlid='+buttonData.ctrlid+'&fmdatauid='+''+'&fmtoken='+globalSetting.token;
-                                }else if(parseInt(buttonData.ctrlid)>=4000){
-                                    //Remove By JetLeeX 2016-07-21　uurl拼接错误,
-                                    req.url='http://'+replaceURL +'&fmdatauid='+rowData[0];
-                                }
-                                break;
 
-                        }
-                        if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
-                        if(buttonData.ctrlid==_ctrl.delete){
-                            BootstrapDialog.show(
-                                {
 
-                                    title: '删除',
-                                    size: BootstrapDialog.SIZE_SMALL,
-                                    message: '<span style="font-size:2em; margin-left: 35%">确认删除</span>',
+                        if(buttonData.ctrlid>=5000 && buttonData.ctrlid<6000 ){
+                            //alert('>=5000  <6000');
+                            var newDialog=new BootstrapDialog({
+                                size: BootstrapDialog.SIZE_WIDE,
+                            });
+                            var replaceURL =buttonData.uurl.replace(/_ROW_DATA_GUID_/g,rowData[0].toString());
+                            req={
+                                url:replaceURL,
+                                dataType:"html",
+                                type:'get'
+                            };
 
-                                    buttons: [
 
-                                        {
-                                            label: '确认',
-                                            cssClass: 'btn-warning',
-                                            action: function(dialog) {
-                                                _this.sendAjax( req, $.proxy(_this.onReportButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData});
-                                                dialog.close();
-                                            }
-                                        },
-                                        {
-                                            label: '取消',
-                                            cssClass: 'btn-primary',
-                                            action: function(dialog) {
-                                                dialog.close();
-                                            }
-                                        }
+                            _this.sendAjax( req, $.proxy(_this.on5k6kButtonSuccess,_this) , undefined ,undefined , newDialog);
 
-                                    ]
-                                }
-                            );
+
+
+
+                        }else if(buttonData.ctrlid>=6000 && buttonData.ctrlid<7000 ){
+                            window.open(buttonData.uurl);
                         }else{
-                            _this.sendAjax( req, $.proxy(_this.onReportButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData});
+
+                            switch(buttonData.ctrlid){
+                                case _ctrl.delete:
+                                    //_this.data.ctrlid='3005';
+                                    req.url='http://'+_this.data.uurl+'?fmname='+_this.data.name+'&fmctrlid='+_ctrl.delete+'&fmdatauid='+rowData[0]+'&fmtoken='+globalSetting.token;
+                                    break;
+                                case _ctrl.open:
+                                    //  _this.data.ctrlid='3006';
+                                    req.url='http://'+_this.data.uurl+'?fmname='+detailWinID+'&fmctrlid='+_ctrl.open+'&fmdatauid='+rowData[0]+'&fmtoken='+globalSetting.token;
+                                    break;
+                                case _ctrl.create:
+                                    //_this.data.ctrlid:'3004'
+                                    req.url='http://'+_this.data.uurl+'?fmname='+detailWinID+'&fmctrlid='+_ctrl.create+'&fmdatauid='+''+'&fmtoken='+globalSetting.token;
+                                    break;
+                                default:
+                                    var replaceURL =buttonData.uurl.replace(/_ROW_DATA_GUID_/g,rowData[0].toString());
+                                    if(parseInt(buttonData.ctrlid)>3032 && parseInt(buttonData.ctrlid)<4000){
+                                        req.url='http://'+replaceURL; //+'?fmname='+detailWinID+'&fmctrlid='+buttonData.ctrlid+'&fmdatauid='+''+'&fmtoken='+globalSetting.token;
+                                    }else if(parseInt(buttonData.ctrlid)>=4000 && parseInt(buttonData.ctrlid)<5000){
+                                        //Remove By JetLeeX 2016-07-21　uurl拼接错误,
+                                        req.url='http://'+replaceURL +'&fmdatauid='+rowData[0];
+                                    }
+                                    break;
+
+                            }
+                            if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
+                            if(buttonData.ctrlid==_ctrl.delete){
+                                BootstrapDialog.show(
+                                    {
+
+                                        title: '删除',
+                                        size: BootstrapDialog.SIZE_SMALL,
+                                        message: '<span style="font-size:2em; margin-left: 35%">确认删除?</span>',
+
+                                        buttons: [
+
+                                            {
+                                                label: '确认',
+                                                cssClass: 'btn-warning',
+                                                action: function(dialog) {
+                                                    _this.sendAjax( req, $.proxy(_this.onReportButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData});
+                                                    dialog.close();
+                                                }
+                                            },
+                                            {
+                                                label: '取消',
+                                                cssClass: 'btn-primary',
+                                                action: function(dialog) {
+                                                    dialog.close();
+                                                }
+                                            }
+
+                                        ]
+                                    }
+                                );
+                            }else{
+                                _this.sendAjax( req, $.proxy(_this.onReportButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData});
+                            }
+
                         }
+
+
+
+
+
+
 
                     }
                 }
@@ -718,22 +764,46 @@
                                 }//如果校验成功，发送请求
                                 else{
 
-                                    var  url='http://';
-                                    url += ( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)? data4Button.uurl:  _this.data.uurl;
-                                    var data=( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)?  '': _this.data;
-                                    data.token=globalSetting.token;
-                                    var req={
-                                        url: url,//+'&fmtoken='+globalSetting.token
-                                        data:JSON.stringify(data)
-                                    };
 
-                                    if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
-                                    _this.sendAjax( req, $.proxy(_this.onFormButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), dialog);
+                                    if(data4Button.ctrlid>=5000 && data4Button.ctrlid<6000 ){
+                                        //alert('>=5000  <6000');
+                                        var newDialog=new BootstrapDialog({
+                                            size: BootstrapDialog.SIZE_WIDE,
+                                        });
 
-                                    //如果传过来参数 dialog 存在，则关闭 dialog
-                                    if(!!dialog && dialog instanceof BootstrapDialog){
-                                        dialog.close();
+                                        var req={
+                                            url:'../../treeViewList.html',
+                                            dataType:"html",
+                                            type:'get'
+                                        };
+                                        _this.sendAjax( req, $.proxy(_this.on5k6kButtonSuccess,_this) , undefined ,undefined , newDialog);
+
+
+
+
+                                    }else if(data4Button.ctrlid>=6000 && data4Button.ctrlid<7000 ){
+                                        window.location.href=data4Button.uurl;
                                     }
+                                    else{
+                                        var  url='http://';
+                                        url += ( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)? data4Button.uurl:  _this.data.uurl;
+                                        //如果按钮带uurl，执行某些特定功能
+                                        var data=( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)?  '': _this.data;
+                                        data.token=globalSetting.token;
+                                        var req={
+                                            url: url,//+'&fmtoken='+globalSetting.token
+                                            data:JSON.stringify(data)
+                                        };
+
+                                        if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
+                                        _this.sendAjax( req, $.proxy(_this.onFormButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), dialog);
+
+                                        //如果传过来参数 dialog 存在，则关闭 dialog
+                                        if(!!dialog && dialog instanceof BootstrapDialog){
+                                            dialog.close();
+                                        }
+                                    }
+
 
 
                                 }
@@ -783,6 +853,7 @@
                                 beforeAjaxData.close();
                                 new BuildWin(data,0);
                             }else{
+                                this.closeTabView();
                                 this.update(data,0);
                             }
 
@@ -944,16 +1015,6 @@
             }
         };
 
-        BuildWin.prototype.buttonError=function(XMLHttpRequest, textStatus, errorThrown){
-            var msg= "XMLHttpRequest Status:" + XMLHttpRequest.status +"\n"
-                + "XMLHttpRequest readyState: "+ XMLHttpRequest.readyState +"\n"
-                + "textStatus: " + textStatus  +"\n"
-                + "error:" + errorThrown;
-
-            this.winTip(msg);
-
-        };
-
         BuildWin.prototype.onReportButtonsSuccess=function(data,beforeAjaxData){
 
             if(data.windows && $.isArray(data.windows )){
@@ -1053,7 +1114,15 @@
             }else{
                console.log('onGoToPageSuccess, must have beforeAjaxData.tableContainer');
             }
-        }
+        };
+
+        BuildWin.prototype.on5k6kButtonSuccess=function(data,beforeAjaxData){
+            if(beforeAjaxData && beforeAjaxData instanceof BootstrapDialog){
+                beforeAjaxData.setMessage(data);
+                beforeAjaxData.open();
+            }
+
+        };
 
         BuildWin.prototype.winTip=function(msg){
             // var _this=this;
@@ -1147,6 +1216,25 @@
 
         };
 
+        BuildWin.prototype.buttonError=function(XMLHttpRequest, textStatus, errorThrown){
+            var msg= "XMLHttpRequest Status:" + XMLHttpRequest.status +"\n"
+                + "XMLHttpRequest readyState: "+ XMLHttpRequest.readyState +"\n"
+                + "textStatus: " + textStatus  +"\n"
+                + "error:" + errorThrown;
+
+            this.winTip(msg);
+
+        };
+
+        BuildWin.prototype.addLoading=function($element){
+            $element.append('<div class="loadingData"></div>');
+
+        };
+
+        BuildWin.prototype.removeLoading=function($element){
+            $element.find('div.loadingData').remove();
+        };
+
         BuildWin.prototype.sendAjax=function(Request,Success,Complete, Error,preAjaxData ) {
             var ajaxObject = $.ajax({
                 url: Request.url ||'',    //请求的url地址
@@ -1187,3 +1275,26 @@
         return BW;
     })
 );
+
++function(factory){
+    if(typeof define==='function' && define.amd ){
+        define(['jquery'],factory);
+    }else if(typeof module==='object' && module.exports){
+        module.exports=factory(require('jquery'));
+    }
+    else{
+        factory(jQuery);
+    }
+
+
+
+}(function(){
+
+    //define your jquery plugin here
+
+
+
+
+
+
+});
