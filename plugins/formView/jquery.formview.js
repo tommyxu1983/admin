@@ -71,7 +71,8 @@
         integer: 'integer',
         float:'float',
         time:'time',
-        file:'file'
+        file:'file',
+        steps:'steps',
     };
 
     var _currency={
@@ -127,6 +128,8 @@
         button:'<button></button>',
         i:'<i></i>',
         textarea:'<textarea></textarea>',
+        ul:'<ul></ul>',
+        li:'<li></li>'
     };
 
     var logError = function (message) {
@@ -176,13 +179,9 @@
             this.originalData.push(item.data);
         },this));
         this.render(this.settings);
-
-
-
     };
 
     FormView.prototype.render=function(settings){
-
         this.buildForm(settings);
     };
 
@@ -218,8 +217,8 @@
 
             // 12/settings.noInputsInRow 因为 boostrap 栅格系统分为12等分，请将 noInputsInRow设为12的公约数
 
-            //如果是文件， 多选， textarea,直接占一行
-            if(item.dataType==_dataType.file || item.dataType==_dataType.multi ||(item.dataType==_dataType.text && item.inputMultiLine && item.inputMultiLine>0)){
+            //如果是文件， 多选，步骤 ,textarea,直接占一行
+            if(item.dataType==_dataType.file || item.dataType==_dataType.multi || item.dataType==_dataType.steps || (item.dataType==_dataType.text && item.inputMultiLine && item.inputMultiLine>0)){
                //把上一行的 row 系上 form
                 if(rowItemCount>0){this.$form.append($row.clone(true)); }
                 $row=null;
@@ -576,6 +575,66 @@
 
                 $result=$tempContainer.children();
                 break;
+            //如果是步骤的话：
+            case _dataType.steps:
+                var $tempContainer=$(_html.div),
+                    stepsUL=$(_html.ul).addClass('stepsView'),
+                    stepsLength=ctlListItem.dataOption.length,
+                    activeFind=false,
+                    liWidth= (100/stepsLength).toString() + '%';
+
+                $tempContainer.append(stepsUL);
+
+                $.each(ctlListItem.dataOption, $.proxy(function(index,item){
+                    var stepLI=$(_html.li)
+                        .css('width',liWidth),
+
+                     txtContainer=$(_html.div)
+                         .addClass('txtContainer')
+                         .html(item.caption),
+
+                    dotNBarContainer=$(_html.div)
+                        .addClass('dotBarContainer'),
+                    dot=$(_html.span)
+                        .addClass('dot'),
+                    bar=$(_html.span)
+                        .addClass('bar');
+
+/*                    var dotNBarContainerWidth =dot[0].clientHeight,
+                        barWidth= dot[0].offsetWidth;
+                    bar.width=*/
+
+                    stepLI.append(txtContainer);
+                    stepLI.append( dotNBarContainer.append(dot) );
+
+                    //最后一个 step不加 bar
+                    if(index<stepsLength-1){
+                        dotNBarContainer.append(bar);
+                    }
+
+                    //如果是空值，css 维持现状
+                    //如果不是空值,说明steps已经走了几步。
+                    if(  !!ctlListItem.data && ctlListItem.data.length  && ctlListItem.data.length>0){
+
+                        if(item.id==ctlListItem.data){
+                            // 这个step= active
+                            dot.addClass('step-active dot-active');
+                            txtContainer.addClass('text-active');
+                            activeFind=true;
+                        }else if (! activeFind){
+                            // 这个step= done
+                            dot.addClass('step-done');
+                            bar.addClass('step-done');
+                            txtContainer.addClass('text-done');
+                        }
+
+
+                    }
+
+                    stepsUL.append(stepLI)
+                },this));
+
+                $result=$tempContainer.children();
         }
 
         //只读

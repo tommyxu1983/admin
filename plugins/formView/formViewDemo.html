@@ -23,7 +23,116 @@
         }*/
 
 
+
+        .stepsView{
+            display: inline-block;
+            list-style: none;
+            /* margin-bottom:0px;*/
+            width:100%;
+        }
+
+        .stepsView > li{
+            float:left;
+            color: gray;
+        }
+
+
+        .stepsView >li div.txtContainer{
+            /*width:100%;
+            height:50px;
+            background-color: #00b3ee;*/
+            color: grey;
+        }
+
+        .stepsView >li div.dotBarContainer{
+            position: relative;
+            width:100%;
+            height:30px;
+        }
+
+
+        .stepsView >li div.dotBarContainer .dot{
+            display: inline-block;
+
+            width:30px;
+            height:30px;
+            
+            border-radius: 50%;
+            background-color: #bfbfbf;
+            border: 1px solid rgba(103, 103, 103, 0.5);
+            z-index:1000;
+        }
+
+
+
+        .stepsView >li div.dotBarContainer .bar{
+            display: inline-block;
+            position:absolute;
+
+            top:13px;
+            left:30px;
+
+            height:4px;
+            width:100%;
+
+            border-top: 1px solid rgba(103, 103, 103, 0.5);
+            border-bottom: 1px solid rgba(103, 103, 103, 0.5);
+
+        }
+
+
+        .stepsView > li .text-done{
+            color:  #3C8DBC !important;
+        }
+
+        .stepsView > li .text-active{
+            color:  green !important;
+        }
+
+        .stepsView > li .step-done{
+            background-color: #4790c6 !important;
+
+        }
+
+        .stepsView > li .step-active{
+            background-color: #009600 !important;
+
+        }
+
+        .stepsView > li .dot-active{
+            -webkit-animation: twinkling 1s infinite ease-in-out;
+            animation:twinkling 2s infinite ease-in-out;
+        }
+
+
+        @-webkit-keyframes twinkling{
+            0%{
+                opacity:0.3;
+            }
+            100%{
+                opacity:1;
+            }
+        }
+
+        @-webkit-keyframes twinkling{
+
+            0%{
+                opacity:0.3;
+            }
+
+            100%{
+                opacity:1;
+            }
+        }
+
+
+
+
         /*---------formView------End--------------------*/
+
+
+
+
 
         .formviewContainer{
             padding:0px 0px 5px 0px;
@@ -120,7 +229,7 @@
 
             controlList:[
                 {label:'姓名', isLabelDisplay:true, dataType:'text',placeholder:'请填写姓名',dataID:'name',data:'张三',dataOption:'',readonly:1, multiline:1,validateRules:{required:true,maxlength:'4'}},
-                {label:'用户名', isLabelDisplay:true, dataType:'text',placeholder:'请填写用户名',dataID:'userName',data:'',dataOption:'',validateRules:{required:true,'minlength':'2',maxlength:5}},
+              /*  {label:'用户名', isLabelDisplay:true, dataType:'text',placeholder:'请填写用户名',dataID:'userName',data:'',dataOption:'',validateRules:{required:true,'minlength':'2',maxlength:5}},
                 {label:'称昵', isLabelDisplay:true, dataType:'text',placeholder:'请填写称昵',dataID:'nickName',data:'',dataOption:''},
                 {label:'邮箱', isLabelDisplay:true, dataType:'email',placeholder:'请填写邮箱',dataID:'email',data:'',dataOption:''},
                 {label:'密码', isLabelDisplay:true, dataType:'psw',placeholder:'',dataID:'password',data:'',dataOption:''},
@@ -130,14 +239,84 @@
                 {label:'工种', isLabelDisplay:true, dataType:'multi',placeholder:'worker',dataID:'profession',data:'writer',dataOption:[{id:'teacher',caption:'老师',checked:1},{id:'worker',caption:'工人',checked:0},{id:'writer',caption:'作家',checked:1}]},
                 {label:'生日', isLabelDisplay:true, dataType:'date',placeholder:'',dataID:'birthday',data:'1986/04/08',dataOption:''},
                 {label:'部门', isLabelDisplay:true,dataType:'text',placeholder:'',dataID:'department',data:'',dataOption:{}},
-                {label:'注册资金', isLabelDisplay:true,dataType:'text',currencyType:'',placeholder:'',dataID:'companyRegister',data:'2000',dataOption:{}},
+                {label:'注册资金', isLabelDisplay:true,dataType:'text',currencyType:'',placeholder:'',dataID:'companyRegister',data:'2000',dataOption:{}},*/
+                {
+                    "label": "审批步骤",
+                    "isLabelDisplay": true,
+                    "dataType": "steps",
+                    "inputReadOnly": 1,
+                    "inputMultiLine": 0,
+                    "placeholder": "",
+                    "dataID": "AuditStep",
+                    "data": "66feefa3-57c0-11e6-acba-406186f6951f",
+                    "dataOption": [
+                        {
+                            "id": "35a0f18c-57c0-11e6-acba-406186f6951f",
+                            "caption": "步骤一"
+                        },
+                        {
+                            "id": "46502aa6-57c0-11e6-acba-406186f6951f",
+                            "caption": "步骤二"
+                        },
+                        {
+                            "id": "66feefa3-57c0-11e6-acba-406186f6951f",
+                            "caption": "步骤三"
+                        },
+                        {
+                            "id": "8e532eb7-57c0-11e6-acba-406186f6951f",
+                            "caption": "步骤四"
+                        },
+                        {
+                            "id": "a0118498-57c0-11e6-acba-406186f6951f",
+                            "caption": "步骤五"
+                        }
+                    ]
+                }
             ]
 
 
         }
     }
 
-
+var haha= {
+            "uID": "69e18fd5-e106-45ff-88249b7f125cbd",
+            "FCaption": "审批步骤",
+            "FDefName": "AuditStep",
+            "FDefValX": "",
+            "FDefType": "25",
+            "FDefSize": null,
+            "FValMax": null,
+            "FValMin": null,
+            "ErrHint": "",
+            "InpuHint": "",
+            "FStyle": "1",
+            "FStyleEx": null,
+            "FValueX": "",
+            "FMultiLine": 0,
+            "FReadonly": 1,
+            "FLinks": [
+                {
+                    "uid": "35a0f18c-57c0-11e6-acba-406186f6951f",
+                    "caption": "步骤一"
+                },
+                {
+                    "uid": "46502aa6-57c0-11e6-acba-406186f6951f",
+                    "caption": "步骤二"
+                },
+                {
+                    "uid": "66feefa3-57c0-11e6-acba-406186f6951f",
+                    "caption": "步骤三"
+                },
+                {
+                    "uid": "8e532eb7-57c0-11e6-acba-406186f6951f",
+                    "caption": "步骤四"
+                },
+                {
+                    "uid": "a0118498-57c0-11e6-acba-406186f6951f",
+                    "caption": "步骤五"
+                }
+            ]
+        }
 
     $(function(){
         console.time('test');

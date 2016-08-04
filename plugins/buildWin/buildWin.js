@@ -31,6 +31,7 @@
             div:'<div></div>',
             button:'<button></button>'
         };
+
         var _moduleType={
             form:'1',
             report:'4',
@@ -375,12 +376,13 @@
                         '21':'psw',
                         '22':'multi',
                         '23':'files',
-                        '24':'richtext'
+                        '24':'richtext',
+                        '25':'steps'
                     }[control.FDefType];
 
 
 
-                    if((inputType=='option'|| inputType=='multi' )&& $.isArray(control.FLinks)){
+                    if((inputType=='option'|| inputType=='multi' || inputType==='steps' )&& $.isArray(control.FLinks)){
                         var   dataOption=[];
                         $.each(control.FLinks,function(index, FLink){
                             dataOption.push({
@@ -454,16 +456,28 @@
                     funModName:_this.data.name,
                     url:module.winmodfields.Body.uurl,
 
-                    onGoToPageClick: $.proxy(function(evt,goToPageIndex,pSetting){
+                    onGoToPageClick: $.proxy(function(evt,goToPageIndex,pSetting,clickTarget){
+                        var reqGotoPage={}, pageIndex=goToPageIndex;
+                        //如果是goto page 输入框
+                        if(goToPageIndex=='goToPage' ){
+                           var inputValue= $(clickTarget).find('input').val();
+
+                            if( parseInt(inputValue)>0 && parseInt(inputValue)<=pSetting.totalPages){
+                                pageIndex=inputValue-1;
+                            }else{
+                                pageIndex=-1
+                            }
+                        }
+
                         //如果到达页码不等于当前页码，执行！
-                        if(goToPageIndex != pSetting.pageIndex){
+                        if(pageIndex>=0 && pageIndex != pSetting.pageIndex ){
                             this.writeBack();
-                            var reqGotoPage={
-                                url:'http://'+pSetting.url+'?fmname='+pSetting.funModName+'&fmctrlid=3033&fmpageindex='+goToPageIndex+'&fmtoken='+globalSetting.token,
+                            reqGotoPage={
+                                url:'http://'+pSetting.url+'?fmname='+pSetting.funModName+'&fmctrlid=3033&fmpageindex='+pageIndex+'&fmtoken='+globalSetting.token,
                                 data:JSON.stringify(_this.data)
                             }
                             _this.sendAjax( reqGotoPage, $.proxy(_this.onGoToPageSuccess,_this) , undefined , undefined,{tableContainer:$moduleDiv});
-                           // _this.addLoading($moduleDiv);
+                            // _this.addLoading($moduleDiv);
                         }
 
                     },_this)
@@ -496,8 +510,9 @@
                             url:''
                         };
 
+                        var ctrlID=parseInt(buttonData.ctrlid);
 
-                        if(buttonData.ctrlid>=5000 && buttonData.ctrlid<6000 ){
+                        if(ctrlID>=5000 && ctrlID<6000 ){
                             //alert('>=5000  <6000');
                             var newDialog=new BootstrapDialog({
                                 size: BootstrapDialog.SIZE_WIDE,
@@ -515,8 +530,9 @@
 
 
 
-                        }else if(buttonData.ctrlid>=6000 && buttonData.ctrlid<7000 ){
-                            window.open(buttonData.uurl);
+                        }else if(ctrlID>=6000 && ctrlID<7000 ){
+                            var replaceURL =buttonData.uurl.replace(/_ROW_DATA_GUID_/g,rowData[0].toString());
+                            window.open(replaceURL);
                         }else{
 
                             switch(buttonData.ctrlid){

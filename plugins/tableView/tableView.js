@@ -220,7 +220,10 @@
 
         //内部事件 --> 翻页操作事件
         this.$div_PageContainer.on('click','ul li',function(event){
-            _this.$element.trigger('onGoToPageClick',[ this.value,_this.settings.paginationSetting]);
+            if(event.target.tagName.toLowerCase()==='a'){
+                _this.$element.trigger('onGoToPageClick',[ $(this).attr('value'),_this.settings.paginationSetting, event.target]);
+            }
+
         });
 
         //内部事件 --> checkBox
@@ -1052,21 +1055,46 @@
         arrayGoToPage.push({caption:'下一页',page:_pageNex});
         //--->尾页
         arrayGoToPage.push({caption:'尾页',page:(pageSettings.totalPages-1)});
-
+        //--->去第几页
+        arrayGoToPage.push({caption:'跳转到：',page:'goToPage'});
 
 
         $.each(arrayGoToPage,function(index,item){
-            var _cssClass= parseInt(item.caption)==parseInt(pageSettings.pageIndex+1)? _style.activePage:'';
-            $ul_pages.append(
-                $(_html.li)
-                    .attr('value',item.page)
-                    .append(
-                        $(_html.a)
-                            .attr('href','javascript:void(0)')
-                            .append(item.caption)
-                            .addClass(_cssClass)
-                    )
-            );
+            if(item.page=='goToPage'){
+                /*$ul_pages.append(
+                    $(_html.li)
+                        .attr('name',item.page)
+                        .append(
+                            $('<input type="number">')
+                        )
+                );*/
+
+                $ul_pages.append(
+                    $(_html.li)
+                        .attr('value',item.page)
+                        .append(
+                            $(_html.a)
+                                .attr('href','javascript:void(0)')
+                                .append(item.caption)
+                                .append( $('<input type="number">') )
+
+                        )
+                );
+            }else{
+
+                var _cssClass= parseInt(item.caption)==parseInt(pageSettings.pageIndex+1)? _style.activePage:'';
+                $ul_pages.append(
+                    $(_html.li)
+                        .attr('value',item.page)
+                        .append(
+                            $(_html.a)
+                                .attr('href','javascript:void(0)')
+                                .append(item.caption)
+                                .addClass(_cssClass)
+                        )
+                );
+            }
+
         });
 
 
@@ -1079,6 +1107,9 @@
         this.$element.append(this.$div_PageContainer);
 
         //this.floatPagination();
+
+
+
     };
 
 

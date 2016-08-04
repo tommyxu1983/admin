@@ -78,6 +78,7 @@ require.config({
         'tabview':'plugins/tabView/tabView',
         'formview':'plugins/formView/jquery.formview',
         'validateX':'plugins/validate/jquery.validateX',
+        'popUpMsg':'plugins/popUpMsg/popUpMsg',
                 //没有按 AMD 规范写的插件，需要在 require.config shim 里定义依赖和输出
         'uploader': 'plugins/uploader/uploader',
         'slimscroll':'plugins/slimScroll/jquery.slimscroll',
@@ -98,7 +99,7 @@ require.config({
 
 
 
-require(['jquery','bootstrap-dialog','BuildWin','echarts','dMenu','slimscroll','treeview'], function ($,BootstrapDialog,BW){
+require(['jquery','bootstrap-dialog','BuildWin','popUpMsg','echarts','dMenu','slimscroll','treeview'], function ($,BootstrapDialog,BW){
 
 
 
@@ -227,17 +228,26 @@ require(['jquery','bootstrap-dialog','BuildWin','echarts','dMenu','slimscroll','
                 selectedColor: '#FFFFFF',
                 selectedBackColor: '#428bca',
                 onNodeClick:function(event, node){
-                    var req={};
+                    var req={},pMsg= new popUpMsg();
                     req.url=globalSetting.uurl+'?fmname='+node.name+'&fmtoken='+globalSetting.token;
-                    getAjax(req,getMenuContentSuccess);
+
+                    getAjax(req,getMenuContentSuccess,undefined,undefined,{pMessage:pMsg});
+                   /* pMsg.showLoading();*/
                 }
             }
         );
     }
 
-    function getMenuContentSuccess(data){
+    function getMenuContentSuccess(data,preAjaxData){
         if(data.code>=0){
+
             BW(data,0,'.tabViewContainer');
+            if(preAjaxData.pMessage instanceof popUpMsg){
+                preAjaxData.pMessage.remove();
+                preAjaxData.pMessage.removeLoading();
+                preAjaxData.pMessage.setSuccMsg('加载成功');
+                preAjaxData.pMessage.showSuccMsg();
+            }
         }
     }
 

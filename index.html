@@ -54,6 +54,38 @@
         color:whitesmoke;
     }
 
+    .popUpMsg-msgTip{
+        position:absolute;
+        display: none;
+        top:49%;
+        left:48%;
+        max-width: 250px;
+        border-radius: 5px;
+        text-align: center;
+        padding: 10px;
+        background-color:#000000;
+        background-color: rgba(47, 109, 166, 0.66);
+        z-index:20001;
+        color:whitesmoke;
+    }
+
+    .popUpMsg-overlay{
+        position:absolute;
+        display: none;
+        top:0px;
+        left:0px;
+        width:100%;
+        height:100%;
+        z-index:20000;
+        background-color: rgba(128, 128, 128, 0.5);
+        color:white;
+
+    }
+
+
+
+
+
     .errorPlacement{
         padding-top:2px;
 
@@ -125,7 +157,80 @@
     -ms-transform:rotate(180deg);
 }
 
-/*---------formView------End--------------------*/
+.stepsView{
+    display: inline-block;
+    list-style: none;
+    /* margin-bottom:0px;*/
+    width:100%;
+}
+
+.stepsView > li{
+    float:left;
+    color: gray;
+}
+
+
+.stepsView >li div.txtContainer{
+    /*width:100%;
+    height:50px;
+    background-color: #00b3ee;*/
+    color: grey;
+}
+
+.stepsView >li div.dotBarContainer{
+    position: relative;
+    width:100%;
+    height:30px;
+}
+
+
+.stepsView >li div.dotBarContainer .dot{
+    display: inline-block;
+    width:30px;
+    height:30px;
+    border-radius: 50%;
+    background-color: #bfbfbf;
+    border: 1px solid rgba(103, 103, 103, 0.5);
+    z-index:1000;
+}
+
+
+
+.stepsView >li div.dotBarContainer .bar{
+    display: inline-block;
+    position:absolute;
+    top:13px;
+    left:30px;
+    height:4px;
+    width:100%;
+
+    border: 1px solid rgba(103, 103, 103, 0.5);
+
+}
+
+
+.stepsView > li .text-done{
+    color:  #3C8DBC !important;
+}
+
+.stepsView > li .text-active{
+    color:  green !important;
+}
+
+.stepsView > li .step-done{
+    background-color: rgba(60, 141, 188, 0.5) !important;
+
+}
+
+.stepsView > li .step-active{
+    background-color: rgba(0, 128, 0, 0.5) !important;
+
+}
+
+
+
+
+    /*---------formView------End--------------------*/
 
 
 /*---------taView------Begin--------------------*/
@@ -385,7 +490,12 @@
         background-color: #286090;
 
     }
-
+    .table-responsive .tableView-paginationContainer .tableView-paginationChange>ul>li>a>input{
+        display: inline-block;
+        margin:1px 0px 1px 5px;
+        width:40px;
+        height:26px;
+    }
 
 
     /*让图标按钮不换行*/
@@ -493,6 +603,12 @@
     .paginationFixBottomMid .tableView-paginationChange>ul>li>a.tableView-activePage:hover {
         background-color: #286090;
 
+    }
+    .paginationFixBottomMid .tableView-paginationChange>ul>li>a>input{
+        display: inline-block;
+        margin:1px 0px 1px 5px;
+        width:40px;
+        height:26px;
     }
 
     /*翻页 div */
@@ -691,8 +807,18 @@
 <!--<script type="text/javascript" src="plugins/buildWin/buildWin.js"></script>-->
 <!--页面主 js-->
 <!--<script type="text/javascript" src="plugins/echart/echarts.js"></script>-->
+
 <script type="text/javascript" src="jsLib/require-2.1.1.js"></script>
 <script type="text/javascript" src="index.js" data-main="js/main"></script>
+
+
+<!--<link href="plugins/umEditor/themes/default/_css/umeditor.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" charset="utf-8" src="plugins/umEditor/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="plugins/umEditor/_examples/editor_api.js"></script>
+<script type="text/javascript" src="plugins/umEditor/lang/zh-cn/zh-cn.js"></script>-->
+
+
+
 
 
 <!--<script type="text/javascript" src="jsLib/avalon.js"></script>-->
