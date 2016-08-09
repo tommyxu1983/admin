@@ -165,6 +165,7 @@
 
         //校验规则缓存，有校验生成器维护
         this.vRules={};
+        this.previousItemDataID=undefined;
 
        // options.isDataWritable==true 直接操作 传进来的数据，任何input里的值改变都会直接改动传进的 option.data
         this.settings=$.extend({},_default.options,options);
@@ -213,12 +214,14 @@
         var rowItemCount= 0,
             $row=$(_html.div).addClass(_defaultStyle.bs.row),
             contoListLength= $.isArray(settings.data.controlList)? settings.data.controlList.length : 0 ;
+
         $.each( settings.data.controlList, $.proxy(function(index,item){
 
             // 12/settings.noInputsInRow 因为 boostrap 栅格系统分为12等分，请将 noInputsInRow设为12的公约数
 
+
             //如果是文件， 多选，步骤 ,textarea,直接占一行
-            if(item.dataType==_dataType.file || item.dataType==_dataType.multi || item.dataType==_dataType.steps || (item.dataType==_dataType.text && item.inputMultiLine && item.inputMultiLine>0)){
+            if(  (  item.dataType==_dataType.file || item.dataType==_dataType.multi || item.dataType==_dataType.steps || (item.dataType==_dataType.text && item.inputMultiLine && item.inputMultiLine>0) ) && ! item.FNoNewLine){
                //把上一行的 row 系上 form
                 if(rowItemCount>0){this.$form.append($row.clone(true)); }
                 $row=null;
@@ -228,40 +231,67 @@
                 rowItemCount=0;
             }else{
 
-                if(rowItemCount==0){
-                    //第一个，创建新的 row（之前的row清零）
-                    $row=null;
-                    $row=$(_html.div).addClass(_defaultStyle.bs.form_Group);
-                    $row.append(this.buildControlItem(item,settings.noInputsInRow));
-                    rowItemCount++;
+                //如果是连着的input， 如一个range，从某日到某日
+                if(item.dataID==this.previousItemDataID){
+
+                    var $inputs= this.buildControlItem(item,settings.noInputsInRow, true);
+                    if($row){
+                        $row.find('div').last().append($inputs);
+                    }else{
+                        this.$form.find('div.form-group').last().find('div').last().append($inputs);
+                    }
+
+                    $inputs.siblings().addClass('merged-input');
+
                     //如果是最后一个 controlList item ,则把这个系上form
                     if(index==contoListLength-1){
                         this.$form.append($row.clone(true));
                     }
-                }
-                else if (0<rowItemCount && rowItemCount< settings.noInputsInRow-1){
-                    //大于0（不是第一个），小于设置的最大列数,老的row 上系上 controList item
-                    $row.append(this.buildControlItem(item,settings.noInputsInRow));
-                    rowItemCount++;
-                    //如果是最后一个 controlList item ,则把这个系上form
-                    if(index==contoListLength-1){
-                        this.$form.append($row.clone(true));
+
+                }else{
+
+                    if(rowItemCount==0){
+                        //第一个，创建新的 row（之前的row清零）
+                        $row=null;
+                        $row=$(_html.div).addClass(_defaultStyle.bs.form_Group);
+                        $row.append(this.buildControlItem(item,settings.noInputsInRow));
+                        rowItemCount++;
+                        //如果是最后一个 controlList item ,则把这个系上form
+                        if(index==contoListLength-1){
+                            this.$form.append($row.clone(true));
+                        }
                     }
-                }
-                else{
-                    //最后行里的一个
-                    $row.append(this.buildControlItem(item,settings.noInputsInRow));
-                    rowItemCount++;
-                    this.$form.append($row.clone(true));
-                    rowItemCount=0;
+                    else if (0<rowItemCount && rowItemCount< settings.noInputsInRow-1){
+                        //大于0（不是第一个），小于设置的最大列数,老的row 上系上 controList item
+                        $row.append(this.buildControlItem(item,settings.noInputsInRow));
+                        rowItemCount++;
+                        //如果是最后一个 controlList item ,则把这个系上form
+                        if(index==contoListLength-1){
+                            this.$form.append($row.clone(true));
+                        }
+                    }
+                    else{
+                        //最后行里的一个
+                        $row.append(this.buildControlItem(item,settings.noInputsInRow));
+                        rowItemCount++;
+                        this.$form.append($row.clone(true));
+                        rowItemCount=0;
+
+                    }
 
                 }
+
+
 
 
             }
+            //如果是多选，加个框
+            if( item.dataType==_dataType.multi ){
+               var $div= $row.find('input[type=checkbox]').parent().parent();
+                $div.addClass('multiChoice');
+            }
 
-
-
+            this.previousItemDataID=item.dataID;
         },this) );
 
         //创建 button
@@ -310,27 +340,37 @@
         this.$element.empty();
     };
 
-    FormView.prototype.buildControlItem=function(ctlListItem,itemsPerRow){
+    FormView.prototype.buildControlItem=function(ctlListItem,itemsPerRow, merge){
         //创建 label
-        var iCol= 1, jCol=1;
+        var iCol= 1,
+            jCol= 1,
+            tempDiv=$(_html.div),
+            $label=$(_html.label)
+                .attr('for',this.settings.data.formID+'-'+ctlListItem.dataID)//.css('text-align','left')
+                .append((ctlListItem.isLabelDisplay)&& ctlListItem.label),
+            $input= this.buildInput(ctlListItem);
 
         //label占的 col-sm-iCol
         iCol={1:2,2:2,3:2,4:1}[itemsPerRow];
         // input 占的 col-sm-jCol
         jCol={1:10,2:4,3:2,4:2}[itemsPerRow];
 
+        // label Div
+        var $labelDiv=$(_html.div).addClass('col-sm-'+iCol +' ' +_defaultStyle.bs.label) //style
+            .append( $label );
 
-        var $label=$(_html.label)
-                .attr('for',this.settings.data.formID+'-'+ctlListItem.dataID)
-                //.css('text-align','left')
-                .addClass('col-sm-'+iCol +' ' +_defaultStyle.bs.label) //style
-                .append((ctlListItem.isLabelDisplay)&& ctlListItem.label); // data
+        // input Div
+        var $inputDiv=$(_html.div).addClass('col-sm-'+ jCol).append($input );
 
         //创建 temp div, 返回 label 和 input
-        return $(_html.div)
-                .append($label)                   // attach label
-                .append(  $(_html.div).addClass('col-sm-'+ jCol).append(this.buildInput(ctlListItem)) )
-                .children(); // attach input
+        if(merge){
+            $label.addClass('merged-label');
+            $input.addClass('merged-input');
+         return   tempDiv.append($label).append($input).children();
+        }else{
+            return   tempDiv.append($labelDiv).append( $inputDiv ).children();
+        }
+
     };
 
     FormView.prototype.createVRules=function(ctlListItem){

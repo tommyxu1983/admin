@@ -6,6 +6,20 @@
     <script type="text/javascript" src="../../jsLib/jquery-1.12.3.js"></script>
     <script type="text/javascript" src="popUpMsg.js"></script>
     <style>
+        .messageTip{
+            position:fixed;
+            top:49%;
+            right:48%;
+            max-width: 250px;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            background-color:#000000;
+            background-color: rgba(47, 109, 166, 0.66);
+            z-index:1000000;
+            color:whitesmoke;
+        }
+
         .popUpMsg-msgTip{
             position:absolute;
             display: none;
@@ -16,7 +30,7 @@
             text-align: center;
             padding: 10px;
             background-color:#000000;
-            background-color: rgba(47, 109, 166, 0.66);
+            background-color: rgba(0, 150, 0, 0.66);
             z-index:20001;
             color:whitesmoke;
         }
@@ -35,11 +49,74 @@
         }
 
 
+        .overLayMsg{
+            position: absolute;
+            top:49%;
+            left:48%;
+        }
+
+
+
+        .popUpMsg-errorTip{
+            position:absolute;
+            display: none;
+            top:49%;
+            left:48%;
+            max-width: 250px;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            background-color:#000000;
+            background-color: rgba(255, 61, 22, 0.5);
+            z-index:20001;
+            color:whitesmoke;
+        }
+
+
+        .popUpMsg-errorTip  .errorTipClose{
+            display:inline-block;
+            width:30px;
+            height:20px;
+            margin-left:5px;
+            cursor: pointer;
+        }
+
+        .popUpMsg-errorTip  .errorTipClose:hover{
+            transition:All 0.4s ease-in-out;
+            -webkit-transition:All 0.4s ease-in-out;
+            -moz-transition:All 0.4s ease-in-out;
+            -o-transition:All 0.4s ease-in-out;
+
+            transform:rotate(180deg);
+            -webkit-transform:rotate(180deg);
+            -moz-transform:rotate(180deg);
+            -o-transform:rotate(180deg);
+            -ms-transform:rotate(180deg);
+        }
+
+        .popUpMsg-errorTip .errorMsg{
+            display: inline-block;
+        }
+
+        .popUpMsg-toolTip{
+            background-color: rgba(47, 109, 166, 0.66);
+            z-index:1000000;
+            color:whitesmoke;
+            padding:5px;
+            border-radius: 5px;
+            max-width: 75px;
+        }
+
+        
 
     </style>
 </head>
 <body>
-        <div id="msgDiv" style="position:relative; margin:100px; width:500px; height:500px; background-color: #0B85A1"></div>
+
+<button style="position:fixed; top:500px; left:800px " id="buttonTL">aaaaa</button>
+        <div id="msgDiv" style="position:relative; margin:100px; width:500px; height:500px; background-color: #0B85A1">
+
+        </div>
 </body>
 
 <script>
@@ -47,14 +124,20 @@
 
     $('#msgDiv').first();
 
-  var pMsg= new popUpMsg();
+  var pMsg= new PUMsg({ container: $('#msgDiv').first()});
     pMsg.showLoading();
     setTimeout(function(){
         pMsg.removeLoading();
-        pMsg.setSuccMsg('加载成功');
+      /*  pMsg.setSuccMsg('加载成功');
         pMsg.showSuccMsg();
+        */
+        pMsg.setErrorMsg('错误提示');
+        pMsg.showErrorMsg();
+
     },2000);
 
+    var bpMsg= new PUMsg({ popUpTarget: $('#buttonTL') ,tooTipMsg: '按钮提示按钮提示按钮提示按钮提示按钮提示按钮提示按钮提示按钮提示按钮提示按钮提示按钮提示'});
+    /*bpMsg.setToolTipMsg('按钮提示');*/
 
 
 </script>

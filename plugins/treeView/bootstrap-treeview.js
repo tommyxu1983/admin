@@ -437,7 +437,12 @@
 				 else {
 
 					 if (node.selectable) {
-						 _this.toggleSelectedState(node, _default.options);
+						 if(node.nodes && $.isArray(node.nodes) && node.nodes.length>0){
+							 _this.toggleExpandedState(node, _default.options);
+						 }else{
+							 _this.toggleSelectedState(node, _default.options);
+						 }
+
 					 } else {
 						 _this.toggleExpandedState(node, _default.options);
 					 }
@@ -452,12 +457,16 @@
 			},_clickSetting.DELAY);
 		}else{
 			//handle double-click events
-			var target = $(event.target);
+
+
+			/*var target = $(event.target);
 			var node = _this.findNode(target);
 			if($.isArray(node.nodes)){
 				_this.toggleExpandedState(node, _default.options);
 				_this.render();
-			}
+			}*/
+
+
 			//handle double-click events
 
 			clearTimeout(_clickSetting.timmer);
@@ -757,6 +766,9 @@
 					$textNode.append(node.text)
 				//'<span>'+node.text+'</span>'
 				);
+				if (!node.nodes){
+					$textNode.css('font-size','12px');
+				}
 			}
 
 			//xul added

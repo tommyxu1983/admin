@@ -3,7 +3,7 @@
 <head>
     <script>
         var globalSetting={};
-
+        globalSetting.debug=true;
         globalSetting.token=getCookie('eaosoft_token_lngyes');
         if(! globalSetting.token){
             window.location.href='../index.html';
@@ -39,51 +39,253 @@
 </head>
 <style>
 
-    .messageTip{
+/*-----------------------buildWin Begin----------------------*/
 
-        position:fixed;
-        top:49%;
-        right:48%;
-        max-width: 250px;
-        border-radius: 5px;
-        text-align: center;
-        padding: 10px;
-        background-color:#000000;
-        background-color: rgba(47, 109, 166, 0.66);
-        z-index:1000000;
-        color:whitesmoke;
-    }
+.win-buttonsContainer{
+    display: block;
+    margin: 10px;
+  /*  padding: 10px;*/
+    padding-bottom: 10px;
+    text-align:right;
+    border:1px #b3b3b3 solid;
+    border-radius: 5px;
+}
 
-    .popUpMsg-msgTip{
-        position:absolute;
-        display: none;
-        top:49%;
-        left:48%;
-        max-width: 250px;
-        border-radius: 5px;
-        text-align: center;
-        padding: 10px;
-        background-color:#000000;
-        background-color: rgba(47, 109, 166, 0.66);
-        z-index:20001;
-        color:whitesmoke;
-    }
+.win-buttonsContainer .banner{
+    background-color: #3C8DBC;
+    margin: 0px 0px 10px 0px;
+    padding:5px;
+    width:100%;
+    min-height:22px;
+    text-align:center;
+    color:whitesmoke;
+    font-size:1.2em;
+    text-align: right;
+}
 
-    .popUpMsg-overlay{
-        position:absolute;
-        display: none;
-        top:0px;
-        left:0px;
-        width:100%;
-        height:100%;
-        z-index:20000;
-        background-color: rgba(128, 128, 128, 0.5);
-        color:white;
+.win-buttonsContainer .content{
+    display: block;
+}
+.win-buttonsContainer .toggle{
 
-    }
+}
 
 
 
+.win-buttonsContainer .buttonCollapse{
+    display: inline-block;
+
+    font-size:1.2em;
+
+    cursor:pointer;
+/*    width:20px;
+    height:20px;*/
+    color:whitesmoke;
+}
+
+.win-buttonsContainer .buttonCollapse:hover{
+    color:indianred;
+
+    transition:All 0.4s ease-in-out;
+    -webkit-transition:All 0.4s ease-in-out;
+    -moz-transition:All 0.4s ease-in-out;
+    -o-transition:All 0.4s ease-in-out;
+
+    transform:rotate(180deg);
+    -webkit-transform:rotate(180deg);
+    -moz-transform:rotate(180deg);
+    -o-transform:rotate(180deg);
+    -ms-transform:rotate(180deg);
+}
+
+.win-buttonsContainer .win-buttonGrid{
+    display: inline-block;
+
+    margin-right: 10px;
+    width:150px;
+ /*   max-width: 300px;*/
+
+
+    vertical-align: middle;
+    padding-left: 10px;
+   /* position:*/
+
+
+}
+
+.win-modulesContainer{
+    display: block;
+}
+
+/*-----------------------buildWin End------------------------*/
+
+
+
+
+/*-----------------------------PopUP menu begin--------------------------*/
+.PUMenu-menuContainer{
+    position:fixed;
+    background-color:#3C8DBC;
+    border-radius: 5px;
+    border: 1px solid;
+    color:white;
+    /*  display: none;*/
+
+}
+.PUMenu-menuContainer>ul{
+    list-style-type:none;
+    padding:0px;
+}
+
+.PUMenu-menuContainer>ul{
+    list-style-type:none;
+    /* padding-left:5px;
+     padding-right:10px;*/
+    margin:10px 0px 10px 0px;
+    /*   min-width: px;*/
+}
+
+.PUMenu-menuContainer>ul>li{
+    display: list-item;
+    padding:0px 10px 0px 10px;
+
+}
+
+.PUMenu-menuContainer>ul>li:hover{
+
+    background-color: #3a81ae;
+    vertical-align: middle;
+
+}
+
+.PUMenu-menuContainer>ul>li>a.text{
+    color:white;
+    display: table-cell;
+    min-width:100px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+
+
+}
+
+.PUMenu-menuContainer>ul>li>a.arrow{
+    display: table-cell;
+    /*   background-color: red;*/
+    padding: 5px 10px  5px  10px;
+    vertical-align: middle;
+
+}
+/*-----------------------------PopUP menu End--------------------------*/
+
+
+
+
+/*------------------- pupupMsg Begin------------------------*/
+.messageTip{
+    position:fixed;
+    top:49%;
+    right:48%;
+    max-width: 250px;
+    border-radius: 5px;
+    text-align: center;
+    padding: 10px;
+    background-color:#000000;
+    background-color: rgba(47, 109, 166, 0.66);
+    z-index:1000000;
+    color:whitesmoke;
+}
+
+.popUpMsg-msgTip{
+    position:absolute;
+    display: none;
+    top:49%;
+    left:48%;
+    max-width: 250px;
+    border-radius: 5px;
+    text-align: center;
+    padding: 10px;
+    background-color:#000000;
+    background-color: rgba(0, 150, 0, 0.66);
+    z-index:20001;
+    color:whitesmoke;
+}
+
+.popUpMsg-overlay{
+    position:absolute;
+    display: none;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    z-index:20000;
+    background-color: rgba(128, 128, 128, 0.5);
+    color:white;
+
+}
+
+
+.overLayMsg{
+    position: absolute;
+    top:49%;
+    left:48%;
+}
+
+
+
+.popUpMsg-errorTip{
+    position:absolute;
+    display: none;
+    top:49%;
+    left:48%;
+    max-width: 250px;
+    border-radius: 5px;
+    text-align: center;
+    padding: 10px;
+    background-color:#000000;
+    background-color: rgba(255, 61, 22, 0.5);
+    z-index:20001;
+    color:whitesmoke;
+}
+
+
+.popUpMsg-errorTip  .errorTipClose{
+    display:inline-block;
+    width:30px;
+    height:20px;
+    margin-left:5px;
+    cursor: pointer;
+}
+
+.popUpMsg-errorTip  .errorTipClose:hover{
+    transition:All 0.4s ease-in-out;
+    -webkit-transition:All 0.4s ease-in-out;
+    -moz-transition:All 0.4s ease-in-out;
+    -o-transition:All 0.4s ease-in-out;
+
+    transform:rotate(180deg);
+    -webkit-transform:rotate(180deg);
+    -moz-transform:rotate(180deg);
+    -o-transform:rotate(180deg);
+    -ms-transform:rotate(180deg);
+}
+
+.popUpMsg-errorTip .errorMsg{
+    display: inline-block;
+}
+
+.popUpMsg-toolTip{
+    background-color: rgba(47, 109, 166, 0.66);
+    z-index:1000000;
+    color:whitesmoke;
+    padding:5px;
+    border-radius: 5px;
+    max-width: 75px;
+}
+
+
+
+/* -----------------pupupMsg End-------------------------*/
 
 
     .errorPlacement{
@@ -119,6 +321,7 @@
     margin: 0px 0px 10px 0px;
     padding:5px;
     width:100%;
+    min-height:22px;
     text-align:center;
     color:whitesmoke;
     font-size:1.2em;
@@ -128,21 +331,34 @@
     padding-right:5%;
 }
 
+.formviewContainer input.merged-input{
+    width:auto;
+    display:inline-block;
+    width:45%;
+}
+.formviewContainer label.merged-label{
+    width:auto;
+    display:inline-block;
+    width:10%;
+    text-align: center;
+}
+
+.formviewContainer .multiChoice{
+    border:1px solid;
+    border-radius: 5px;
+}
+
 
 .formviewContainer .formviewFormCollapse{
-
-
     font-size:1.2em;
     float:right;
     cursor:pointer;
     width:30px;
     color:whitesmoke;
-
 }
+
+
 .formviewContainer .formviewFormCollapse:hover{
-
-
-
     color:indianred;
 
     transition:All 0.4s ease-in-out;
@@ -348,15 +564,7 @@
         /*overflow-x:hidden;*/
     }
 
-    .win-buttonGrid{
-        width:250px;
-        max-width: 300px;
-        display: inline-block;
-        vertical-align: middle;
-        padding-left: 10px;
-        float:right;
 
-    }
 
 
 
@@ -493,7 +701,7 @@
     .table-responsive .tableView-paginationContainer .tableView-paginationChange>ul>li>a>input{
         display: inline-block;
         margin:1px 0px 1px 5px;
-        width:40px;
+        width:60px;
         height:26px;
     }
 
@@ -532,7 +740,7 @@
 
 
 
-    /*---------------悬浮 翻页 开始*/
+    /*---------------悬浮 翻页 开始------------------*/
 
     .paginationFixBottomMid{
         position:absolute;
@@ -541,7 +749,7 @@
         width:100%;
         text-align: center;
         background-color: rgba(119, 119, 119, 0.75);
-
+        visibility: hidden;
 
     }
 
@@ -607,7 +815,7 @@
     .paginationFixBottomMid .tableView-paginationChange>ul>li>a>input{
         display: inline-block;
         margin:1px 0px 1px 5px;
-        width:40px;
+        width:60px;
         height:26px;
     }
 

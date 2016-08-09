@@ -78,7 +78,8 @@ require.config({
         'tabview':'plugins/tabView/tabView',
         'formview':'plugins/formView/jquery.formview',
         'validateX':'plugins/validate/jquery.validateX',
-        'popUpMsg':'plugins/popUpMsg/popUpMsg',
+        'PUMsg':'plugins/popUpMsg/popUpMsg',
+        'puMenu':'plugins/puMenu/puMenu',
                 //没有按 AMD 规范写的插件，需要在 require.config shim 里定义依赖和输出
         'uploader': 'plugins/uploader/uploader',
         'slimscroll':'plugins/slimScroll/jquery.slimscroll',
@@ -99,7 +100,7 @@ require.config({
 
 
 
-require(['jquery','bootstrap-dialog','BuildWin','popUpMsg','echarts','dMenu','slimscroll','treeview'], function ($,BootstrapDialog,BW){
+require(['jquery','bootstrap-dialog','BuildWin','PUMsg','echarts','dMenu','slimscroll','treeview','puMenu'], function ($,BootstrapDialog,BW){
 
 
 
@@ -203,6 +204,43 @@ require(['jquery','bootstrap-dialog','BuildWin','popUpMsg','echarts','dMenu','sl
     //
     //});
 
+    $('#globalSetting_opiname').parents('li').first().PUMenu({
+        data:[
+            {
+            "name": "logout",
+            "title": "注销",
+
+            },
+
+            {
+                "name": "changePWD",
+                "title": "修改密码",
+            }
+        ],
+        onMenuItemClick:function(event, itemData){
+          if(  itemData.data.name=='logout' ){
+              window.location.href='../index.html';
+              /*setCookie('eaosoft_token_lngyes','',-1)*/
+              window.globalSetting=null;
+
+          }else if(  itemData.data.name=='changePWD' ){
+
+          }
+
+        },
+
+    })
+
+    if(globalSetting.debug){
+        var errorMsg= new PUMsg();
+        window.onerror = function(errorMessage, scriptURI, lineNumber) {
+            errorMsg.setErrorMsg('');
+            errorMsg.setErrorMsg('error: ' + errorMessage);
+            errorMsg.showErrorMsg();
+
+        }
+    }
+
 
     function getDataSuccess(data){
         globalSetting.uurl=data.globalsetting.uurl;
@@ -228,11 +266,26 @@ require(['jquery','bootstrap-dialog','BuildWin','popUpMsg','echarts','dMenu','sl
                 selectedColor: '#FFFFFF',
                 selectedBackColor: '#428bca',
                 onNodeClick:function(event, node){
-                    var req={},pMsg= new popUpMsg();
-                    req.url=globalSetting.uurl+'?fmname='+node.name+'&fmtoken='+globalSetting.token;
+                    var req={},
+                        pMsg=new PUMsg({
+                            overLayUltimateTime:7000,
+                            onOverLayUltimate:function(event,puMsg){
+                                if(globalSetting.debug){
+                                    puMsg.setErrorMsg('数据解析失败，请查看console');
+                                    puMsg.showErrorMsg();
+                                }
 
-                    getAjax(req,getMenuContentSuccess,undefined,undefined,{pMessage:pMsg});
-                   /* pMsg.showLoading();*/
+                            }
+                        });
+                    req.url=globalSetting.uurl+'?fmname='+node.name+'&fmtoken='+globalSetting.token;
+                    if(node.nodes && $.isArray(node.nodes) && node.nodes.length>0){
+                        //memnu（nodes） 下有子菜单你哦的是
+                    }else{
+                        getAjax(req,getMenuContentSuccess,undefined,undefined,{pMessage:pMsg});
+                         pMsg.showOverLay();
+                    }
+
+
                 }
             }
         );
@@ -242,9 +295,9 @@ require(['jquery','bootstrap-dialog','BuildWin','popUpMsg','echarts','dMenu','sl
         if(data.code>=0){
 
             BW(data,0,'.tabViewContainer');
-            if(preAjaxData.pMessage instanceof popUpMsg){
-                preAjaxData.pMessage.remove();
-                preAjaxData.pMessage.removeLoading();
+            if(preAjaxData.pMessage instanceof PUMsg){
+
+                preAjaxData.pMessage.removeOverLay();
                 preAjaxData.pMessage.setSuccMsg('加载成功');
                 preAjaxData.pMessage.showSuccMsg();
             }
@@ -278,6 +331,15 @@ require(['jquery','bootstrap-dialog','BuildWin','popUpMsg','echarts','dMenu','sl
                 );
                 if(typeof Error ==='function'){
                     Error(XMLHttpRequest,textStatus,errorThrown);
+
+                    if(preAjaxData.pMessage instanceof PUMsg){
+                        preAjaxData.pMessage.removeOverLay();
+                        preAjaxData.pMessage.setErrorMsg('加载失败:'+"XMLHttpRequest Status:" + XMLHttpRequest.status +"\n"
+                            + "XMLHttpRequest readyState: "+ XMLHttpRequest.readyState +"\n"
+                            + "textStatus: " + textStatus  +"\n"
+                            + "error:" + errorThrown);
+                        preAjaxData.pMessage.showErrorMsg();
+                    }
                 }
             }
         });

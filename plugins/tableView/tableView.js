@@ -7,7 +7,7 @@
 
 
     if(typeof define==='function' && define.amd){
-        define(['jquery'],factory);
+        define(['jquery','PUMsg'],factory);
     }else if(typeof window !=='undefined' && window.jQuery){
         factory(jQuery,window)
     }
@@ -666,9 +666,11 @@
         var buttonsContainer=$(_html.div).addClass(_style.buttonContainer);
 
         $.each(buttons,function(index,item){
+           var buttonwithIcon=false;
             var htmlForButton='';
             if(item.data.icon && item.data.icon.length>0){
                 htmlForButton=$(_html.span).addClass(item.data.icon).attr('title',item.innerHTML);
+                buttonwithIcon=true;
             }else{
                 htmlForButton=  ( !!item.innerHTML && item.innerHTML.jquery)? item.innerHTML.clone(true): item.innerHTML
             }
@@ -683,6 +685,12 @@
             $button.data('buttonData', item.data);
             $button.data('rowData', {rowIndex:rowIndex,$row: $tr, oData:rowOData });
             buttonsContainer.append($button);
+            if(buttonwithIcon){
+                new PUMsg({
+                    popUpTarget: $button ,tooTipMsg:item.innerHTML
+                });
+            }
+
         });
 
 
@@ -1030,12 +1038,6 @@
             $div_ChangePage.addClass(pluginName+'-paginationChange');
             $div_PageDetial.addClass(pluginName+'-paginationDetail');
         }
-
-
-
-
-
-
 
 
 

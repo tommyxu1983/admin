@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+    <style>
+        /*------------------- pupupMsg Begin------------------------*/
+        .messageTip{
+            position:fixed;
+            top:49%;
+            right:48%;
+            max-width: 250px;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            background-color:#000000;
+            background-color: rgba(47, 109, 166, 0.66);
+            z-index:1000000;
+            color:whitesmoke;
+        }
+
+        .popUpMsg-msgTip{
+            position:absolute;
+            display: none;
+            top:49%;
+            left:48%;
+            max-width: 250px;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            background-color:#000000;
+            background-color: rgba(0, 150, 0, 0.66);
+            z-index:20001;
+            color:whitesmoke;
+        }
+
+        .popUpMsg-overlay{
+            position:absolute;
+            display: none;
+            top:0px;
+            left:0px;
+            width:100%;
+            height:100%;
+            z-index:20000;
+            background-color: rgba(128, 128, 128, 0.5);
+            color:white;
+
+        }
+
+
+        .overLayMsg{
+            position: absolute;
+            top:49%;
+            left:48%;
+        }
+
+
+
+        .popUpMsg-errorTip{
+            position:absolute;
+            display: none;
+            top:49%;
+            left:48%;
+            max-width: 250px;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            background-color:#000000;
+            background-color: rgba(255, 61, 22, 0.5);
+            z-index:20001;
+            color:whitesmoke;
+        }
+
+
+        .popUpMsg-errorTip  .errorTipClose{
+            display:inline-block;
+            width:30px;
+            height:20px;
+            margin-left:5px;
+            cursor: pointer;
+        }
+
+        .popUpMsg-errorTip  .errorTipClose:hover{
+            transition:All 0.4s ease-in-out;
+            -webkit-transition:All 0.4s ease-in-out;
+            -moz-transition:All 0.4s ease-in-out;
+            -o-transition:All 0.4s ease-in-out;
+
+            transform:rotate(180deg);
+            -webkit-transform:rotate(180deg);
+            -moz-transform:rotate(180deg);
+            -o-transform:rotate(180deg);
+            -ms-transform:rotate(180deg);
+        }
+
+        .popUpMsg-errorTip .errorMsg{
+            display: inline-block;
+        }
+
+        .popUpMsg-toolTip{
+            background-color: rgba(47, 109, 166, 0.66);
+            z-index:1000000;
+            color:whitesmoke;
+            padding:5px;
+            border-radius: 5px;
+            max-width: 75px;
+        }
+
+
+
+        /* -----------------pupupMsg End-------------------------*/
+
+
+
+
+
+/*-----------------------------PopUP menu begin--------------------------*/
+        .PUMenu-menuContainer{
+            position:fixed;
+            background-color:#3C8DBC;
+            border-radius: 5px;
+            border: 1px solid;
+            color:white;
+          /*  display: none;*/
+
+        }
+        .PUMenu-menuContainer>ul{
+            list-style-type:none;
+            padding:0px;
+        }
+
+        .PUMenu-menuContainer>ul{
+            list-style-type:none;
+           /* padding-left:5px;
+            padding-right:10px;*/
+            margin:10px 0px 10px 0px;
+        /*   min-width: px;*/
+        }
+
+        .PUMenu-menuContainer>ul>li{
+            display: list-item;
+            padding:0px 10px 0px 10px;
+
+        }
+
+        .PUMenu-menuContainer>ul>li:hover{
+
+            background-color: #3a81ae;
+            vertical-align: middle;
+
+        }
+
+        .PUMenu-menuContainer>ul>li>a.text{
+            display: table-cell;
+            min-width:100px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+
+
+
+        }
+
+        .PUMenu-menuContainer>ul>li>a.arrow{
+            display: table-cell;
+         /*   background-color: red;*/
+            padding: 5px 10px  5px  10px;
+            vertical-align: middle;
+
+        }
+/*-----------------------------PopUP menu End--------------------------*/
+    </style>
+
+
+
+    <script type="text/javascript" src="../../jsLib/jquery-1.12.3.js"></script>
+    <script type="text/javascript" src="../popUpMsg/popUpMsg.js"></script>
+    <script type="text/javascript" src="puMenu.js"></script>
+</head>
+
+<button id="menuDropDownB">menu</button>
+
+
+<script>
+    var treeData1=[
+        {
+            "uid": "0a6a0fa9-b271-466c-898d137a3fcaae",
+            "name": "YSystem",
+            "title": "系统阿斯顿",
+            "token": "d41d8cd98f00b204e9800998ecf8427e",
+            "menu": [
+                {
+                    "uid": "494aed25-6ca9-4bc4-90e3e027970656",
+                    "name": "FMTRoleList",
+                    "title": "系统角色信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "5c410279-fdfa-4228-b8cdf2ec578904",
+                    "name": "FMTUserBaseInfo",
+                    "title": "系统账户基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "c188fcd9-f2a1-42af-bf28cfd3217676",
+                    "name": "FMTRoleBaseInfo",
+                    "title": "系统角色基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "c693ebd9-8da4-4e96-943d9f4fc5d8e4",
+                    "name": "FMTUserList",
+                    "title": "系统账户信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "ec8041fc-cb57-4452-a586f59d57d0fd",
+                    "name": "FMTPowerList",
+                    "title": "系统权限信息列表",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "f6e2d1df-2e83-4a0c-872833b6d9e3af",
+                    "name": "FMTPowerBaseInfo",
+                    "title": "系统权限基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                }
+            ]
+        },
+        {
+            "uid": "27bfe57d-283c-4288-987e32a4e0f6ce",
+            "name": "YSupplier",
+            "title": "液厂",
+            "token": "d41d8cd98f00b204e9800998ecf8427e",
+            "menu": [
+                {
+                    "uid": "187c4502-9c22-48a1-b7d7ae9a161954",
+                    "name": "FMSRoleList",
+                    "title": "液厂角色信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e",
+
+                },
+                {
+                    "uid": "528fc0fd-f07e-4f52-92ab10b4a26bfc",
+                    "name": "FMSSupplyList",
+                    "title": "液厂信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "673aa7e4-f131-4ad2-b6f46fb4f81916",
+                    "name": "FMSRoleBaseInfo",
+                    "title": "液厂角色基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "c2743d01-0405-4046-9b39439cf1fb52",
+                    "name": "FMSupplyBaseInfo",
+                    "title": "液厂基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "c3ab6887-35b0-44be-b5ffd77b20ae30",
+                    "name": "FMSPowerList",
+                    "title": "液厂权限列表",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "d20111fd-c07a-4a07-8f2b2ade46d2d0",
+                    "name": "FMSPowerBaseInfo",
+                    "title": "液厂权限基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "ef355f43-f7bb-4ede-96ddd5265d4fd3",
+                    "name": "FMSUserList",
+                    "title": "液场账户信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "f72f94fd-a481-4333-900a61f9f8fd20",
+                    "name": "FMSUserBaseInfo",
+                    "title": "液厂账户基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                }
+            ]
+        },
+        {
+            "uid": "4b13f631-f647-458c-92f1844508c09a",
+            "name": "YPlan",
+            "title": "计划",
+            "token": "d41d8cd98f00b204e9800998ecf8427e",
+            "menu": [
+                {
+                    "uid": "187c4502-9c22-48a1-b7d7ae9a161954",
+                    "name": "FMSRoleList",
+                    "title": "液厂角色信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "528fc0fd-f07e-4f52-92ab10b4a26bfc",
+                    "name": "FMSSupplyList",
+                    "title": "液厂信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "673aa7e4-f131-4ad2-b6f46fb4f81916",
+                    "name": "FMSRoleBaseInfo",
+                    "title": "液厂角色基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "c2743d01-0405-4046-9b39439cf1fb52",
+                    "name": "FMSupplyBaseInfo",
+                    "title": "液厂基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "c3ab6887-35b0-44be-b5ffd77b20ae30",
+                    "name": "FMSPowerList",
+                    "title": "液厂权限列表",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "d20111fd-c07a-4a07-8f2b2ade46d2d0",
+                    "name": "FMSPowerBaseInfo",
+                    "title": "液厂权限基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "ef355f43-f7bb-4ede-96ddd5265d4fd3",
+                    "name": "FMSUserList",
+                    "title": "液场账户信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "f72f94fd-a481-4333-900a61f9f8fd20",
+                    "name": "FMSUserBaseInfo",
+                    "title": "液厂账户基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                }
+            ]
+        },
+        {
+            "uid": "57612b59-acc5-4cb4-ae7b3021f39c97",
+            "name": "YIndent",
+            "title": "订单",
+            "token": "d41d8cd98f00b204e9800998ecf8427e",
+            "menu": [
+                {
+                    "uid": "187c4502-9c22-48a1-b7d7ae9a161954",
+                    "name": "FMSRoleList",
+                    "title": "液厂角色信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "528fc0fd-f07e-4f52-92ab10b4a26bfc",
+                    "name": "FMSSupplyList",
+                    "title": "液厂信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "673aa7e4-f131-4ad2-b6f46fb4f81916",
+                    "name": "FMSRoleBaseInfo",
+                    "title": "液厂角色基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "c2743d01-0405-4046-9b39439cf1fb52",
+                    "name": "FMSupplyBaseInfo",
+                    "title": "液厂基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "c3ab6887-35b0-44be-b5ffd77b20ae30",
+                    "name": "FMSPowerList",
+                    "title": "液厂权限列表",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "d20111fd-c07a-4a07-8f2b2ade46d2d0",
+                    "name": "FMSPowerBaseInfo",
+                    "title": "液厂权限基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "ef355f43-f7bb-4ede-96ddd5265d4fd3",
+                    "name": "FMSUserList",
+                    "title": "液场账户信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "f72f94fd-a481-4333-900a61f9f8fd20",
+                    "name": "FMSUserBaseInfo",
+                    "title": "液厂账户基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                }
+            ]
+        },
+        {
+            "uid": "e843a6c2-ecf1-47e5-ad75dd9c803a37",
+            "name": "Ybuyer",
+            "title": "会员",
+            "token": "d41d8cd98f00b204e9800998ecf8427e",
+            "menu": [
+                {
+                    "uid": "0f86d652-4697-46ad-b7f5b403b919cd",
+                    "name": "FMMUserList",
+                    "title": "会员账户信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "28cd50dc-94f4-4dc1-8181d3d6ba35da",
+                    "name": "FMMRoleList",
+                    "title": "会员角色信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "335c7bdf-34bd-46bc-ad59c34436db0c",
+                    "name": "FMMemberBaseInfo",
+                    "title": "会员基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "9b0a038d-d6f8-4f29-8daa12ad744725",
+                    "name": "FMMPowerList",
+                    "title": "会员权限信息列表",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "a29ece30-0525-4427-a82dae63f3b291",
+                    "name": "FMMPowerBaseInfo",
+                    "title": "会员权限基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "a4975189-9f6b-4d67-b9b0555082dc01",
+                    "name": "FMMMemberList",
+                    "title": "会员信息查找",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "b51b22e1-df01-40c3-942b002f30f76a",
+                    "name": "FMMUserBaseInfo",
+                    "title": "会员账户基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                },
+                {
+                    "uid": "dfeb1451-9bfc-4569-b133f5d457f39b",
+                    "name": "FMMRoleBaseInfo",
+                    "title": "会员角色基础信息",
+                    "token": "d41d8cd98f00b204e9800998ecf8427e"
+                }
+            ]
+        }
+    ];
+  var treeData2=[
+      {
+          "uid": "935b3a5b-b987-468d-95658ff3b8d3bc",
+          "name": "SYS_Admin",
+          "title": "系统管理",
+          "menu": [
+              {
+                  "uid": "46fd8026-5239-11e6-ba1d-406186f6951f",
+                  "name": "FMDirectory",
+                  "title": "字典管理",
+                  "menu": [
+                      {
+                          "uid": "8c008d6a-5238-11e6-ba1d-406186f6951f",
+                          "name": "FMA_City",
+                          "title": "地区字典"
+                      }
+                  ]
+              },
+              {
+                  "uid": "1a5dd72c-7748-424b-86aa63314dc147",
+                  "name": "USR_UserAdminList",
+                  "title": "用户管理"
+              },
+              {
+                  "uid": "1fc760e9-0baf-48a1-bd262cc2e843af",
+                  "name": "USR_RoleManagementList",
+                  "title": "角色管理"
+              },
+              {
+                  "uid": "400ab864-1730-474c-be0ccede3b96ec",
+                  "name": "USR_OPLogList",
+                  "title": "操作日志"
+              }
+          ]
+      },
+      {
+          "uid": "fe76daa6-1ebe-474c-b81b3a5b8aff6a",
+          "name": "SYS_FixMoney",
+          "title": "固定收益理财产品管理",
+          "menu": [
+              {
+                  "uid": "6b9e809f-ca13-46e6-87f9f6ac0cf3b1",
+                  "name": "PM_ProductList",
+                  "title": "产品管理"
+              },
+              {
+                  "uid": "8486f771-020a-4313-bbff3f8333961c",
+                  "name": "PM_ProductAudit",
+                  "title": "产品审核"
+              },
+              {
+                  "uid": "63237a5b-bca8-4904-b6ed090ba67c76",
+                  "name": "PM_OnlinePList",
+                  "title": "在线产品"
+              }
+          ]
+      },
+      {
+          "uid": "be807ef9-fbfe-4893-bb1e192d8f7d6b",
+          "name": "SYS_RaisedCar",
+          "title": "惠养车",
+          "menu": [
+              {
+                  "uid": "ce7ded61-3d25-49e6-8170780244bc01",
+                  "name": "RC_BasicSettingInfo",
+                  "title": "基本参数设置"
+              },
+              {
+                  "uid": "2046ef3a-4229-4bf1-836e3fb116f101",
+                  "name": "RC_XHSJCXList",
+                  "title": "销售数据查询"
+              },
+              {
+                  "uid": "063cadce-d884-452f-adf701f3558d2d",
+                  "name": "RC_XFSJCXList",
+                  "title": "消费数据查询"
+              }
+          ]
+      },
+      {
+          "uid": "0dd54759-8809-4e20-86640e03a59175",
+          "name": "SYS_FundManagement",
+          "title": "资金管理",
+          "menu": [
+              {
+                  "uid": "0317ede8-58c4-475d-8caba0f46c66d9",
+                  "name": "FM_25F3998",
+                  "title": "固定收益理财产品还款",
+                  "menu": [
+                      {
+                          "uid": "0d46bc7d-a465-451b-8cb53f8790c75f",
+                          "name": "FM_FixedList3",
+                          "title": "还款投资记录查询&提交"
+                      },
+                      {
+                          "uid": "31508375-8495-496f-ba8e6758d4d462",
+                          "name": "FM_FixedList2",
+                          "title": "还款产品查询"
+                      }
+                  ]
+              },
+              {
+                  "uid": "073547ef-93b8-417e-9e49ff759dfda3",
+                  "name": "FM_FixedList0",
+                  "title": "固定收益理财预计还款"
+              },
+              {
+                  "uid": "5b087cb6-be68-4c06-92837c0f2ef5b1",
+                  "name": "FM_FixedList4",
+                  "title": "固定收益理财产品还款审批"
+              },
+              {
+                  "uid": "575bf561-2b72-48d9-a797ccf6f0fef5",
+                  "name": "FM_FixedList5",
+                  "title": "惠养车门店佣金导入与查询"
+              },
+              {
+                  "uid": "208b9188-e69c-438b-a309f48dbb1bc3",
+                  "name": "FM_FixedList6",
+                  "title": "资金账户管理"
+              },
+              {
+                  "uid": "1b1a13d9-0de7-403a-abf3782b3e5127",
+                  "name": "FM_FixedList7",
+                  "title": "备付金转账"
+              },
+              {
+                  "uid": "3420d420-e292-4593-97ef2187d9a466",
+                  "name": "FM_FixedList8",
+                  "title": "备付金转账记录查看"
+              },
+              {
+                  "uid": "7776ba04-1b4b-4363-8367f033ab6c9c",
+                  "name": "FM_FixedList10",
+                  "title": "交易退款管理"
+              }
+          ]
+      },
+      {
+          "uid": "76e1c5b4-9a27-4e6f-958d57e18d58c9",
+          "name": "SYS_StoreManagement",
+          "title": "门店管理",
+          "menu": [
+              {
+                  "uid": "0dd73237-9e6c-4d45-b9ec7e48297a44",
+                  "name": "SM_StoreList",
+                  "title": "门店信息管理"
+              },
+              {
+                  "uid": "6a1d3cc6-4fac-4ed7-8aa017cadd9a25",
+                  "name": "SM_OtherStoreList",
+                  "title": "其它门店管理"
+              },
+              {
+                  "uid": "2c373d60-d48e-4079-b6d8c2e41a2060",
+                  "name": "SM_StoreServiceList",
+                  "title": "门店服务管理"
+              },
+              {
+                  "uid": "68034dd8-24c4-44a9-b7d14af37927c1",
+                  "name": "SM_ServiceVList",
+                  "title": "服务券管理"
+              }
+          ]
+      },
+      {
+          "uid": "3acc1534-8e16-4b46-91ce18adf5cee3",
+          "name": "SYS_FinanciaLeasingBusinessManagement",
+          "title": "融资租赁业务管理",
+          "menu": [
+              {
+                  "uid": "80e5f5e5-ab23-4854-9938ff8c6f9ecf",
+                  "name": "FLBM_DataImport",
+                  "title": "数据导入"
+              }
+          ]
+      },
+      {
+          "uid": "cd5e7365-8661-46ae-8192c647d63a4b",
+          "name": "SYS_WebsiteUserManagement",
+          "title": "网站用户管理",
+          "menu": [
+              {
+                  "uid": "8b0029c7-55a8-4e1b-a90c698141b6c5",
+                  "name": "WM_UserQueryList",
+                  "title": "用户信息查询"
+              },
+              {
+                  "uid": "9df704e5-4b82-47ae-a9cb12fa6b2066",
+                  "name": "WM_IRecordList",
+                  "title": "用户投资记录查询"
+              }
+          ]
+      },
+      {
+          "uid": "4422fd37-f41c-4138-a00eefb1c3cfb7",
+          "name": "SYS_WebsiteManagement",
+          "title": "网站管理",
+          "menu": [
+              {
+                  "uid": "247365d0-4729-4f31-a5bec35ad011da",
+                  "name": "WM_NewsList",
+                  "title": "新闻和公告"
+              },
+              {
+                  "uid": "3b0189f0-6cac-41c6-8c4cf3cf79d813",
+                  "name": "WM_BannerList",
+                  "title": "Banner管理"
+              }
+          ]
+      }
+  ]
+
+    $('#menuDropDownB').PUMenu({
+        data:treeData2,
+
+    });
+
+    var pMsg= new PUMsg();
+    window.onerror = function(errorMessage, scriptURI, lineNumber) {
+                pMsg.setErrorMsg('error: ' + errorMessage);
+                pMsg.showErrorMsg();
+            }
+
+</script>
+
+</body>
+</html>
