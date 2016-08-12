@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <script type="text/javascript" src="../../jsLib/jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="../../jsLib/jquery-1.12.3.js"></script>
     <script type="text/javascript" src="uploader.js"></script>
 
 
@@ -22,7 +22,7 @@
 <script>
 
     $(function(){
-        $('#fileUploader').uploader({url:'http://192.168.10.201:86/lngyes/bin/uploads.php',
+        $('#fileUploader').uploader({url:'http://192.168.10.201:86/xuluweb/bin/uploads.php',
 
             onBeforeUploading:function(evt,data){
 
@@ -34,6 +34,10 @@
               //  var progress= data.percent===100?'完成': (data.percent+'%');
                // $('#process').children().last().html(data.file.name +' '+progress);
                 $('#process').children().last().find('progress').attr('value',data.percent);
+            },
+
+            onUploadingSuccess:function(event,data){
+              var kk=  data.data
             }
 
 

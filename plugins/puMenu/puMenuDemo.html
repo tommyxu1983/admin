@@ -116,60 +116,68 @@
 
 
 
-/*-----------------------------PopUP menu begin--------------------------*/
-        .PUMenu-menuContainer{
+        /*-----------------------------PopUP menu begin--------------------------*/
+
+
+        .PUMenu-allMenuContainer   .PUMenu-menuContainer{
             position:fixed;
             background-color:#3C8DBC;
             border-radius: 5px;
             border: 1px solid;
-            color:white;
-          /*  display: none;*/
-
+            z-index: 10002;
+            /*  display: none;*/
         }
-        .PUMenu-menuContainer>ul{
+
+
+        .PUMenu-allMenuContainer   .PUMenu-menuContainer>ul{
             list-style-type:none;
             padding:0px;
         }
 
-        .PUMenu-menuContainer>ul{
+        .PUMenu-allMenuContainer  .PUMenu-menuContainer>ul{
             list-style-type:none;
-           /* padding-left:5px;
-            padding-right:10px;*/
             margin:10px 0px 10px 0px;
-        /*   min-width: px;*/
         }
 
-        .PUMenu-menuContainer>ul>li{
+        .PUMenu-allMenuContainer   .PUMenu-menuContainer>ul>li{
             display: list-item;
             padding:0px 10px 0px 10px;
 
         }
 
-        .PUMenu-menuContainer>ul>li:hover{
-
+        .PUMenu-allMenuContainer  .PUMenu-menuContainer>ul>li:hover{
             background-color: #3a81ae;
             vertical-align: middle;
-
+            cursor: pointer;
         }
 
-        .PUMenu-menuContainer>ul>li>a.text{
-            display: table-cell;
+        .PUMenu-allMenuContainer   .PUMenu-menuContainer>ul>li>a.text{
+            color:white;
+            display: inline-block;
             min-width:100px;
             padding-top: 5px;
             padding-bottom: 5px;
-
-
-
         }
 
-        .PUMenu-menuContainer>ul>li>a.arrow{
-            display: table-cell;
-         /*   background-color: red;*/
+        .PUMenu-allMenuContainer  .PUMenu-menuContainer>ul>li>a.arrow{
+            display: inline-block;
+            color:white;
+            float:right;
             padding: 5px 10px  5px  10px;
             vertical-align: middle;
-
         }
-/*-----------------------------PopUP menu End--------------------------*/
+
+        .PUMenu-allMenuContainer .PUMenu-overLay{
+            display: none;
+            position: fixed;
+            top:0px;
+            left:0px;
+            width:100%;
+            height:100%;
+            /*background-color: rgba(103, 177, 104, 0.56);*/
+            z-index: 10000;
+        }
+        /*-----------------------------PopUP menu End--------------------------*/
     </style>
 
 
@@ -475,7 +483,17 @@
               {
                   "uid": "1a5dd72c-7748-424b-86aa63314dc147",
                   "name": "USR_UserAdminList",
-                  "title": "用户管理"
+                  "title": "用户管理",
+                  "menu":[ {
+                      "uid": "1fc760e9-0baf-48a1-bd262cc2e843af",
+                      "name": "USR_RoleManagementList",
+                      "title": "角色管理"
+                        },
+                      {
+                          "uid": "400ab864-1730-474c-be0ccede3b96ec",
+                          "name": "USR_OPLogList",
+                          "title": "操作日志"
+                      }]
               },
               {
                   "uid": "1fc760e9-0baf-48a1-bd262cc2e843af",
@@ -669,6 +687,7 @@
 
     $('#menuDropDownB').PUMenu({
         data:treeData2,
+        activeEvent:'click'
 
     });
 

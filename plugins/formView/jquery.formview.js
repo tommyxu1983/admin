@@ -22,7 +22,7 @@
     var pluginName='formview';
     _default.options={
         data:{},
-        noInputsInRow:2, //一行摆几个 input
+        noInputsInRow:2, //一行摆几个 input, 最大4 个
         style:{},
         isDataWritable:false
     };
@@ -73,6 +73,7 @@
         time:'time',
         file:'file',
         steps:'steps',
+        img:'img'
     };
 
     var _currency={
@@ -211,7 +212,8 @@
                 .appendTo(this.$element);
 
         //创建 row (label +input)
-        var rowItemCount= 0,
+        var /*rowItemCount= 0,*/
+            wholeItemCount= 1,
             $row=$(_html.div).addClass(_defaultStyle.bs.row),
             contoListLength= $.isArray(settings.data.controlList)? settings.data.controlList.length : 0 ;
 
@@ -219,78 +221,45 @@
 
             // 12/settings.noInputsInRow 因为 boostrap 栅格系统分为12等分，请将 noInputsInRow设为12的公约数
 
+            /*
+             1.如果是 range控件， 寻找 form  里的最后一个row 里的最后一个div 加入控件
+             2. 其他
+                2.1. 如果是 file multi（直接占一行控件）  创建新的row, 加控件，row系上table
+                2.2 如果是 一行里的第一个                创建新的row,加控件,row系上table
+                2.3  其他 寻找 form  里的最后一个row  加控件进入这个row.
 
-            //如果是文件， 多选，步骤 ,textarea,直接占一行
-            if(  (  item.dataType==_dataType.file || item.dataType==_dataType.multi || item.dataType==_dataType.steps || (item.dataType==_dataType.text && item.inputMultiLine && item.inputMultiLine>0) ) && ! item.FNoNewLine){
-               //把上一行的 row 系上 form
-                if(rowItemCount>0){this.$form.append($row.clone(true)); }
-                $row=null;
-                $row=$(_html.div).addClass(_defaultStyle.bs.form_Group);
-                $row.append(this.buildControlItem(item,1));
-                this.$form.append($row.clone(true));
-                rowItemCount=0;
-            }else{
-
-                //如果是连着的input， 如一个range，从某日到某日
-                if(item.dataID==this.previousItemDataID){
-
-                    var $inputs= this.buildControlItem(item,settings.noInputsInRow, true);
-                    if($row){
-                        $row.find('div').last().append($inputs);
-                    }else{
-                        this.$form.find('div.form-group').last().find('div').last().append($inputs);
-                    }
-
-                    $inputs.siblings().addClass('merged-input');
-
-                    //如果是最后一个 controlList item ,则把这个系上form
-                    if(index==contoListLength-1){
-                        this.$form.append($row.clone(true));
-                    }
-
-                }else{
-
-                    if(rowItemCount==0){
-                        //第一个，创建新的 row（之前的row清零）
-                        $row=null;
-                        $row=$(_html.div).addClass(_defaultStyle.bs.form_Group);
-                        $row.append(this.buildControlItem(item,settings.noInputsInRow));
-                        rowItemCount++;
-                        //如果是最后一个 controlList item ,则把这个系上form
-                        if(index==contoListLength-1){
-                            this.$form.append($row.clone(true));
-                        }
-                    }
-                    else if (0<rowItemCount && rowItemCount< settings.noInputsInRow-1){
-                        //大于0（不是第一个），小于设置的最大列数,老的row 上系上 controList item
-                        $row.append(this.buildControlItem(item,settings.noInputsInRow));
-                        rowItemCount++;
-                        //如果是最后一个 controlList item ,则把这个系上form
-                        if(index==contoListLength-1){
-                            this.$form.append($row.clone(true));
-                        }
-                    }
-                    else{
-                        //最后行里的一个
-                        $row.append(this.buildControlItem(item,settings.noInputsInRow));
-                        rowItemCount++;
-                        this.$form.append($row.clone(true));
-                        rowItemCount=0;
-
-                    }
-
+             */
+            if(item.dataID==this.previousItemDataID ){
+                //range控件
+                var $inputs= this.buildControlItem(item,settings.noInputsInRow, true);
+                this.$form.find('div.form-group').last().find('div').last().append($inputs);
+                $inputs.siblings().addClass('merged-input');
+                wholeItemCount--;
+            }
+            else
+            {
+                if( (  item.dataType==_dataType.file || item.dataType==_dataType.multi || item.dataType==_dataType.steps || (item.dataType==_dataType.text && item.inputMultiLine && item.inputMultiLine>0) ) && ! item.FNoNewLine)
+                {
+                    $row=null;
+                    $row=$(_html.div).addClass(_defaultStyle.bs.form_Group);
+                    $row.append(this.buildControlItem(item,1));
+                    this.$form.append($row.clone(true));
+                    wholeItemCount=0;
                 }
-
-
-
-
+                else if(parseInt(wholeItemCount) % parseInt(settings.noInputsInRow)==1 || settings.noInputsInRow==1)
+                {
+                    $row=null;
+                    $row=$(_html.div).addClass(_defaultStyle.bs.form_Group);
+                    $row.append(this.buildControlItem(item,settings.noInputsInRow));
+                    this.$form.append($row.clone(true));
+                }
+                else{
+                    this.$form.find('div.form-group').last().append(this.buildControlItem(item,settings.noInputsInRow));
+                }
             }
-            //如果是多选，加个框
-            if( item.dataType==_dataType.multi ){
-               var $div= $row.find('input[type=checkbox]').parent().parent();
-                $div.addClass('multiChoice');
-            }
 
+
+            wholeItemCount++;
             this.previousItemDataID=item.dataID;
         },this) );
 
@@ -351,9 +320,10 @@
             $input= this.buildInput(ctlListItem);
 
         //label占的 col-sm-iCol
-        iCol={1:2,2:2,3:2,4:1}[itemsPerRow];
+        iCol={1:2,2:2,3:1,4:1}[itemsPerRow];
+
         // input 占的 col-sm-jCol
-        jCol={1:10,2:4,3:2,4:2}[itemsPerRow];
+        jCol={1:10,2:4,3:3,4:2}[itemsPerRow];
 
         // label Div
         var $labelDiv=$(_html.div).addClass('col-sm-'+iCol +' ' +_defaultStyle.bs.label) //style
@@ -361,6 +331,9 @@
 
         // input Div
         var $inputDiv=$(_html.div).addClass('col-sm-'+ jCol).append($input );
+        /*if(ctlListItem.dataType==_dataType.multi){
+            $inputDiv.addClass('');
+        }*/
 
         //创建 temp div, 返回 label 和 input
         if(merge){
@@ -585,7 +558,7 @@
                     .append($groupAddon_SPAN);
                 break;
             case _dataType.multi:
-                var $tempContainer=$(_html.div);
+                var $tempContainer=$(_html.div).addClass('multiChoice');
                 $.each(ctlListItem.dataOption, $.proxy(function(index,item){
 
                     var $checkbox=$(_html.input)
@@ -613,7 +586,7 @@
                     $tempContainer.append($labelChBx);
                 },this));
 
-                $result=$tempContainer.children();
+                $result=$tempContainer;
                 break;
             //如果是步骤的话：
             case _dataType.steps:
@@ -675,6 +648,10 @@
                 },this));
 
                 $result=$tempContainer.children();
+                break;
+            case _dataType.img:
+                $result = $('<img/>').attr('src',ctlListItem.data);
+
         }
 
         //只读

@@ -23,15 +23,17 @@ html, body{
 
 .l-middle{
     position:relative;
-    height:90%;
+    height:91%;
     width:100%;
     /*background-color:yellow;*/
 }
 
 .l-footer{
 
-    height:5%;
+    height:4%;
     width:100%;
+    margin-top:1px;
+    background-color: #36749E;
 }
 
 

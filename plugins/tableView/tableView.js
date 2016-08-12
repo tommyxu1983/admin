@@ -33,15 +33,16 @@
         hasOwnStyle:false,
         tableBordered:true,
         hasTickBox:true,
-        isfixingHead:true,
+        isFixingHead:true,
         rowSettings:{
             buttons:[],
             // buttons handler
             onRowButtonClick: undefined,
         },
+        enlargeImgWidth:300,
 
         isShowingCheckBox:true,
-
+        onCheckRow:undefined,
         paginationSetting:{
             pageCount:undefined,
             pageIndex:undefined,
@@ -114,7 +115,8 @@
         option:'<option></option>',
         button:'<button></button>',
         checkBox:'<input type="checkbox" />',
-        span:'<span></span>'
+        span:'<span></span>',
+        img:'<img/>',
     };
 
     var css=function(){
@@ -174,6 +176,25 @@
 
     };
 
+    var getImgNaturalStyle= function (imgDom,callBack,error) {
+    /*    var nWidth, nHeight
+        if (imgDom.naturalWidth) { // 现代浏览器
+            nWidth = imgDom.naturalWidth
+            nHeight = imgDom.naturalHeight
+        } else {  // IE6/7/8
+            var image = new Image();
+            image.src = imgDom.src;
+            image.onload = callback.call(this,image.width, image.height)
+
+        }
+        return [nWidth, nHeight];*/
+
+
+        var image = new Image();
+        image.src = imgDom.src;
+        image.onload = callBack.call(this,image);
+        image.onerror= error.call(this);
+    }
 
 
     TableView.prototype.init=function(){
@@ -218,13 +239,21 @@
             });
         }
 
-        //内部事件 --> 翻页操作事件
-        this.$div_PageContainer.on('click','ul li',function(event){
-            if(event.target.tagName.toLowerCase()==='a'){
-                _this.$element.trigger('onGoToPageClick',[ $(this).attr('value'),_this.settings.paginationSetting, event.target]);
-            }
 
-        });
+        if(this.$div_PageContainer instanceof $){
+
+            //内部事件 --> 翻页操作事件
+            this.$div_PageContainer.on('click','ul li',function(event){
+                if(event.target.tagName.toLowerCase()==='a'){
+                    _this.$element.trigger('onGoToPageClick',[ $(this).attr('value'),_this.settings.paginationSetting, event.target]);
+                }
+
+            });
+
+            //内部事件 --> 有滚动条的祖先: 1. 翻页悬浮 2.表头固定（未实现）
+            this.getScrollableParent();
+        }
+
 
         //内部事件 --> checkBox
         this.$element.on('click','input.'+_style.checkBox,function(){
@@ -252,8 +281,8 @@
 
                 });
 
-            //check Row
-            }
+
+            }//check Row
             else if( $checkBox.hasClass(_style.inputCheckRow) ){
                 var rowData= $(this).data('rowData');
                 var index=-1;
@@ -265,20 +294,15 @@
                 if(this.checked && !hasStored){
                         [].push.call(_this.checkedRow,rowData);
                 }else if (!this.checked && hasStored){
-                    _this.checkedRow= _this.checkedRow= cut( _this.checkedRow,index,index);;
+                    _this.checkedRow= _this.checkedRow= cut( _this.checkedRow,index,index);
                 }
 
             }
 
+            _this.$element.trigger('onCheckRow',[_this.checkedRow]);
+
+
         });
-
-        //内部事件 --> 有滚动条的祖先: 1. 翻页悬浮 2.表头固定（未实现）
-
-        this.getScrollableParent();
-
-
-
-
 
 
         //外部事件
@@ -291,6 +315,9 @@
         }
 
 
+        if(typeof this.settings.onCheckRow==='function'){
+            this.$element.on('onCheckRow', this.settings.onCheckRow);
+        }
     };
 
 
@@ -326,9 +353,8 @@
                     $(scrollableParent).on('scroll', function(){
                         /*
                         //表头固定
-                        if(_this.settings.isfixingHead){_this.floatHead(scrollableParent);}
+                        if(_this.settings.isFixingHead){_this.floatHead(scrollableParent);}
                         */
-
 
                 /*        $('#monitor').html(
                             'pageTop: ' + _this.$div_PageContainer[0].getBoundingClientRect().top + '<br>'+
@@ -634,7 +660,14 @@
                     if(j==0){
                         $trData.attr('id',('datarow'+'-'+item ));
                     }else{
-                        $(_html.td).append(item).appendTo($trData);
+
+                        if(typeof item=='object'){
+
+                        }
+                        else{
+                            $(_html.td).append(item).appendTo($trData);
+                        }
+
                     }
 
                 });
@@ -797,7 +830,6 @@
             pageNow=this.getPageNow(this.dataSplit,this.dataRowNow);
             totolPage= this.dataSplit.length;
         }
-
 
 
         $div_PageDetial.append('<span>目前：第'+pageNow +'页 / 共'+totolPage+'页</span>');
@@ -996,10 +1028,63 @@
                 $.each(row,function(j,item){
                     if(j==0){
                         $trData.attr('id',('datarow'+'-'+item ));
-                    }else{
-                        $(_html.td).append(item).appendTo($trData);
-                    }
 
+                    }else{
+                        if( item && typeof item=='object'){
+                            if(item.FDefName=='image'){
+                                var $image=$(_html.img).attr({
+                                    'src': item.uurl,
+                                    'alt':'图片'
+                                });
+
+
+                                $(_html.td).append($image).appendTo($trData);
+
+
+                                //获取 图片资源的真实宽高，设置比例
+                                getImgNaturalStyle($image[0],
+                                    function(image){
+                                        var $div=$(_html.div),
+                                            $enlareImage=$image.clone(),
+                                            ratio;
+                                        $div.addClass('popUpMsg-imgWrapper').append($enlareImage);
+
+
+                                        setTimeout(function(){
+                                            if(image.width>0 && image.height>0){
+                                                ratioHW=image.height/image.width;
+                                                $enlareImage.css({'width':_this.settings.enlargeImgWidth+'px',
+                                                    'height':_this.settings.enlargeImgWidth * ratioHW +'px'
+
+                                                })
+                                                new PUMsg({
+                                                    popUpTarget: $image ,tooTipMsg:$div
+                                                });
+                                            }else{
+                                                new PUMsg({
+                                                    popUpTarget: $image ,tooTipMsg:item.FDefValX+'<br>图片获取资源出错'
+                                                });
+                                            }
+                                        },1000);
+
+
+
+
+                                     },
+                                    function(){
+                                        console.log('图片获取资源出错')
+                                    }
+                                );
+
+
+
+                            }
+
+                        }
+                        else{
+                            $(_html.td).append(item).appendTo($trData);
+                        }
+                    }
                 });
 
                 // 画出操作按钮
@@ -1023,94 +1108,90 @@
 
 
     TableView.prototype.buildPaginationServ=function(pageSettings){
-        var _this=this,arrayGoToPage=[];
-        if(! this.$div_PageContainer) {this.$div_PageContainer= $(_html.div).addClass(_style.paginationContainer);}
-        this.$div_PageContainer.detach().empty();
+        if(pageSettings.totalPages>1){
 
-        //var $div_RowsPerPage=$(_html.div);
-        var $div_ChangePage=$(_html.div);
-        var $div_PageDetial=$(_html.div);
-        var $ul_pages=$(_html.ul);
+            var _this=this,arrayGoToPage=[];
+            if(! this.$div_PageContainer) {this.$div_PageContainer= $(_html.div).addClass(_style.paginationContainer);}
+            this.$div_PageContainer.detach().empty();
 
-
-        if(!this.hasOwnStyle){
-            this.$div_PageContainer.css({'display':'block', });//  {'':'', '':'', '':''}
-            $div_ChangePage.addClass(pluginName+'-paginationChange');
-            $div_PageDetial.addClass(pluginName+'-paginationDetail');
-        }
+            //var $div_RowsPerPage=$(_html.div);
+            var $div_ChangePage=$(_html.div);
+            var $div_PageDetial=$(_html.div);
+            var $ul_pages=$(_html.ul);
 
 
-
-        $div_PageDetial.append('<span> 共'+pageSettings.totalPages+'页</span>');
-
-
-        //翻页 div
-        //--->首页
-         arrayGoToPage.push({caption:'首页',page:0});
-        //-->上一页 （要判断，现在页码是否是<1）
-        var _pagePre=parseInt(pageSettings.pageIndex)<1 ? pageSettings.pageIndex : (parseInt(pageSettings.pageIndex) -1)
-        arrayGoToPage.push({caption:'上一页',page:_pagePre});
-        //-->数字(现在所在页码)
-        arrayGoToPage.push({caption:pageSettings.pageIndex+1,page:parseInt(pageSettings.pageIndex)});
-        //-->下一页 （要判断，现在页码是否是 最后一页）
-        var _pageNex=parseInt(pageSettings.pageIndex)>=(pageSettings.totalPages-1) ? pageSettings.pageIndex: (parseInt(pageSettings.pageIndex) +1);
-        arrayGoToPage.push({caption:'下一页',page:_pageNex});
-        //--->尾页
-        arrayGoToPage.push({caption:'尾页',page:(pageSettings.totalPages-1)});
-        //--->去第几页
-        arrayGoToPage.push({caption:'跳转到：',page:'goToPage'});
-
-
-        $.each(arrayGoToPage,function(index,item){
-            if(item.page=='goToPage'){
-                /*$ul_pages.append(
-                    $(_html.li)
-                        .attr('name',item.page)
-                        .append(
-                            $('<input type="number">')
-                        )
-                );*/
-
-                $ul_pages.append(
-                    $(_html.li)
-                        .attr('value',item.page)
-                        .append(
-                            $(_html.a)
-                                .attr('href','javascript:void(0)')
-                                .append(item.caption)
-                                .append( $('<input type="number">') )
-
-                        )
-                );
-            }else{
-
-                var _cssClass= parseInt(item.caption)==parseInt(pageSettings.pageIndex+1)? _style.activePage:'';
-                $ul_pages.append(
-                    $(_html.li)
-                        .attr('value',item.page)
-                        .append(
-                            $(_html.a)
-                                .attr('href','javascript:void(0)')
-                                .append(item.caption)
-                                .addClass(_cssClass)
-                        )
-                );
+            if(!this.hasOwnStyle){
+                this.$div_PageContainer.css({'display':'block', });//  {'':'', '':'', '':''}
+                $div_ChangePage.addClass(pluginName+'-paginationChange');
+                $div_PageDetial.addClass(pluginName+'-paginationDetail');
             }
 
-        });
+
+
+            $div_PageDetial.append('<span> 共'+pageSettings.totalPages+'页</span>');
+
+
+            //翻页 div
+            //--->首页
+            arrayGoToPage.push({caption:'首页',page:0});
+            //-->上一页 （要判断，现在页码是否是<1）
+            var _pagePre=parseInt(pageSettings.pageIndex)<1 ? pageSettings.pageIndex : (parseInt(pageSettings.pageIndex) -1)
+            arrayGoToPage.push({caption:'上一页',page:_pagePre});
+            //-->数字(现在所在页码)
+            arrayGoToPage.push({caption:pageSettings.pageIndex+1,page:parseInt(pageSettings.pageIndex)});
+            //-->下一页 （要判断，现在页码是否是 最后一页）
+            var _pageNex=parseInt(pageSettings.pageIndex)>=(pageSettings.totalPages-1) ? pageSettings.pageIndex: (parseInt(pageSettings.pageIndex) +1);
+            arrayGoToPage.push({caption:'下一页',page:_pageNex});
+            //--->尾页
+            arrayGoToPage.push({caption:'尾页',page:(pageSettings.totalPages-1)});
+            //--->去第几页
+            arrayGoToPage.push({caption:'跳转到：',page:'goToPage'});
+
+
+            $.each(arrayGoToPage,function(index,item){
+                if(item.page=='goToPage'){
+                  
+                    $ul_pages.append(
+                        $(_html.li)
+                            .attr('value',item.page)
+                            .append(
+                                $(_html.a)
+                                    .attr('href','javascript:void(0)')
+                                    .append(item.caption)
+                                    .append( $('<input type="number">') )
+
+                            )
+                    );
+                }else{
+
+                    var _cssClass= parseInt(item.caption)==parseInt(pageSettings.pageIndex+1)? _style.activePage:'';
+                    $ul_pages.append(
+                        $(_html.li)
+                            .attr('value',item.page)
+                            .append(
+                                $(_html.a)
+                                    .attr('href','javascript:void(0)')
+                                    .append(item.caption)
+                                    .addClass(_cssClass)
+                            )
+                    );
+                }
+
+            });
+
+
+            this.$div_PageContainer
+                .append($div_ChangePage.append($ul_pages))
+                .append($div_PageDetial);
+
+
+            this.$element.append(this.$div_PageContainer);
+
+            //this.floatPagination();
 
 
 
-        this.$div_PageContainer
-            .append($div_ChangePage.append($ul_pages))
-            .append($div_PageDetial);
-
-
-        this.$element.append(this.$div_PageContainer);
-
-        //this.floatPagination();
-
-
+        }
 
     };
 

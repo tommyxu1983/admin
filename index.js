@@ -219,14 +219,20 @@ require(['jquery','bootstrap-dialog','BuildWin','PUMsg','echarts','dMenu','slims
         ],
         onMenuItemClick:function(event, itemData){
           if(  itemData.data.name=='logout' ){
-              window.location.href='../index.html';
-              /*setCookie('eaosoft_token_lngyes','',-1)*/
+
+              getAjax({url: window.globalSetting.logouturl});
+
               window.globalSetting=null;
+              var re=/\/[a-zA-Z0-9_-]*/g,
+                  pathArr=window.location.pathname.match(re),
+                  cookiePath=pathArr[0];
+
+              CookieUtil.clear('eaosoft_token_lngyes',cookiePath);
+              window.location.href='../index.html';
 
           }else if(  itemData.data.name=='changePWD' ){
 
           }
-
         },
 
     })
@@ -237,21 +243,20 @@ require(['jquery','bootstrap-dialog','BuildWin','PUMsg','echarts','dMenu','slims
             errorMsg.setErrorMsg('');
             errorMsg.setErrorMsg('error: ' + errorMessage);
             errorMsg.showErrorMsg();
-
         }
     }
 
 
     function getDataSuccess(data){
-        globalSetting.uurl=data.globalsetting.uurl;
-        data.globalsetting.token=globalSetting.token;
+        $.extend(true,globalSetting,data.globalsetting);
+       // data.globalsetting.token=globalSetting.token;
 
-        !! data.globalsetting.title && $('#globalSetting_title').append(data.globalsetting.title) && $('title').append(data.globalsetting.title);
-        !! data.globalsetting.emailcount && $('#globalSetting_emailCount').append(data.globalsetting.emailcount);
-        !! data.globalsetting.msgcount && $('#globalSetting_msgCount').append(data.globalsetting.msgcount);
-        !! data.globalsetting.opimg && $('#globalSetting_opimag').attr('src', data.globalsetting.opimg);
-        !! data.globalsetting.opname && $('#globalSetting_opiname').append( data.globalsetting.opname);
-        !! data.globalsetting.opdept && $('#globalSetting_opdept').append( data.globalsetting.opdept);
+        !! globalSetting.title && $('#globalSetting_title').append(globalSetting.title) && $('title').append(globalSetting.title);
+        !! globalSetting.emailcount && $('#globalSetting_emailCount').append(globalSetting.emailcount);
+        !! globalSetting.msgcount && $('#globalSetting_msgCount').append(globalSetting.msgcount);
+        !! globalSetting.opimg && $('#globalSetting_opimag').attr('src', globalSetting.opimg);
+        !! globalSetting.opname && $('#globalSetting_opiname').append( globalSetting.opname);
+        !! globalSetting.opdept && $('#globalSetting_opdept').append( globalSetting.opdept);
 
 
 

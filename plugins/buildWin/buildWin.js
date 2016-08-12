@@ -387,7 +387,8 @@
                         '22':'multi',
                         '23':'files',
                         '24':'richtext',
-                        '25':'steps'
+                        '25':'steps',
+                        '26':'img'
                     }[control.FDefType];
 
 
@@ -539,8 +540,6 @@
                             _this.sendAjax( req, $.proxy(_this.on5k6kButtonSuccess,_this) , undefined ,undefined , newDialog);
 
 
-
-
                         }else if(ctrlID>=6000 && ctrlID<7000 ){
                             var replaceURL =buttonData.uurl.replace(/_ROW_DATA_GUID_/g,rowData[0].toString());
                             window.open(replaceURL);
@@ -616,7 +615,17 @@
                             }
 
                         }
+                    }
 
+
+                },
+                onCheckRow:function(event,data){
+                    if($.isArray(data)){
+                        _this.data.DataGUID='';
+                        $.each(data,function(index,item){
+                           _this.data.DataGUID=_this.data.DataGUID+ item.oData[0]+',';
+
+                        });
                     }
                 }
 
@@ -796,7 +805,6 @@
                                 }//如果校验成功，发送请求
                                 else{
 
-
                                     if(data4Button.ctrlid>=5000 && data4Button.ctrlid<6000 ){
                                         //alert('>=5000  <6000');
                                         var newDialog=new BootstrapDialog({
@@ -810,9 +818,6 @@
                                         };
 
                                         _this.sendAjax( req, $.proxy(_this.on5k6kButtonSuccess,_this) , undefined ,undefined , newDialog);
-
-
-
 
                                     }else if(data4Button.ctrlid>=6000 && data4Button.ctrlid<7000 ){
                                         /*window.location.href=data4Button.uurl;*/
@@ -837,8 +842,6 @@
                                             dialog.close();
                                         }
                                     }
-
-
 
                                 }
 
@@ -897,14 +900,13 @@
 
                             //如果是dialog 老的关掉，new  BuildWin 只传2个参数= buildWinInDialog
                             if(!!beforeAjaxData.dialog && beforeAjaxData.dialog instanceof BootstrapDialog){
-                                beforeAjaxData.close();
+                                beforeAjaxData.dialog.close();
                                 new BuildWin(data,0);
                             }else{
                                 this.closeTabView();
                                 this.update(data,0);
                             }
-
-
+                            
                             break;
 
                         case _ctrl.delete:
@@ -1086,81 +1088,88 @@
 
         BuildWin.prototype.onReportButtonsSuccess=function(data,beforeAjaxData){
             var msgTip= new PUMsg();
-            if(data.windows && $.isArray(data.windows )){
-
-                //查看
-                if(beforeAjaxData.action.ctrlid==_ctrl.open){
-                    new BuildWin(data,0,undefined,beforeAjaxData.preRequest);
-                }
-                //新建
-                else if(beforeAjaxData.action.ctrlid==_ctrl.create){
-                    new BuildWin(data,0,undefined,beforeAjaxData.preRequest);
-                }
-                //删除
-                else if(beforeAjaxData.action.ctrlid==_ctrl.delete){
-                    /*BootstrapDialog.show(
-                        {
-
-                            title: '删除',
-                            size: BootstrapDialog.SIZE_SMALL,
-                            message: '<span style="font-size:2em; margin-left: 35%">确认删除</span>',
-
-                            buttons: [
-
-                                {
-                                    label: '确认',
-                                    cssClass: 'btn-warning',
-                                    action: function(dialog) {
-                                        dialog.close();
-                                        $.each( data.windows[0].winmodules,function(index,winmodule){
-                                            if(winmodule.mtype==_moduleType.report){
-                                                var newData= winmodule.winmodfields.Body.Data;
-                                                beforeAjaxData.tableContainer.tableView('updateDataRows','newData','', newData);
-                                            }
-
-                                        });
-
-
-                                    }
-                                },
-                                {
-                                    label: '取消',
-                                    cssClass: 'btn-primary',
-                                    action: function(dialog) {
-                                        dialog.close();
-                                    }
-                                }
-
-                            ]
-                        }
-                    );*/
-                    // 确认是否是 tableContianer, 里面有没有 table domElement
-                    if(beforeAjaxData.tableContainer && beforeAjaxData.tableContainer.length>0 && beforeAjaxData.tableContainer.has('table') ){
-                        this.update(data,0,beforeAjaxData.tableContainer);
-                    }else{
-                        this.update(data,0);
-                    }
-
-
-                }
-                //button ctrlID>3032
-                else if(parseInt(beforeAjaxData.action.ctrlid)>3032 && parseInt(beforeAjaxData.action.ctrlid)<4000){
-                    new BuildWin(data,0);
-
-                }else if(parseInt(beforeAjaxData.action.ctrlid)>=4000){
-                    //beforeAjaxData.action.uurl
-                }
-
-
-
-            }
-            else {
-                logError('onRowButtonSuccess: data.windows object does not exist')
-            }
-
 
             if(!!data.code && data.code>0){
+                if(parseInt(beforeAjaxData.action.ctrlid)<4000){
 
+                    if(data.windows && $.isArray(data.windows )){
+
+                        //查看
+                        if(beforeAjaxData.action.ctrlid==_ctrl.open){
+                            new BuildWin(data,0,undefined,beforeAjaxData.preRequest);
+                        }
+                        //新建
+                        else if(beforeAjaxData.action.ctrlid==_ctrl.create){
+                            new BuildWin(data,0,undefined,beforeAjaxData.preRequest);
+                        }
+                        //删除
+                        else if(beforeAjaxData.action.ctrlid==_ctrl.delete){
+                            /*BootstrapDialog.show(
+                             {
+
+                             title: '删除',
+                             size: BootstrapDialog.SIZE_SMALL,
+                             message: '<span style="font-size:2em; margin-left: 35%">确认删除</span>',
+
+                             buttons: [
+
+                             {
+                             label: '确认',
+                             cssClass: 'btn-warning',
+                             action: function(dialog) {
+                             dialog.close();
+                             $.each( data.windows[0].winmodules,function(index,winmodule){
+                             if(winmodule.mtype==_moduleType.report){
+                             var newData= winmodule.winmodfields.Body.Data;
+                             beforeAjaxData.tableContainer.tableView('updateDataRows','newData','', newData);
+                             }
+
+                             });
+
+
+                             }
+                             },
+                             {
+                             label: '取消',
+                             cssClass: 'btn-primary',
+                             action: function(dialog) {
+                             dialog.close();
+                             }
+                             }
+
+                             ]
+                             }
+                             );*/
+                            // 确认是否是 tableContianer, 里面有没有 table domElement
+                            if(beforeAjaxData.tableContainer && beforeAjaxData.tableContainer.length>0 && beforeAjaxData.tableContainer.has('table') ){
+                                this.update(data,0,beforeAjaxData.tableContainer);
+                            }else{
+                                this.update(data,0);
+                            }
+
+
+                        }
+                        //button ctrlID>3032
+                        else if(parseInt(beforeAjaxData.action.ctrlid)>3032 && parseInt(beforeAjaxData.action.ctrlid)<4000){
+                            new BuildWin(data,0);
+
+                        }
+
+
+
+                    }
+                    else {
+                        logError('onRowButtonSuccess: data.windows object does not exist')
+                    }
+
+                }
+                else if(  parseInt(beforeAjaxData.action.ctrlid)>=4000 && parseInt(beforeAjaxData.action.ctrlid)<5000 )
+                {
+                    msgTip.setSuccMsg('操作成功： '+ data.msg);
+                    msgTip.showSuccMsg(2000);
+
+
+                }
                /* this.winTip('操作成功： '+ data.msg);*/
                 msgTip.setSuccMsg('操作成功： '+ data.msg);
                 msgTip.showSuccMsg(2000);
@@ -1169,12 +1178,12 @@
                 if(parseInt(this.code)<= -10000 ){
                     /*this.winTip('操作失败: ' + data.msg);*/
                     msgTip.setErrorMsg('操作失败： '+ data.msg);
-                    msgTip.setErrorMsg();
+                    msgTip.showErrorMsg();
                     window.location.href='../index.html';
                 }else{
                     /*this.winTip('操作失败: '+ data.msg);*/
                     msgTip.setErrorMsg('操作失败： '+ data.msg);
-                    msgTip.setErrorMsg();
+                    msgTip.showErrorMsg();
                 }
 
             }

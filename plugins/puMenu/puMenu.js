@@ -27,7 +27,7 @@
     var _default={
         data:undefined,
         direction:undefined, // 'down','up', 'left','right' 'left'
-        activeEvent:'click', // to active the menu 'click' or 'mouseover'
+        activeEvent:'click', // to active the menu 'click' or 'hover'
         orientation:'down',
         calibration: '2', // 离 所选的，element多远
         onMenuItemClick:undefined
@@ -44,18 +44,17 @@
 
     var _orientation={
         left: 'left',
-            right:'right',
-            up:'up',
-            down:'down'
+        right:'right',
+        up:'up',
+        down:'down'
     };
 
     var cssClass={
-
         menuContainer: pluginName + '-menuContainer',
         ul:  pluginName + '-ul',
         allMenuContainer:pluginName + '-allMenuContainer',
         menuActive: pluginName + '-active',
-
+        overLay:pluginName + '-overLay'
     }
 
     var PUMenu=function (options,element ){
@@ -63,8 +62,7 @@
         this.$element=$(element);
         this.flatMenuCache=[];
         this.$allMenuContainer=$(html.div).addClass(cssClass.allMenuContainer);
-
-
+        this.$overLay=$(html.div).addClass(cssClass.overLay);
         this.init();
     }
 
@@ -74,8 +72,9 @@
             init:function(){
                 //把 多层 this.rootData展开，并且把array 层数打上记号
                 this.flatMenuData(this.settings.data,0,-1);
-                $('body').append(this.$allMenuContainer);
 
+                $('body').append(this.$allMenuContainer);
+                this.$allMenuContainer.append(this.$overLay);
                 this.subEvents();
             },
 
@@ -83,24 +82,17 @@
                 var me=this;
                 this.offEvents();
 
-                this.$element.on(this.settings.activeEvent,function(){
-                    if(me.$allMenuContainer.hasClass(cssClass.menuActive)){
-                        me.$allMenuContainer.find('div.'+cssClass.menuContainer).hide();
-                        me.$allMenuContainer.removeClass(cssClass.menuActive);
-                    }else{
-                        me.$allMenuContainer.addClass(cssClass.menuActive);
+                if(this.settings.activeEvent=='click'){
+                    this.$element.on(this.settings.activeEvent,'',me,me.rootMenuOnOffHandler);
+                }else if(this.settings.activeEvent=='hover'){
+                    this.$element.on('mouseenter','',me,me.rootMenuOnOffHandler);
+                    this.$element.on('mouseleave','',me,me.rootMenuOnOffHandler);
+                }
 
-                        if(me.$allMenuContainer.find('div[data-menulevel=0].'+cssClass.menuContainer).length>0){
-                            me.$allMenuContainer.find('div[data-menulevel=0].'+cssClass.menuContainer).show();
-                        }else{
-                            var level0Menu = me.prepareMenuData.call(me,this.flatMenuCache,0,-1);
-                            me.buildMenuHtml.call(me, level0Menu,me.$element,me.settings.orientation,me.settings.calibration);
-                        }
-
-
-                    }
-
+                this.$overLay.on('click',function(){
+                    me.rootMenuHide.call(me);
                 });
+
                 if(typeof this.settings.onMenuItemClick==='function'){
                     this.$element.on('onMenuItemClick', this.settings.onMenuItemClick)
                 }
@@ -113,9 +105,45 @@
             },
 
             offEvents:function(){
-
                 this.$element.off(this.settings.activeEvent);
                 this.$element.off('onMenuItemClick');
+            },
+
+            rootMenuOnOffHandler:function(event){
+                var me=event.data; //通过 $.on 第三个函数传递进来；
+
+                if(event.type=='click'){
+                    if(me.$allMenuContainer.hasClass(cssClass.menuActive)){
+                        me.rootMenuHide.call(me);
+                    }else{
+                        me.rootMenuShow.call(me);
+                    }
+                }
+                else if(event.type=='mouseenter'){
+                    me.rootMenuShow.call(me);
+                }
+            },
+
+            rootMenuShow:function(){
+                this.$allMenuContainer.addClass(cssClass.menuActive);
+
+                //如果已经创建了root menu(第一个menu),  那就show, 如果没有就用
+                if(this.$allMenuContainer.find('div[data-menulevel=0].'+cssClass.menuContainer).length>0){
+                    this.$allMenuContainer.find('div[data-menulevel=0].'+cssClass.menuContainer).show();
+                }else{
+                    var level0Menu = this.prepareMenuData(this.flatMenuCache,0,-1);
+                    this.buildMenuHtml(level0Menu,this.$element,this.settings.orientation,this.settings.calibration);
+                }
+
+                this.$overLay.show();
+
+
+
+            },
+            rootMenuHide:function(){
+                this.$allMenuContainer.find('div.'+cssClass.menuContainer).hide();
+                this.$allMenuContainer.removeClass(cssClass.menuActive);
+                this.$overLay.hide();
             },
 
             flatMenuData:function(array , level, upMenuIndex){
@@ -191,17 +219,12 @@
                         $a_text.attr('name', data.name);
                         $a_text.append(data.title);
 
+
                         //是有下级菜单的目录
                         if(data.menu && $.isArray(data.menu)){
-
                             $a_arrow.html('>');
                             $li.append($a_arrow);
-
-
-
-
                             $li.on('mouseover',function(event){
-
                                 var upMenu = $.data(this,'upInfo'),
                                     thisMenuContainer= $(this).parents('.'+cssClass.menuContainer),
                                     currentLevel=thisMenuContainer.attr('data-menulevel'),
@@ -220,15 +243,12 @@
                                 else{
                                     var menuArray=  me.prepareMenuData.call(me,me.flatMenuCache,parseInt(upMenu.level)+1,upMenu.index,upMenu.boundGUID);
 
-                                    me.buildMenuHtml(menuArray, $(this).parent(),'right',1);
+                                    me.buildMenuHtml(menuArray, $(this),'right',1);
                                 }
-
-
                             });
-
-
-
                         }
+
+
 
                         $li.on('click',function(event){
                             var menuItem = $.data(this,'upInfo')
