@@ -1,0 +1,120 @@
+/*blue Night Theme*/
+html, body {
+  width: 100%;
+  height: 100%; }
+
+.l-mainWrap {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%; }
+  .l-mainWrap .l-header {
+    height: 5%;
+    width: 100%; }
+    .l-mainWrap .l-header .l-logo-wrapper {
+      text-align: center;
+      width: 100%;
+      overflow: hidden;
+      background-color: #36749e; }
+      .l-mainWrap .l-header .l-logo-wrapper .logo {
+        width: 100%;
+        color: white;
+        font-size: 1.5em; }
+    .l-mainWrap .l-header .l-headerContent {
+      postion: relative;
+      margin-left: 0.25%;
+      width: 100%;
+      height: 100%;
+      background-color: #3C8DBC; }
+  .l-mainWrap .l-middle {
+    height: 91%;
+    width: 100%; }
+    .l-mainWrap .l-middle .l-menu-wrapper {
+      height: 100%;
+      padding: 1%;
+      background-color: #424A5D; }
+    .l-mainWrap .l-middle .l-middle-content {
+      margin-left: 0.25%;
+      width: 100%;
+      height: 100%;
+      background-color: lightgrey;
+      overflow-x: auto; }
+  .l-mainWrap .l-footer {
+    height: 4%;
+    width: 100%;
+    margin-top: 1px;
+    background-color: #3C8DBC; }
+
+/*for bootstrap grid vertically centered*/
+.l-vCenter-parent {
+  display: table;
+  table-layout: fixed;
+  height: 100%; }
+
+.l-vCenter-child {
+  display: table-cell;
+  vertical-align: middle;
+  float: none; }
+
+/*for bootstrap grid vertically centered*/
+.l-label {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  text-align: center;
+  font-size: 10px;
+  padding: 3px 3px;
+  line-height: .9;
+  border-radius: 40%; }
+
+.l-userImg {
+  float: left;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  margin-top: -2px; }
+
+
+/*--------------------navbar nav------start------------ */
+.l-navbar {
+  background-color: #3C8DBC;
+  height: 100%; }
+  .l-navbar ul.l-navbar-nav {
+    float: left;
+    display: table;
+    margin: 0px;
+    padding-right: 5px;
+    padding-left: 5px;
+    height: 100%; }
+  .l-navbar ul.l-navbar-nav-right {
+    float: right;
+    display: table;
+    margin: 0px;
+    padding-right: 5px;
+    padding-left: 5px;
+    height: 100%; }
+  .l-navbar ul > li {
+    position: relative;
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 10px;
+    padding-right: 10px; }
+    .l-navbar ul > li > a {
+      display: table;
+      padding: 5px;
+      position: relative;
+      text-decoration: none; }
+      .l-navbar ul > li > a > span {
+        position: relative;
+        display: table-cell;
+        vertical-align: middle; }
+      .l-navbar ul > li > a > img {
+        position: relative;
+        display: table-cell;
+        vertical-align: middle; }
+  .l-navbar ul > li:hover {
+    background-color: #3378a1; }
+
+/*--------------------navbar nav------finish------------ */
+

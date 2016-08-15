@@ -1,0 +1,204 @@
+
+@import "theme-BlueNight.scss";
+
+
+@mixin ratio2Parent($percent:100%){
+  width: $percent;
+  height:$percent;
+}
+
+
+html, body{
+  @include ratio2Parent;
+}
+
+.l-mainWrap{
+  overflow: hidden;
+  position:relative;
+  @include ratio2Parent;
+
+  //Header ---start
+  .l-header{
+
+    height:5%;
+    width:100%;
+
+    .l-logo-wrapper {
+      text-align: center;
+      width:100%;
+      overflow: hidden;
+      background-color: $logo-wrap-bc;
+
+      .logo{
+        width:100%;
+        color:$logo-color;
+        font-size: 1.5em;
+      }
+    }
+
+    .l-headerContent{
+
+      postion:relative;
+      margin-left:0.25%;
+      @include ratio2Parent;
+
+      background-color: $theme-Color;
+    }
+
+
+  }
+  //top Header ---finish
+
+
+  //middle ---start
+  .l-middle{
+    height:91%;
+    width:100%;
+
+
+
+    .l-menu-wrapper {
+      height:100%;
+      padding:1%;
+      background-color: $menu-wrap-bc;
+    }
+
+    .l-middle-content{
+      margin-left:0.25%;
+      @include ratio2Parent;
+
+      background-color: $middle-Content;
+      overflow-x: auto;
+    }
+
+
+
+
+
+
+  }
+  //middle ---finish
+
+  //foot ---start
+  .l-footer{
+
+    height:4%;
+    width:100%;
+    margin-top:1px;
+    background-color: $theme-Color;
+  }
+  //foot ---finish
+
+
+}
+
+
+/*for bootstrap grid vertically centered*/
+.l-vCenter-parent {
+  display: table;
+  table-layout: fixed;
+  height:100%;
+}
+
+.l-vCenter-child {
+  display:table-cell;
+  vertical-align:middle;
+  float: none;
+}
+/*for bootstrap grid vertically centered*/
+
+
+
+//show the number on icon (e.g. how many emails, sms)
+.l-label {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  text-align: center;
+  font-size: 10px;
+  padding: 3px 3px;
+  line-height: .9;
+  border-radius: 40%;
+}
+
+// user Icon
+.l-userImg{
+  float: left;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  margin-top: -2px;
+}
+
+
+
+/*--------------------navbar nav------start------------ */
+
+
+
+.l-navbar{
+
+  background-color: #3C8DBC;
+  height:100%;
+
+  @mixin navbar-nav($float:left){
+    float: $float;
+    display:table;
+    margin:0px;
+    padding-right:5px;
+    padding-left:5px;
+    height:100%;
+  }
+
+  ul.l-navbar-nav{
+    @include navbar-nav;
+
+
+
+  }
+
+  ul.l-navbar-nav-right{
+    @include navbar-nav(right);
+  }
+
+  ul{
+
+    >li{
+        position:relative;
+        display:table-cell;
+        vertical-align: middle;
+
+        padding-left: 10px;
+        padding-right:10px;
+
+        >a{
+            display: table;
+            padding:5px;
+            position:relative;
+            text-decoration:none;
+
+            >span{
+              position:relative;
+              display: table-cell;
+              vertical-align: middle;
+            }
+
+            >img{
+              position:relative;
+              display: table-cell;
+              vertical-align: middle;
+            }
+        }
+    }
+
+    >li:hover{
+      background-color: $theme-ColorHover;
+    }
+
+  }
+
+
+
+}
+

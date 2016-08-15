@@ -17,7 +17,7 @@ html, body{
     postion:relative;
     margin-left:0.25%;
     height:100%;
-    width:99.5%;
+    width:100%;
     background-color: #3C8DBC;
 }
 
@@ -59,7 +59,7 @@ html, body{
     text-align: center;
     width:100%;
     overflow: hidden;
-    background-color: #36749e;
+    background-color: #9e3247;
 
 
 
@@ -67,7 +67,7 @@ html, body{
 .l-logo-wrapper .logo{
     width:100%;
     color:white;
-    font-size: 150%;
+    font-size: 1.5em;
 }
 
 
