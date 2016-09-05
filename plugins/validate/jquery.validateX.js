@@ -82,13 +82,16 @@
                 //为 服务器 检验而建
                 if(this.hasItemValidateOnServer){
                     //第一次检查
-                    _this.validateCache.forEach(function(each, index){
-                        if(each.isValidateOnServer){
-                            each.isValid=false;
-                            _this.check(each);
-                            each.value = each.element.value;
-                        }
-                    });
+                    setTimeout(function(){
+                        _this.validateCache.forEach(function(each, index){
+                            if(each.isValidateOnServer){
+                                each.isValid=false;
+                                _this.check(each);
+                                each.value = each.element.value;
+                            }
+                        });
+                    },500);
+
 
                     //第二次检查至n次（因为，用了 datapicker插件，任何原始事件不能被激发，只能靠扫描来检查）
                     _this.intervalID = setInterval(function(){
