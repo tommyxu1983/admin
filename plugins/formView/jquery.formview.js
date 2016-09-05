@@ -67,6 +67,8 @@
         option:'option',
         multi:'multi',
         date:'date',
+        time:'time',
+        dateTime:'dateTime',
         currency:'currency',
         integer: 'integer',
         float:'float',
@@ -168,7 +170,7 @@
         this.vRules={};
         this.previousItemDataID=undefined;
 
-       // options.isDataWritable==true 直接操作 传进来的数据，任何input里的值改变都会直接改动传进的 option.data
+        // options.isDataWritable==true 直接操作 传进来的数据，任何input里的值改变都会直接改动传进的 option.data
         this.settings=$.extend({},_default.options,options);
         if(options.isDataWritable){
             (this.settings.data)?  this.settings.data=options.data : logError('please passing the option with \'data\' property')
@@ -533,16 +535,21 @@
 
             case _dataType.date:
                 $input.attr('type','datepicker');
-                //$input.datepicker({
-                //    format: "yyyy/mm/dd",
-                //    todayBtn: "linked",
-                //    language: "zh-CN"
-                //});
+                $input.datepicker({
+                    format: "yyyy/mm/dd",
+                    todayBtn: "linked",
+                    language: "zh-CN"
+                });
 
-
-
+            case _dataType.time:
+                $input.attr('type','time');
                 $result=$input;
                 break;
+            case _dataType.dateTime:
+                $input.attr('type','datetime');
+                $result=$input;
+                break;
+
             case _dataType.currency:
                 $input.attr('type',_iType.number);
 

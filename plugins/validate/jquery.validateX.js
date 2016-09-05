@@ -105,8 +105,6 @@
                         });
                     },100);
 
-
-
                 }
 
 
@@ -446,6 +444,72 @@
                 return value.length > 0;
             },
 
+            dateTime: function( value, element , param ){
+               /* var isValidDateTime = /[0-3]\//.test(value);*/
+                var YMD,
+                    time,
+                    //空格隔开 日期 和 时间
+                    YYYYMMDD_Time= $.isArray(value.split(/\s/g) )? value.split(/\s/g) : [],
+                    isFinalCorrect=true;
+
+                if( YYYYMMDD_Time.length >= 2 ) {
+                    //验证日期是否是正确
+                        // 是否是 8888/88/88 格式
+                    if(  /\d{4}\/\d{2}\/\d{2}/.test(YYYYMMDD_Time[0])  ){
+                        YMD=YYYYMMDD_Time[0].split(/\//g);
+                        var year = parseInt( YMD[0] ),
+                            month =parseInt( YMD[1] ),
+                            day = parseInt(YMD[2]);
+
+                        //判断 年份 0001 - 9999
+                        if(! (year>=1 && year<=9999) ){
+                            isFinalCorrect=false;
+                        }
+                        //判断 月份 01-12
+                        if(! (month>=1 && month<=12) ){
+                            isFinalCorrect=false;
+                        }
+
+                        var normalYear4MaxDay={'01':31,'02':28,'03':31,'04':30,'05':31,'06':30,'07':31,'08':31,'09':30,'10':31,'11':30,'12':31}[YMD[1]];
+                        var leapYear4MaxDay = {'01':31,'02':29,'03':31,'04':30,'05':31,'06':30,'07':31,'08':31,'09':30,'10':31,'11':30,'12':31}[YMD[1]];
+
+                        //闰年
+                        if( ( year % 4 == 0) && ( year % 100 != 0 ||  year % 400 == 0) )
+                        {
+                            if( ! (day>=1 && day <= leapYear4MaxDay) ){
+                                isFinalCorrect=false;
+                            }
+                        }
+                        //非闰年
+                        else{
+                            if( !  (day>=1 && day <= normalYear4MaxDay) ){
+                                isFinalCorrect=false;
+                            }
+
+                        }
+
+                    }
+                    else{
+                        isFinalCorrect=false;
+                    }
+
+                    //验证时间是否正确
+                    if(! /([0-1][0-9]:[0-5][0-9])|([2][0-3]:[0-5][0-9])/.test(YYYYMMDD_Time[1]) ){
+                        isFinalCorrect=false;
+                    }
+
+                }else{
+                    isFinalCorrect=false;
+                }
+                return isFinalCorrect;
+            },
+
+            time: function( value, element , param ){
+                //按照时间格式： 23：34
+                var isTime = /([0-1][0-9]:[0-5][0-9])|([2][0-3]:[0-5][0-9])/.test(value);
+                return isTime;
+            },
+
             minlength: function( value, element, param ) {
                 var length = $.isArray( value ) ? value.length : this.getLength( value, element );
                 return  length >= param;
@@ -490,6 +554,12 @@
             number: "Please enter a valid number.",
             digits: "Please enter only digits.",
             equalTo: "Please enter the same value again.",
+            time:function(){
+                return "请按照正确的 时间格式 填写。 如：下午2点12分  \"14:12\"";
+            },
+            dateTime:function(){
+                return "请按照正确的 日期时间格式 填写。 如：2011年11月11日 下午2点12分 \"2011/11/11 14:12\"";
+            },
             maxlength: function(parameter){
                 return "请不要超过"+parameter+"个字";
             },
@@ -507,6 +577,8 @@
             numberInRange: function(p1,p2){
                 return "请输入 "+p1+' 和 '+p2+' 之间的数字'
             }
+            ,
+
 
         },
 

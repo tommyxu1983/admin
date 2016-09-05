@@ -229,7 +229,9 @@
 
             controlList:[
                 {label:'姓名', isLabelDisplay:true, dataType:'text',placeholder:'请填写姓名',dataID:'name',data:'张三',dataOption:'',readonly:1, multiline:1,validateRules:{required:true,maxlength:'4'}},
-              /*  {label:'用户名', isLabelDisplay:true, dataType:'text',placeholder:'请填写用户名',dataID:'userName',data:'',dataOption:'',validateRules:{required:true,'minlength':'2',maxlength:5}},
+                {label:'生日', isLabelDisplay:true, dataType:'dateTime',placeholder:'',dataID:'birthday',data:'1986/04/08 23:54:56',dataOption:'',validateRules:{dateTime:true}},
+                {label:'时间', isLabelDisplay:true, dataType:'time',placeholder:'',dataID:'time',data:'23:54:56',dataOption:'',validateRules:{time:true}},
+                {label:'用户名', isLabelDisplay:true, dataType:'text',placeholder:'请填写用户名',dataID:'userName',data:'',dataOption:'',validateRules:{required:true,'minlength':'2',maxlength:5}},
                 {label:'称昵', isLabelDisplay:true, dataType:'text',placeholder:'请填写称昵',dataID:'nickName',data:'',dataOption:''},
                 {label:'邮箱', isLabelDisplay:true, dataType:'email',placeholder:'请填写邮箱',dataID:'email',data:'',dataOption:''},
                 {label:'密码', isLabelDisplay:true, dataType:'psw',placeholder:'',dataID:'password',data:'',dataOption:''},
@@ -237,9 +239,9 @@
                 {label:'性别', isLabelDisplay:true, dataType:'bool',placeholder:'male',dataID:'gender',data:'male',dataOption:[{id:'male',caption:'男'},{id:'female',caption:'女'}]},
                 {label:'工种', isLabelDisplay:true, dataType:'option',placeholder:'worker',dataID:'profession',data:'writer',dataOption:[{id:'teacher',caption:'老师'},{id:'worker',caption:'工人'},{id:'writer',caption:'作家'}]},
                 {label:'工种', isLabelDisplay:true, dataType:'multi',placeholder:'worker',dataID:'profession',data:'writer',dataOption:[{id:'teacher',caption:'老师',checked:1},{id:'worker',caption:'工人',checked:0},{id:'writer',caption:'作家',checked:1}]},
-                {label:'生日', isLabelDisplay:true, dataType:'date',placeholder:'',dataID:'birthday',data:'1986/04/08',dataOption:''},
+
                 {label:'部门', isLabelDisplay:true,dataType:'text',placeholder:'',dataID:'department',data:'',dataOption:{}},
-                {label:'注册资金', isLabelDisplay:true,dataType:'text',currencyType:'',placeholder:'',dataID:'companyRegister',data:'2000',dataOption:{}},*/
+                {label:'注册资金', isLabelDisplay:true,dataType:'text',currencyType:'',placeholder:'',dataID:'companyRegister',data:'2000',dataOption:{}},
                 {
                     "label": "傻逼实现",
                     "isLabelDisplay": true,
@@ -252,7 +254,7 @@
                     "dataOption": [
                         {
                             "id": "35a0f18c-57c0-11e6-acba-406186f6951f",
-                            "caption": "sha2"
+                            "caption": "步骤一"
                         },
                         {
                             "id": "46502aa6-57c0-11e6-acba-406186f6951f",

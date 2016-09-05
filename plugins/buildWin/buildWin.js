@@ -368,6 +368,7 @@
                         '7': 'float',
                         '8': 'date',
                         '9': 'time',
+                        '10':'dateTime',
                         '12':'option',
                         '21':'psw',
                         '22':'multi',
