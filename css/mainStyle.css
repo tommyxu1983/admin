@@ -27,6 +27,7 @@ html, body {
       height: 100%;
       background-color: #3C8DBC; }
   .l-mainWrap .l-middle {
+    position: relative;
     height: 91%;
     width: 100%; }
     .l-mainWrap .l-middle .l-menu-wrapper {
@@ -75,7 +76,6 @@ html, body {
   margin-right: 10px;
   margin-top: -2px; }
 
-
 /*--------------------navbar nav------start------------ */
 .l-navbar {
   background-color: #3C8DBC;
@@ -116,5 +116,4 @@ html, body {
   .l-navbar ul > li:hover {
     background-color: #3378a1; }
 
-/*--------------------navbar nav------finish------------ */
-
+/*# sourceMappingURL=mainStyle.css.map */

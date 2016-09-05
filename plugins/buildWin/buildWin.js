@@ -23,8 +23,6 @@
             open:'3006',
         };
 
-        var debug=true;
-
 
         if (typeof $ === 'undefined') {
             throw new Error( + 'buildWin\'s  requires jQuery');
@@ -65,19 +63,7 @@
             panelContent:'win-panelContent',
 
         };
-        /*var findItem=function(obj,key){
-            var item=undefined;
-            if( $.isArray(obj) ){
-                for(var i= 0, l=obj.length; i<l; i++){
-                   if( obj[i].key==key){
-                       return obj[i].element;
-                   }
-                }
-            }else{
 
-                return item;
-            }
-        }*/
         var logError = function (message) {
             if (window.console) {
                 window.console.error(message);
@@ -437,9 +423,15 @@
 
                     $moduleDiv.find('form').validateX({
                         rules: vRules,
+                        onValidateAtServer:function(evt,data){
+                            var request;
+
+                                _this.writeBack(); //读取表单里的文字
+                                request={url:data.url,data: JSON.stringify(_this.data)};
+
+                            _this.sendAjax(request,_this.onValidateOnServerSuccess,undefined,undefined,data);
+                        }
                     });
-
-
 
                 }
 
@@ -489,19 +481,11 @@
                                 data:JSON.stringify(_this.data)
                             }
                             _this.sendAjax( reqGotoPage, $.proxy(_this.onGoToPageSuccess,_this) , undefined , undefined,{tableContainer:$moduleDiv});
-                            // _this.addLoading($moduleDiv);
                         }
 
                     },_this)
                 };
 
-/*            var element=findItem( this.updateElement,this.winData.uid);
-            if( element ){
-                $moduleDiv=element;
-            }
-            else{
-                this.updateElement.push({key:this.winData.uid, element: $moduleDiv,title:module.caption});
-            }*/
 
             $moduleDiv.empty();
 
@@ -532,7 +516,7 @@
                             var replaceURL =buttonData.uurl.replace(/_ROW_DATA_GUID_/g,rowData[0].toString());
                             req={
                                 url:replaceURL,
-                                dataType:"html",
+                                dataType:'html',
                                 type:'get'
                             };
 
@@ -703,55 +687,6 @@
                 console.log('module.winmodfields.Body.Head is not array, can\'t plot');
             }
 
-
-
-
-
-
-
-
-
- /*           [
-                {
-                    label: 'Scatter Dataset',
-                    fill: false,
-                    lineTension: 0.1,
-                    backgroundColor: "rgba(75,192,192,0.4)",
-                    borderColor: "rgba(75,192,192,1)",
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "rgba(75,192,192,1)",
-                    pointBackgroundColor: "#fff",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                    pointHoverBorderColor: "rgba(220,220,220,1)",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 9,
-                    pointHitRadius: 10,
-                    data: lineData
-                }
-            ] */
-
-            var scatterChart = new Chart(ctx_line, {
-                type: 'line',
-                data: {
-                    datasets:lineDataSets
-                },
-                options: {
-                    scales: {
-                        xAxes: [{
-                            type: 'linear',
-                            position: 'bottom'
-                        }]
-                    }
-                }
-            });
-
-
-
         };
 
         BuildWin.prototype.buildFormButtons=function(buttonsData,dialog,preRequest){
@@ -791,11 +726,20 @@
 
                                 //用 validate 插件， 来校验
                                 var validateX;
-                                if(formView.$form.validateX() instanceof $.validator){
+                                if(formView.$form.validateX() instanceof $.validator) {
                                     validateX=formView.$form.validateX();
-                                }else{
+                                }
+                                else{
                                     //初始化validate 插件
-                                    formView.$form.validateX({rules:formView.vRules});
+                                    formView.$form.validateX({rules:formView.vRules,
+                                        onValidateAtServer:function(evt,data){
+                                            var request;
+                                            _this.writeBack(); //读取表单里的文字
+                                            request={url:data.url,data: JSON.stringify(_this.data)};
+                                            _this.sendAjax(request,_this.onValidateOnServerSuccess,undefined,undefined,data);
+                                        }
+
+                                    });
                                     validateX=formView.$form.validateX();
                                 }
 
@@ -804,6 +748,9 @@
                                     validateX.showOremoveAllErrorOnPage();
                                 }//如果校验成功，发送请求
                                 else{
+                                    //销毁验证 里的 事件和 setInterval
+                                    validateX.destroy();
+
 
                                     if(data4Button.ctrlid>=5000 && data4Button.ctrlid<6000 ){
                                         //alert('>=5000  <6000');
@@ -982,6 +929,9 @@
                             case _ctrl.delete: // 删除
                                 buttonTypeCss= 'btn-warning'
                                 break;
+                            default:
+                                buttonTypeCss= 'btn-primary';
+                                break;
                         }
 
 
@@ -1046,7 +996,6 @@
                                 this.update(data,0);
                             }
 
-
                             break;
 
                         case _ctrl.delete:
@@ -1066,19 +1015,16 @@
 
                 }
 
-               /* this.winTip('操作成功： '+ data.msg);*/
                 msgTip.setSuccMsg('操作成功： '+ data.msg);
                 msgTip.showSuccMsg(2000);
 
             }else{
 
                 if(parseInt(this.code)<= -10000 ){
-                   /* this.winTip('操作失败: ' + data.msg);*/
                     msgTip.setSuccMsg('操作成功： '+ data.msg);
                     msgTip.showSuccMsg(2000);
                     window.location.href='../index.html';
                 }else{
-                    /*this.winTip('操作失败: '+ data.msg);*/
                     msgTip.setSuccMsg('操作成功： '+ data.msg);
                     msgTip.showSuccMsg(2000);
                 }
@@ -1104,49 +1050,12 @@
                         }
                         //删除
                         else if(beforeAjaxData.action.ctrlid==_ctrl.delete){
-                            /*BootstrapDialog.show(
-                             {
 
-                             title: '删除',
-                             size: BootstrapDialog.SIZE_SMALL,
-                             message: '<span style="font-size:2em; margin-left: 35%">确认删除</span>',
-
-                             buttons: [
-
-                             {
-                             label: '确认',
-                             cssClass: 'btn-warning',
-                             action: function(dialog) {
-                             dialog.close();
-                             $.each( data.windows[0].winmodules,function(index,winmodule){
-                             if(winmodule.mtype==_moduleType.report){
-                             var newData= winmodule.winmodfields.Body.Data;
-                             beforeAjaxData.tableContainer.tableView('updateDataRows','newData','', newData);
-                             }
-
-                             });
-
-
-                             }
-                             },
-                             {
-                             label: '取消',
-                             cssClass: 'btn-primary',
-                             action: function(dialog) {
-                             dialog.close();
-                             }
-                             }
-
-                             ]
-                             }
-                             );*/
-                            // 确认是否是 tableContianer, 里面有没有 table domElement
                             if(beforeAjaxData.tableContainer && beforeAjaxData.tableContainer.length>0 && beforeAjaxData.tableContainer.has('table') ){
                                 this.update(data,0,beforeAjaxData.tableContainer);
                             }else{
                                 this.update(data,0);
                             }
-
 
                         }
                         //button ctrlID>3032
@@ -1170,18 +1079,15 @@
 
 
                 }
-               /* this.winTip('操作成功： '+ data.msg);*/
                 msgTip.setSuccMsg('操作成功： '+ data.msg);
                 msgTip.showSuccMsg(2000);
             }else{
 
                 if(parseInt(this.code)<= -10000 ){
-                    /*this.winTip('操作失败: ' + data.msg);*/
                     msgTip.setErrorMsg('操作失败： '+ data.msg);
                     msgTip.showErrorMsg();
                     window.location.href='../index.html';
                 }else{
-                    /*this.winTip('操作失败: '+ data.msg);*/
                     msgTip.setErrorMsg('操作失败： '+ data.msg);
                     msgTip.showErrorMsg();
                 }
@@ -1208,17 +1114,24 @@
             }
 
         };
+        BuildWin.prototype.onValidateOnServerSuccess=function(data,beforeAjaxData){
+            var _this=this,
+                validator = beforeAjaxData.validator,
+                element = beforeAjaxData.element,
+                singleValidator;
 
-       /* BuildWin.prototype.winTip=function(msg){
-            // var _this=this;
-            if(!!msg && !!this.$selector){
-
-                var $msgDiv=$(_html.div).append(msg).addClass('messageTip');
-                $('body').append($msgDiv);
-                window.setTimeout(function(){$msgDiv.remove()},2000);
+            if( !! ( singleValidator=validator.isInValidateCache(element) )  ){
+                if(data.code>=0){
+                    singleValidator.isValid=true;
+                }else{
+                    singleValidator.isValid=false;
+                    singleValidator.errorMsg.push(data.msg);
+                    validator.showOremoveErrorOnPage(singleValidator);
+                }
             }
 
-        };*/
+        };
+
 
         BuildWin.prototype.writeBack=function(){
             var _this=this;
@@ -1301,25 +1214,6 @@
 
         };
 
-       /* BuildWin.prototype.buttonError=function(XMLHttpRequest, textStatus, errorThrown){
-            var msg= "XMLHttpRequest Status:" + XMLHttpRequest.status +"\n"
-                + "XMLHttpRequest readyState: "+ XMLHttpRequest.readyState +"\n"
-                + "textStatus: " + textStatus  +"\n"
-                + "error:" + errorThrown;
-
-            this.winTip(msg);
-
-        };*/
-
-        BuildWin.prototype.addLoading=function($element){
-            $element.append('<div class="loadingData"></div>');
-
-        };
-
-        BuildWin.prototype.removeLoading=function($element){
-            $element.find('div.loadingData').remove();
-        };
-
         BuildWin.prototype.sendAjax=function(Request,Success,Complete, Error,preAjaxData ) {
             var ajaxObject = $.ajax({
                 url: Request.url ||'',    //请求的url地址
@@ -1372,20 +1266,3 @@
     })
 );
 
-+function(factory){
-    if(typeof define==='function' && define.amd ){
-        define(['jquery'],factory);
-    }else if(typeof module==='object' && module.exports){
-        module.exports=factory(require('jquery'));
-    }
-    else{
-        factory(jQuery);
-    }
-
-
-
-}(function(){
-
-    //define your jquery plugin here
-
-});

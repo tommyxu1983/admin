@@ -348,7 +348,6 @@
 
     FormView.prototype.createVRules=function(ctlListItem){
         if(ctlListItem.validateRules){
-            /* validateClassName= createValidateName(ctlListItem.validateRules, this.vRules);*/
             this.vRules[ctlListItem.dataID]=ctlListItem.validateRules;
             for(var key in this.vRules[ctlListItem.dataID]){
                 (  this.vRules[ctlListItem.dataID][key]==='true') && (  this.vRules[ctlListItem.dataID][key]=true);

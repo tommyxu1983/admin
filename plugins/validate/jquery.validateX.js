@@ -62,32 +62,76 @@
         prototype : {
            constructor: $.validator,
             init: function(){
-
+                var _this=this;
                 //需要被验证的元素，里面储存的是 {element: jquery 元素 ,ClassName4Rules:'', rules:object,valid:false}
                 this.validateCache=[];
                 this.invalidElements={};
                 this.ClassNameOfRules=this.settings.rules;
 
-
+                //为 服务器 检验而建
+                this.hasItemValidateOnServer=false;
+                this.intervalID;
 
 
                 this.initValidateEleCache(); //初始化  this.validateCache=[];
+
+
+
                 this.subEvent();
+
+                //为 服务器 检验而建
+                if(this.hasItemValidateOnServer){
+                    //第一次检查
+                    _this.validateCache.forEach(function(each, index){
+                        if(each.isValidateOnServer){
+                            each.isValid=false;
+                            _this.check(each);
+                            each.value = each.element.value;
+                        }
+                    });
+
+                    //第二次检查至n次（因为，用了 datapicker插件，任何原始事件不能被激发，只能靠扫描来检查）
+                    _this.intervalID = setInterval(function(){
+                        _this.validateCache.forEach(function(each, index){
+                            if(each.isValidateOnServer && each.element.value != each.value){
+                                each.isValid=false;
+                                _this.check(each);
+                                each.value= each.element.value;
+                            }
+
+                        });
+                    },100);
+
+
+
+                }
 
 
             },
+
+
             //初始化  this.validateCache=[];
             initValidateEleCache:function(){
                 for(var key in this.ClassNameOfRules ){
                     if(this.$form.find('input[name='+ key+']').length && this.$form.find('input[name='+ key+']').length>0){
 
-                        this.validateCache.push({
-                            element: this.$form.find('input[name='+ key+']')[0],
-                            ClassName4Rules:key,
-                            rules: this.ClassNameOfRules[key],
-                            isValid:false,
-                            errorMsg:[]
-                        });
+                       var  singleItem={
+                                element: this.$form.find('input[name='+ key+']')[0],
+                                ClassName4Rules:key,
+                                rules: this.ClassNameOfRules[key],
+                                isValid:false,
+                                errorMsg:[],
+                        };
+
+                        if(this.ClassNameOfRules[key]['validateOnServer']){
+                            singleItem.value=this.$form.find('input[name='+ key+']')[0].value;
+                            singleItem.isValidateOnServer=true;
+                            this.hasItemValidateOnServer=true;
+                        }
+
+                        this.validateCache.push(singleItem);
+
+
                     }
 
 
@@ -110,6 +154,7 @@
             subEvent:function(){
                 var validator=this;
                 this.unSubevent();
+
                 this.$form.on("focusin focusout keyup",
                     ":text, [type='password'], [type='file'], select, textarea, [type='number'], [type='search'], " +
                     "[type='tel'], [type='url'], [type='email'], [type='datetime'], [type='date'], [type='month'], " +
@@ -122,6 +167,15 @@
                         validator.settings['on'+evetType].call(validator,this,event);
                     }
                 }
+
+                //外部事件定义
+                //用来定义 ajax 回服务器验证的规则
+                if(typeof this.settings.onValidateAtServer === 'function'){
+                    this.$form.on('onValidateAtServer',this.settings.onValidateAtServer);
+                }
+
+
+
             },
 
             unSubevent:function(){
@@ -186,56 +240,62 @@
                     .not(this.settings.ignore);
             },
 
+            destroy:function(){
+                this.unSubevent();
+                clearInterval(this.intervalID);
+            },
+
             check:function(elementFromCache){
                 var element= elementFromCache.element,
-                 value = this.elementValue(elementFromCache.element),
+                    value = this.elementValue(elementFromCache.element),
                     validFlag=true;
-                //清空 errorMsg, 为新验证错误准备
-                elementFromCache.errorMsg=[];
+               // 如果去server 验证，但已经验证正确
+                if(! (elementFromCache.isValidateOnServer && elementFromCache.isValid) ){
+                    //清空 errorMsg, 为新验证错误准备
+                    elementFromCache.errorMsg=[];
+                    for(var rule in elementFromCache.rules){
+                        if(typeof $.validator.methods[rule]==='function'){
+                            //如果 其中一个，验证出错，则改变 验证旗为false，同时推入错误信息
+                            if( ! $.validator.methods[rule].call(this,value,element,elementFromCache.rules[rule]) ){
 
-                for(var rule in elementFromCache.rules){
+                                validFlag=false;
+                                if( $.validator.messages[rule]  ){
 
-                    if(typeof $.validator.methods[rule]==='function'){
-                        //如果 其中一个，验证出错，则改变 验证旗为false，同时推入错误信息
-                      if( ! $.validator.methods[rule].call(this,value,element,elementFromCache.rules[rule]) ){
+                                    if( typeof $.validator.messages[rule]==='string' ){
+                                        ( elementFromCache.errorMsg.push($.validator.messages[rule]) );
+                                    }
+                                    if( typeof $.validator.messages[rule]==='function'){
+                                        var parameters= $.isArray(elementFromCache.rules[rule])? elementFromCache.rules[rule] : [elementFromCache.rules[rule]];
+                                        elementFromCache.errorMsg.push( $.validator.messages[rule].apply(this,parameters)  ) ;
+                                    }
 
-                          validFlag=false;
-                          if( $.validator.messages[rule]  ){
+                                }else{
+                                    console.log('input[name='+ elementFromCache.ClassName4Rules +'] :找不到对应的错误msg');
+                                }
 
-                             if( typeof $.validator.messages[rule]==='string' ){
-                                 ( elementFromCache.errorMsg.push($.validator.messages[rule]) );
-                             }
-                              if( typeof $.validator.messages[rule]==='function'){
-                                var parameters= $.isArray(elementFromCache.rules[rule])? elementFromCache.rules[rule] : [elementFromCache.rules[rule]];
-                                elementFromCache.errorMsg.push( $.validator.messages[rule].apply(this,parameters)  ) ;
-                              }
+                            }
+                        }else{
+                            console.log('input[name='+ elementFromCache.ClassName4Rules +'] :没有'+ rule+'此验证方法');
+                        }
 
-                          }else{
-                              console.log('input[name='+ elementFromCache.ClassName4Rules +'] :找不到对应的错误msg');
-                          }
-
-                      }
-                    }else{
-                        console.log('input[name='+ elementFromCache.ClassName4Rules +'] :没有'+ rule+'此验证方法');
                     }
-
                 }
+
                 // 经过上面的循环，检查 validFlag 有没有变成 false
                 elementFromCache.isValid=validFlag;
-
             },
 
             checkAll:function(){
                 var _this=this;
-                $.each(this.validateCache,function(index,each){
-                    _this.check(each.element);
+                $.each(_this.validateCache,function(index,each){
+                    _this.check(each);
                 });
 
             },
 
             showOremoveErrorOnPage:function(elementFromCache){
                 // 如果没有通过
-                this.check(elementFromCache);
+
                 if(! elementFromCache.isValid){
 
                     if (elementFromCache.errorMsg[0]){
@@ -244,7 +304,7 @@
                         $(elementFromCache.element).parent().append('<div class="errorPlacement">'+elementFromCache.errorMsg[0]+'</div>');
                         $(elementFromCache.element).addClass('errorInput');
                     }else{
-                        console.log('啊，没有errorMsg?');
+                        console.log('没有errorMsg?');
                     }
 
 
@@ -267,7 +327,9 @@
                 if(this.validateCache.length<1){
                     return true;
                 }else{
+                    this.checkAll();
                     for(var i= 0, l=this.validateCache.length; i<l; i++){
+
                         if (this.validateCache[i].isValid==false){
                             return false;
                         }
@@ -308,14 +370,19 @@
             rules:{},
             ignore: ":hidden",
             onfocusin:undefined,
+
             onfocusout:function(element,event){
                 var elementFromCache=this.isInValidateCache(element);
                 if ( elementFromCache  ){
                     //去这里面检验是否通过 验证
                     this.check(elementFromCache);
                     //验真完，在页面上画出来，或移走ErrorMsg
-                  this.showOremoveErrorOnPage(elementFromCache);
+                    this.showOremoveErrorOnPage(elementFromCache);
                 }
+
+            },
+
+            onchange:function(element, event){
 
             },
 
@@ -348,7 +415,7 @@
                     // 这个 input是不是 有验证要求的。
                     var elementFromCache=this.isInValidateCache(element);
                     if ( elementFromCache  ){
-                        //去 这里面检验是否通过 验证
+                        //去 这里面检验是否通过 验证9
                         this.check(elementFromCache);
                     }
                 }
@@ -401,6 +468,10 @@
                 {
                     return (  isNumber && parseFloat(value)>parseFloat(param[0]) && parseFloat(value)<parseFloat(param[1]) );
                 }
+            },
+
+            validateOnServer:function(value, element, param){
+                this.$form.trigger('onValidateAtServer',[{element:element,validator:this, url: param}]);
             }
 
 
@@ -437,16 +508,9 @@
         },
 
 
-
-
         setDefaults:function(settings){
             $.extend($.validator.defaults,settings);
         },
-
-
-
-
-
     });
 
     //插件定义---->End

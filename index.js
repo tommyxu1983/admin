@@ -80,7 +80,7 @@ require.config({
         'validateX':'plugins/validate/jquery.validateX',
         'PUMsg':'plugins/popUpMsg/popUpMsg',
         'puMenu':'plugins/puMenu/puMenu',
-                //没有按 AMD 规范写的插件，需要在 require.config shim 里定义依赖和输出
+        //没有按 AMD 规范写的插件，需要在 require.config shim 里定义依赖和输出
         'uploader': 'plugins/uploader/uploader',
         'slimscroll':'plugins/slimScroll/jquery.slimscroll',
         'dMenu':'plugins/dMenu/jquery.dMenu',
@@ -103,15 +103,6 @@ require.config({
 require(['jquery','bootstrap-dialog','BuildWin','PUMsg','echarts','dMenu','slimscroll','treeview','puMenu'], function ($,BootstrapDialog,BW){
 
 
-
-
-
-    $('#menu-LeftPush').dMenu({
-        type:'push-left',      // the Menu type
-        wrapperID:'#l-middle-content', // the wrapper id
-        menuToggleBtnID:'#menuToggleBtn-LeftPush', // the menu toggle button
-    });
-
     $('#menu-LeftTopPush').dMenu({
         type:'push-left',      // the Menu type
         wrapperID:'#l-header-Content', // the wrapper id
@@ -119,6 +110,11 @@ require(['jquery','bootstrap-dialog','BuildWin','PUMsg','echarts','dMenu','slims
     });
 
 
+    $('#menu-LeftPush').dMenu({
+        type:'push-left',      // the Menu type
+        wrapperID:'#l-middle-content', // the wrapper id
+        menuToggleBtnID:'#menuToggleBtn-LeftPush', // the menu toggle button
+    });
 
     $('.l-menu-wrapper').slimScroll({
         height:'100%',
@@ -129,80 +125,7 @@ require(['jquery','bootstrap-dialog','BuildWin','PUMsg','echarts','dMenu','slims
     var req={url:'../bin/gemsmenulist.php'+'?fmtoken='+globalSetting.token};
     getAjax(req,getDataSuccess);
 
-    //
-    //var ctx_bar = document.getElementById("BarChart").getContext('2d');
-    //ctx_bar.fillRect(10,10,500,500);
-    //
-    //var Chart_Bar = new Chart(ctx_bar, {
-    //    type: 'bar',
-    //    data: {
-    //        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-    //        datasets: [{
-    //            label: '# of Votes',
-    //            data: [11, 8, 3, 5, 2, 3],
-    //            backgroundColor: [
-    //                'rgba(255, 99, 132, 0.2)',
-    //                'rgba(54, 162, 235, 0.2)',
-    //                'rgba(255, 206, 86, 0.2)',
-    //                'rgba(75, 192, 192, 0.2)',
-    //                'rgba(153, 102, 255, 0.2)',
-    //                'rgba(255, 159, 64, 0.2)'
-    //            ],
-    //            borderColor: [
-    //                'rgba(255,99,132,1)',
-    //                'rgba(54, 162, 235, 1)',
-    //                'rgba(255, 206, 86, 1)',
-    //                'rgba(75, 192, 192, 1)',
-    //                'rgba(153, 102, 255, 1)',
-    //                'rgba(255, 159, 64, 1)'
-    //            ],
-    //            borderWidth: 1
-    //        }]
-    //    },
-    //    options: {
-    //        scales: {
-    //            yAxes: [{
-    //                ticks: {
-    //                    beginAtZero:true
-    //                }
-    //            }]
-    //        }
-    //    }
-    //});
 
-    //var ctx_line=document.getElementById("LineChart");
-    //var Chart_Line= new Chart(ctx_line,{
-    //    type: 'line',
-    //    data:{
-    //        labels: ["January", "February", "March", "April", "May", "June", "July"],
-    //        datasets: [
-    //            {
-    //                label: "My First dataset",
-    //                fill: false,
-    //                lineTension: 0.1,
-    //                backgroundColor: "rgba(75,192,192,0.4)",
-    //                borderColor: "rgba(75,192,192,1)",
-    //                borderCapStyle: 'butt',
-    //                borderDash: [],
-    //                borderDashOffset: 0.0,
-    //                borderJoinStyle: 'miter',
-    //                pointBorderColor: "rgba(75,192,192,1)",
-    //                pointBackgroundColor: "#fff",
-    //                pointBorderWidth: 1,
-    //                pointHoverRadius: 5,
-    //                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-    //                pointHoverBorderColor: "rgba(220,220,220,1)",
-    //                pointHoverBorderWidth: 2,
-    //                pointRadius: 9,
-    //                pointHitRadius: 10,
-    //                data: [65, 59, 80, 81, 56, 55, 40],
-    //            }
-    //        ]
-    //    }
-    //
-    //
-    //
-    //});
 
     $('#globalSetting_opiname').parents('li').first().PUMenu({
         data:[
