@@ -535,18 +535,18 @@
 
             case _dataType.date:
                 $input.attr('type','datepicker');
-                $input.datepicker({
+               /* $input.datepicker({
                     format: "yyyy/mm/dd",
                     todayBtn: "linked",
                     language: "zh-CN"
-                });
+                });*/
 
             case _dataType.time:
-                $input.attr('type','time');
+             /*   $input.attr('type','time');*/
                 $result=$input;
                 break;
             case _dataType.dateTime:
-                $input.attr('type','datetime');
+                //$input.attr('type','datetime');
                 $result=$input;
                 break;
 
