@@ -859,14 +859,24 @@
 
                         case _ctrl.delete:
                             msg='删除 ';
-                            if( this.closeTabView() ){
+                            /*if( this.closeTabView() ){
                                 this.data=null;
                                 this.WinData=null;
                                 this.winDataCopy=null;
                                 this.$selector=null;
                                 this.modulesAdptData=null;
 
+                            }*/
+                            //如果是dialog 老的关掉，new  BuildWin 只传2个参数= buildWinInDialog
+                            if(!!beforeAjaxData.dialog && beforeAjaxData.dialog instanceof BootstrapDialog){
+                                beforeAjaxData.dialog.close();
+                                new BuildWin(data,0);
+                            }else{
+                                this.closeTabView();
+                                this.update(data,0);
                             }
+
+
                             break;
                         case _ctrl.create:
                             new BuildWin(data,0 );
