@@ -1,157 +1,100 @@
-
-
-
-
+/*Begin----taView---*/
 .tabViewContainer {
-    width:1000px;
-    height:800px;
-    background-color: gainsboro;
-    position:relative;
-    overflow:hidden;
+  width: 100%;
+  height: 100%;
+  background-color: gainsboro;
+  position: relative;
+  overflow: hidden;
+  /*padding-top: 1px;*/
+  /*border: 2px black dashed;*/
+  /*border: 1px gray solid;*/ }
 
-}
+.tabViewContainer > ul {
+  margin-top: 3px;
+  /* don't set height property, tabview.js has done*/ }
 
-.tabViewContainer ul{
-    /* don't set height property, tabview js has done*/
-    padding-left: 0px;
-    margin-top:0px;
-    margin-bottom:0px;
-    list-style: none;
+.tabViewContainer > ul > li {
+  position: relative;
+  min-width: 100px;
+  cursor: pointer;
+  margin-left: 3px; }
 
-    border-bottom:1px solid #DDD;
+.tabViewContainer > ul > li:first-child {
+  margin-left: -1px; }
 
-}
+.tabViewContainer > ul > li > a {
+  margin-top: 2px;
+  background-color: white;
+  color: black;
+  text-align: center;
+  padding: 5px 8px 3px 5px; }
 
-.tabViewContainer ul li{
-    position:relative;
-    float: left;
-    margin-bottom:-1px;
-    min-width:118px ;
-}
-.tabViewContainer ul li>a{
+.tabViewContainer > ul > li > span {
+  cursor: pointer;
+  position: absolute;
+  right: 5px;
+  top: 2px;
+  z-index: 50;
+  color: #3C8DBC; }
 
-    position: relative;
-    display: block;
-    margin-right: 2px;
-    margin-top:2px;
+.tabViewContainer > ul > li > span:hover {
+  color: black;
+  transition: All 0.4s ease-in-out;
+  -webkit-transition: All 0.4s ease-in-out;
+  -moz-transition: All 0.4s ease-in-out;
+  -o-transition: All 0.4s ease-in-out;
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -ms-transform: rotate(180deg); }
 
-    padding: 10px 15px;
-    line-height: 1.42857143;
+.tabViewContainer > ul > li.active > a {
+  margin-top: 2px;
+  background-color: #3C8DBC;
+  color: whitesmoke;
+  text-align: center; }
 
-    background-color:white;
-    color:black;
-    text-align: center;
-    cursor: default;
-    border: 1px solid #ddd;
-    border-bottom-color: transparent;
-    border-radius: 4px 4px 0 0;
-}
+.tabViewContainer > ul > li.active > a:hover {
+  background-color: #3285bc;
+  color: whitesmoke; }
 
-/*关闭按钮*/
-.tabViewContainer ul li>span{
-    position:absolute;
-    right: 5px;
-    top:2px;
-    z-index:50;
-    color:#3C8DBC;
-}
-/*关闭按钮*/
-.tabViewContainer ul li>span:hover{
-    color:black;
-    cursor: pointer;
+.tabViewContainer > ul > li.active > span {
+  position: absolute;
+  right: 5px;
+  top: 2px;
+  z-index: 50;
+  color: whitesmoke; }
 
-    transition:All 0.4s ease-in-out;
-    -webkit-transition:All 0.4s ease-in-out;
-    -moz-transition:All 0.4s ease-in-out;
-    -o-transition:All 0.4s ease-in-out;
+.tabViewContainer > ul > li.active > span:hover {
+  color: indianred;
+  cursor: pointer;
+  transition: All 0.4s ease-in-out;
+  -webkit-transition: All 0.4s ease-in-out;
+  -moz-transition: All 0.4s ease-in-out;
+  -o-transition: All 0.4s ease-in-out;
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -ms-transform: rotate(180deg); }
 
-    transform:rotate(180deg);
-    -webkit-transform:rotate(180deg);
-    -moz-transform:rotate(180deg);
-    -o-transform:rotate(180deg);
-    -ms-transform:rotate(180deg);
-}
-.tabViewContainer ul li.active>a{
-    margin-top:2px;
-    background-color:#3C8DBC;
-    color:whitesmoke;
-    text-align: center;
-}
-.tabViewContainer ul li.active>a:hover{
-    background-color: #3285bc;
-    color:whitesmoke;
-}
-.tabViewContainer ul li.active>span{
-    position:absolute;
-    right: 5px;
-    top:2px;
-    z-index:50;
-    color:whitesmoke;
-}
-.tabViewContainer ul li.active>span:hover{
-    color:indianred;
-    cursor: pointer;
-
-
-
-    transition:All 0.4s ease-in-out;
-    -webkit-transition:All 0.4s ease-in-out;
-    -moz-transition:All 0.4s ease-in-out;
-    -o-transition:All 0.4s ease-in-out;
-
-    transform:rotate(180deg);
-    -webkit-transform:rotate(180deg);
-    -moz-transform:rotate(180deg);
-    -o-transform:rotate(180deg);
-    -ms-transform:rotate(180deg);
-}
-
-.tabViewContainer > .tabView-panelsHolder{
-    /* don't set height property, tabview js has done*/
-    background-color:#3C8DBC;
-
-    width:100%;
-
-    overflow: hidden;
-
-
-}
-
-.tabViewContainer > .tabView-panelsHolder > .tabView-panel{
-    background-color: whitesmoke;
-    height:97%;
-    margin-top: 0.5%;
-    padding-bottom: 1%;
-    margin-left:0.5%;
-    width:99%;
-    overflow-y: auto ;
-    /*overflow-x:hidden;*/
-
-
-}
+.tabViewContainer > .tabView-panelsHolder {
+  /* don't set height property, tabview js has done*/
+  background-color: #3C8DBC;
+  width: 100%;
+  overflow: hidden; }
 
 .tabViewContainer > .tabView-panelsHolder > .tabView-panel {
-    background-color: whitesmoke;
-    height:97%;
-    margin-top: 0.5%;
-    padding-bottom: 1%;
-    margin-left:0.5%;
-    width:99%;
-    overflow-y: auto ;
+  background-color: whitesmoke;
+  height: 97%;
+  margin-top: 0.5%;
+  padding-bottom: 1%;
+  margin-left: 0.5%;
+  width: 99%;
+  overflow-y: auto;
+  /*overflow-x:hidden;*/ }
 
-    display:none;
-    /*overflow-x:hidden;*/
+/*End---tabView ---*/
 
-
-}
-
-.tabViewContainer > .tabView-panelsHolder > .active {
-
-
-    display:block;
-    /*overflow-x:hidden;*/
-
-
-}
-
-
+/*# sourceMappingURL=tabView.css.map */

@@ -1,0 +1,327 @@
+/*begin---jquery.dMenu---*/
+
+/* ----------------css structure in Html----------*/
+
+
+
+/*----------------------
+.o-wrapper
+    .o-header
+        .o-container
+
+    .o-content
+        .o-container
+
+    .o-footer
+        .o-container
+---------------------
+
+.c-menu left-slide
+.c-menu left-push
+.c-menu right-slide
+.c-menu right-push
+.c-menu top-slide
+.c-menu top-push
+.c-menu bottom-slide
+.c-menu bottom-push
+-----------------------*/
+
+
+
+
+
+/* -----------------------------------------------------------------------------
+
+  BOX SIZING RESET
+
+----------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+
+/* -----------------------------------------------------------------------------
+
+  WRAPPER OBJECT
+
+----------------------------------------------------------------------------- */
+.o-wrapper {
+  /*-webkit-transition: -webkit-transform 0.3s;*/
+  /*transition: transform 0.3s;*/
+  transition: 0.75s ease-out;
+  -moz-transition: 0.75s ease-out; /* Firefox 4 */
+  -webkit-transition: 0.75s ease-out; /* Safari and Chrome */
+  -o-transition: 0.75s ease-out; /* Opera */
+}
+
+
+
+/* -----------------------------------------------------------------------------
+
+  MENUS COMPONENT (SLIDE AND PUSH )
+
+----------------------------------------------------------------------------- */
+/**
+ * menu basic styles
+ */
+.c-menu {
+  position: absolute;
+  z-index: 200;
+  background-color: #67b5d1;
+  transition: 0.75s ease-out;
+  -moz-transition: 0.75s ease-out; /* Firefox 4 */
+  -webkit-transition: 0.75s ease-out; /* Safari and Chrome */
+  -o-transition: 0.75s ease-out; /* Opera */
+}
+
+.c-menu__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+/*-----------left/right menus basic styles-------------*/
+
+/*
+ * left/right menus basic styles
+ *    when screen size is less than 320px, menu will be 100%.
+ *    when screen size is larger 320px, menu will be 250px;
+ */
+
+.c-menu--slide-left,
+.c-menu--slide-right,
+.c-menu--push-left,
+.c-menu--push-right{
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+}
+@media all and (min-width: 320px) {
+  .c-menu--slide-left,
+  .c-menu--slide-right,
+  .c-menu--push-left,
+  .c-menu--push-right {
+    width: 250px;
+  }
+}
+
+
+/*-----------left menus detailed styles: animation effect-------------*/
+
+/**
+ * left menus active & non-active (active = is-active)
+ *    if 'is-active' not exits, menu will be  translateX(-300px) or translateX(-100%) @media<320px
+ *    if 'is-active', menu menu will be translateX(0)
+ */
+.c-menu--slide-left,
+.c-menu--push-left {
+  top: 0;
+  left: 0;
+  /*width:0px;*/
+}
+@media all and (min-width: 320px) {
+  .c-menu--slide-left,
+  .c-menu--push-left {
+    -webkit-transform: translateX(-250px);
+    -ms-transform: translateX(-250px);
+    transform: translateX(-250px);
+
+    /*width:0px;*/
+  }
+}
+
+.c-menu--slide-left.is-active,
+.c-menu--push-left.is-active {
+  -webkit-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+  /*width:300px;*/
+}
+
+/*-----------right menus detailed styles: animation effect-------------*/
+
+/**
+ * right menus active & non-active (active = is-active)
+ *    if 'is-active' not exits, menu will be  translateX(300px) or translateX(100%) @media<320px
+ *    if 'is-active', menu menu will be translateX(0)
+ */
+
+.c-menu--slide-right,
+.c-menu--push-right {
+  top: 0;
+  right: 0;
+  /*-webkit-transform: translateX(100%);*/
+  /*-ms-transform: translateX(100%);*/
+  /*transform: translateX(100%);*/
+  width:0px;
+}
+@media all and (min-width: 320px) {
+  .c-menu--slide-right,
+  .c-menu--push-right {
+    /*-webkit-transform: translateX(300px);*/
+    /*-ms-transform: translateX(300px);*/
+    /*transform: translateX(300px);*/
+    width:0px;
+  }
+}
+
+.c-menu--slide-right.is-active,
+.c-menu--push-right.is-active {
+  /*-webkit-transform: translateX(0);*/
+  /*-ms-transform: translateX(0);*/
+  /*transform: translateX(0);*/
+  width:300px;
+}
+
+
+/*-----------top/bottom menus basic style-------------*/
+.c-menu--slide-top,
+.c-menu--slide-bottom,
+.c-menu--push-top,
+.c-menu--push-bottom {
+  vertical-align: middle;
+  width: 100%;
+  height: 60px;
+  text-align: center;
+  overflow-x: scroll;
+}
+
+
+/*-----------top menus detailed styles: animation effect-------------*/
+
+
+/**
+ * top menus active & non-active (active = is-active)
+ *    if 'is-active' not exits, menu will be  translateY(-60px)  -60px, since height= 60px
+ *    if 'is-active', menu menu will be translateX(0)
+ */
+
+.c-menu--slide-top,
+.c-menu--push-top {
+  top: 0;
+  left: 0;
+  -webkit-transform: translateY(-60px);
+  -ms-transform: translateY(-60px);
+  transform: translateY(-60px);
+}
+
+.c-menu--slide-top.is-active,
+.c-menu--push-top.is-active {
+  -webkit-transform: translateY(0);
+  -ms-transform: translateY(0);
+  transform: translateY(0);
+}
+
+/*-----------bottom menus detailed styles: animation effect-------------*/
+
+/**
+ * bottom menus active & non-active (active = is-active)
+ *    if 'is-active' not exits, menu will be  translateY(60px)  60px, since height= 60px
+ *    if 'is-active', menu menu will be translateX(0)
+ */
+
+.c-menu--slide-bottom,
+.c-menu--push-bottom {
+  bottom: 0;
+  left: 0;
+  -webkit-transform: translateY(60px);
+  -ms-transform: translateY(60px);
+  transform: translateY(60px);
+}
+
+.c-menu--slide-bottom.is-active,
+.c-menu--push-bottom.is-active {
+  -webkit-transform: translateY(0);
+  -ms-transform: translateY(0);
+  transform: translateY(0);
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+
+  MENUS COMPONENT (SLIDE AND PUSH )
+
+----------------------------------------------------------------------------- */
+
+/**
+ * wrapper (header, content, footer) states
+ * different wrapper states: when push, size need to be reduced respectively
+ *
+ */
+
+.o-wrapper .has-push-left{
+  /*-webkit-transform: translateX(100%);*/
+  /*-ms-transform: translateX(100%);*/
+  /*transform: translateX(100%);*/
+  margin-left:252px;
+  border-right:250px solid transparent;
+}
+
+@media all and (min-width:320px) {
+  .o-wrapper.has-push-left {
+    /*-webkit-transform: translateX(300px);*/
+    /*-ms-transform: translateX(300px);*/
+    /*transform: translateX(300px);*/
+
+    margin-left:252px;
+    border-right:250px solid transparent;
+
+  }
+}
+
+.o-wrapper.has-push-right {
+  -webkit-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+}
+@media all and (min-width: 320px) {
+  .o-wrapper.has-push-right {
+    -webkit-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+
+.o-wrapper.has-push-top {
+  -webkit-transform: translateY(60px);
+  -ms-transform: translateY(60px);
+  transform: translateY(60px);
+}
+
+.o-wrapper.has-push-bottom {
+  -webkit-transform: translateY(-60px);
+  -ms-transform: translateY(-60px);
+  transform: translateY(-60px);
+}
+
+
+
+
+/*end---jquery.dMenu---*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

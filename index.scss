@@ -1,10 +1,30 @@
 
+
+
+
+
+
 // main style scss
-@import "css/1.css";
+
+/*@import "css/1.css";*/
+
+
+@import "css/mainStyle.scss";
 
 //plugin css
-@import "plugins/dMenu/dMenu.css";
-@import "plugins/treeView/bootstrap-treeview.css";
-@import "plugins/dialog/css/bootstrap-dialog.css";
-@import "plugins/datepicker/datepicker3.css";
+
+@import "plugins/buildWin/buildWin.scss";
+@import "plugins/treeView/bootstrap-treeview.scss";
+@import "plugins/dMenu/jquery.dMenu.scss";
+@import "plugins/datepicker/bootstrap-datapicker.scss";
+@import "plugins/dialog/css/bootstrap-dialog.scss";
+
+
+@import "plugins/puMenu/puMenu.scss";
+@import "plugins/popUpMsg/popUpMsg.scss";
+@import "plugins/tabView/tabView.scss";
+@import "plugins/validate/jquery-validateX.scss";
+@import "plugins/formView/jquery-formview.scss";
+@import "plugins/tableView/tableView.scss";
+
 

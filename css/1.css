@@ -1,34 +1,66 @@
+/*
 html, body{
     width:100%;
     height:100%
 }
 .l-mainWrap{
     overflow: hidden;
+    position: relative;
     height:100%;
     width:100%
 }
-.l-header{
+.l-mainWrap .l-header{
     position:relative;
     height:5%;
     min-height:50px;
     width:100%
 }
-.l-header .l-headerContent{
-    postion:relative;
-    margin-left:0.25%;
+
+.l-mainWrap .l-header .l-logo-wrapper {
+
+    text-align: center;
+    width:100%;
+    overflow: hidden;
+    background-color: #36749E;
+}
+
+.l-mainWrap .l-header .l-logo-wrapper .logo{
+    width:100%;
+    color:white;
+    font-size: 1.5em;
+}
+
+.l-mainWrap .l-header .l-headerContent{
+    position:relative;
+    !*margin-left:0.25%;*!
     height:100%;
     width:100%;
     background-color: #3C8DBC;
 }
 
-.l-middle{
+.l-mainWrap .l-middle{
     position:relative;
     height:91%;
     width:100%;
-    /*background-color:yellow;*/
+    !*background-color:yellow;*!
+}
+.l-mainWrap .l-middle .l-menu-wrapper {
+    height:100%;
+    padding:1%;
+
+    background-color: #424A5D;
+    !*border-radius: 5%;*!
 }
 
-.l-footer{
+.l-mainWrap .l-middle .l-middle-content{
+!*    margin-left:0.25%;*!
+    height:100%;
+    width:99.5%;
+    background-color:lightgrey;
+    overflow-x: auto;
+}
+
+.l-mainWrap .l-footer{
 
     height:4%;
     width:100%;
@@ -38,40 +70,15 @@ html, body{
 
 
 
-.l-middle .l-middle-content{
-    margin-left:0.25%;
-    height:100%;
-    width:99.5%;
-    background-color:lightgrey;
-    overflow-x: auto;
-}
-
-.l-menu-wrapper {
-    height:100%;
-    padding:1%;
-
-    background-color: #424A5D;
-    /*border-radius: 5%;*/
-}
-
-.l-logo-wrapper {
-
-    text-align: center;
-    width:100%;
-    overflow: hidden;
-    background-color: #36749E;
 
 
 
-}
-.l-logo-wrapper .logo{
-    width:100%;
-    color:white;
-    font-size: 1.5em;
-}
 
 
-/*for bootstrap grid vertically centered*/
+
+
+
+!*for bootstrap grid vertically centered*!
 .l-vCenter-parent {
     display: table;
     table-layout: fixed;
@@ -83,7 +90,7 @@ html, body{
     vertical-align:middle;
     float: none;
 }
-/*for bootstrap grid vertically centered*/
+!*for bootstrap grid vertically centered*!
 
 
 .l-label {
@@ -109,13 +116,16 @@ html, body{
     background:yellow
 }
 
+*/
 
+/*@import url('../plugins/buildWin/buildWin.css');*/
 
 /*--------------------navbar nav------------------ */
 /*--------------------navbar nav------------------ */
 /*--------------------navbar nav------------------ */
 /*--------------------navbar nav------------------ */
 
+/*
 .l-navbar{
     postion:relavtive;
     background-color: #3C8DBC;
@@ -126,7 +136,7 @@ html, body{
 
 .l-navbar-static-top{
     z-index:1000;
-    /*width:100%;*/
+    !*width:100%;*!
 }
 
 
@@ -155,7 +165,7 @@ html, body{
 
     padding-left: 10px;
     padding-right:10px;
-    /*line-height: 30px;*/
+    !*line-height: 30px;*!
 
 }
 
@@ -183,37 +193,39 @@ html, body{
     display: table-cell;
     vertical-align: middle;
 }
+*/
 
 
 
 /*plugin starts*/
 
 
-     /*-----------------------buildWin Begin----------------------*/
+/*
+!*-----------------------buildWin Begin----------------------*!
 
- .win-buttonsContainer{
-     display: block;
-     margin: 10px;
-     padding-bottom: 10px;
-     text-align:right;
-     border:1px #b3b3b3 solid;
-     border-radius: 5px;
- }
+.win-buttonsContainer{
+  display: block;
+  margin: 10px;
+  padding-bottom: 10px;
+  text-align:right;
+  border:1px #b3b3b3 solid;
+  border-radius: 5px;
+}
 
 .win-buttonsContainer .banner{
-    background-color: #3C8DBC;
-    margin: 0px 0px 10px 0px;
-    padding:5px;
-    width:100%;
-    min-height:22px;
-    text-align:center;
-    color:whitesmoke;
-    font-size:1.2em;
-    text-align: right;
+  background-color: #3C8DBC;
+  margin: 0px 0px 10px 0px;
+  padding:5px;
+  width:100%;
+  min-height:22px;
+  text-align:center;
+  color:whitesmoke;
+  font-size:1.2em;
+  text-align: right;
 }
 
 .win-buttonsContainer .content{
-    display: block;
+  display: block;
 }
 .win-buttonsContainer .toggle{
 
@@ -222,56 +234,57 @@ html, body{
 
 
 .win-buttonsContainer .buttonCollapse{
-    display: inline-block;
+  display: inline-block;
 
-    font-size:1.2em;
+  font-size:1.2em;
 
-    cursor:pointer;
-    /*    width:20px;
-        height:20px;*/
-    color:whitesmoke;
+  cursor:pointer;
+  !*    width:20px;
+      height:20px;*!
+  color:whitesmoke;
 }
 
 .win-buttonsContainer .buttonCollapse:hover{
-    color:indianred;
+  color:indianred;
 
-    transition:All 0.4s ease-in-out;
-    -webkit-transition:All 0.4s ease-in-out;
-    -moz-transition:All 0.4s ease-in-out;
-    -o-transition:All 0.4s ease-in-out;
+  transition:All 0.4s ease-in-out;
+  -webkit-transition:All 0.4s ease-in-out;
+  -moz-transition:All 0.4s ease-in-out;
+  -o-transition:All 0.4s ease-in-out;
 
-    transform:rotate(180deg);
-    -webkit-transform:rotate(180deg);
-    -moz-transform:rotate(180deg);
-    -o-transform:rotate(180deg);
-    -ms-transform:rotate(180deg);
+  transform:rotate(180deg);
+  -webkit-transform:rotate(180deg);
+  -moz-transform:rotate(180deg);
+  -o-transform:rotate(180deg);
+  -ms-transform:rotate(180deg);
 }
 
 .win-buttonsContainer .win-buttonGrid{
-    display: inline-block;
+  display: inline-block;
 
-    margin-right: 10px;
-    width:150px;
-    /*   max-width: 300px;*/
+  margin-right: 10px;
+  width:150px;
+  !*   max-width: 300px;*!
 
 
-    vertical-align: middle;
-    padding-left: 10px;
-    /* position:*/
+  vertical-align: middle;
+  padding-left: 10px;
+  !* position:*!
 
 
 }
 
 .win-modulesContainer{
-    display: block;
+  display: block;
 }
 
-/*-----------------------buildWin End------------------------*/
+!*-----------------------buildWin End------------------------*!*/
 
 
 
 
-/*-----------------------------PopUP menu begin--------------------------*/
+
+/*!*-----------------------------PopUP menu begin--------------------------*!
 
 
 .PUMenu-allMenuContainer   .PUMenu-menuContainer{
@@ -280,7 +293,7 @@ html, body{
     border-radius: 5px;
     border: 1px solid;
     z-index: 10002;
-    /*  display: none;*/
+    !*  display: none;*!
 }
 
 
@@ -329,10 +342,10 @@ html, body{
     left:0px;
     width:100%;
     height:100%;
-    /*background-color: rgba(103, 177, 104, 0.56);*/
+    !*background-color: rgba(103, 177, 104, 0.56);*!
     z-index: 10000;
 }
-/*-----------------------------PopUP menu End--------------------------*/
+!*-----------------------------PopUP menu End--------------------------*!*/
 
 
 
@@ -346,7 +359,7 @@ html, body{
 
 
 /*------------------- pupupMsg Begin------------------------*/
-.messageTip{
+/*.messageTip{
     position:fixed;
     top:49%;
     right:48%;
@@ -438,13 +451,13 @@ html, body{
     color:whitesmoke;
     padding:5px;
     border-radius: 5px;
-    /* max-width: 75px;*/
+    !* max-width: 75px;*!
 }
 
 
 
 .popUpMsg-toolTip .popUpMsg-imgWrapper{
-    /*   height:270px;*/
+    !*   height:270px;*!
     padding:10px;
 }
 
@@ -457,11 +470,11 @@ html, body{
     position: absolute;
     top:49%;
     left:48%;
-}
+}*/
 /* -----------------pupupMsg End-------------------------*/
 
 
-.errorPlacement{
+/*.errorPlacement{
     padding-top:2px;
 
     color: rgba(255, 0, 0, 0.8);
@@ -479,8 +492,8 @@ html, body{
     height:100%;
     z-index:100000;
     background-color: rgba(0, 0, 0, 0.50);
-}
-/*---------formView-----Begin--------------------*/
+}*/
+/*!*---------formView-----Begin--------------------*!
 
 .formviewContainer{
     padding:0px 0px 5px 0px;
@@ -565,12 +578,12 @@ html, body{
 
 .formviewContainer img{
     width: 50%;
-    /*    height:200px;*/
+    !*    height:200px;*!
 }
 
 .formviewContainer img.landscape{
     width: 100%;
-    /*    height:200px;*/
+    !*    height:200px;*!
 }
 
 .formviewContainer img.PORTRAIT{
@@ -581,7 +594,7 @@ html, body{
 .stepsView{
     display: inline-block;
     list-style: none;
-    /* margin-bottom:0px;*/
+    !* margin-bottom:0px;*!
     width:100%;
 }
 
@@ -592,9 +605,9 @@ html, body{
 
 
 .stepsView >li div.txtContainer{
-    /*width:100%;
+    !*width:100%;
     height:50px;
-    background-color: #00b3ee;*/
+    background-color: #00b3ee;*!
     color: grey;
 }
 
@@ -651,21 +664,22 @@ html, body{
 
 
 
-/*---------formView------End--------------------*/
+!*---------formView------End--------------------*!*/
 
 
 /*---------taView------Begin--------------------*/
+/*
 .tabViewContainer {
     width:100%;
     height:100%;
     background-color: gainsboro;
     position:relative;
     overflow:hidden;
-    /*padding-top: 1px;*/
-    /*border: 2px black dashed;*/
+    !*padding-top: 1px;*!
+    !*border: 2px black dashed;*!
 
 
-    /*border: 1px gray solid;*/
+    !*border: 1px gray solid;*!
 }
 
 
@@ -676,7 +690,7 @@ html, body{
 
 .tabViewContainer>ul{
     margin-top: 3px;
-    /* don't set height property, tabview.js has done*/
+    !* don't set height property, tabview.js has done*!
 }
 
 .tabViewContainer>ul>li{
@@ -753,7 +767,7 @@ html, body{
 }
 
 .tabViewContainer > .tabView-panelsHolder{
-    /* don't set height property, tabview js has done*/
+    !* don't set height property, tabview js has done*!
     background-color:#3C8DBC;
 
     width:100%;
@@ -771,21 +785,23 @@ html, body{
     margin-left:0.5%;
     width:99%;
     overflow-y: auto ;
-    /*overflow-x:hidden;*/
+    !*overflow-x:hidden;*!
 }
 
 
+*/
 
 
 
 
 /*-------------------------tabView End----------------------------------------------------*/
 
-/*-----------------------tableView Begin-------------------------------------------------------*/
+/*
+!*-----------------------tableView Begin-------------------------------------------------------*!
 
 
-/*tableView*/
-/*    .table-responsive{
+!*tableView*!
+!*    .table-responsive{
         padding:3px 10px;
     }
 
@@ -806,7 +822,7 @@ html, body{
         border: 1px solid cornflowerblue;
         background-color: #ededed;
 
-    }*/
+    }*!
 
 .table-responsive{
     margin-top:10px;
@@ -920,13 +936,13 @@ html, body{
 }
 
 
-/*让图标按钮不换行*/
+!*让图标按钮不换行*!
 .table-responsive .tableView-buttonContainer{
     white-space:nowrap;
 }
 
 
-/*
+!*
     .table-responsive .tableView-paginationContainer .tableView-paginationRowsPerPage{
         display: inline-block;
 
@@ -950,11 +966,11 @@ html, body{
         !*padding:6px 12px;*!
         !*color: #797979;*!
         !*text-align: left;*!
-    }*/
+    }*!
 
 
 
-/*---------------悬浮 翻页 开始------------------*/
+!*---------------悬浮 翻页 开始------------------*!
 
 .paginationFixBottomMid{
     position:absolute;
@@ -977,7 +993,7 @@ html, body{
 
 
 
-/*翻页 div */
+!*翻页 div *!
 
 .paginationFixBottomMid .tableView-paginationChange{
     display: inline-block;
@@ -1033,12 +1049,12 @@ html, body{
     height:26px;
 }
 
-/*翻页 div */
+!*翻页 div *!
 
 
 
 
-/*共多少页 div */
+!*共多少页 div *!
 .paginationFixBottomMid .tableView-paginationDetail{
     display: inline-block;
     margin-left:2px;
@@ -1052,13 +1068,14 @@ html, body{
 .paginationFixBottomMid .tableView-paginationDetail span{
     display: inline-block;
 }
-/*共多少页 div */
+!*共多少页 div *!
 
 
-/*---------------悬浮 翻页 结束*/
+!*---------------悬浮 翻页 结束*!
 
 
-/*-------------------tableView----End------------------------------------------------*/
+!*-------------------tableView----End------------------------------------------------*!
+*/
 
 
 /*chart */

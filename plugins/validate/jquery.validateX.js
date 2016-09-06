@@ -300,10 +300,10 @@
                 if(! elementFromCache.isValid){
 
                     if (elementFromCache.errorMsg[0]){
-                        $(elementFromCache.element).parent().find('.errorPlacement').remove();
+                        $(elementFromCache.element).parent().find('.validateX-errorPlacement').remove();
 
-                        $(elementFromCache.element).parent().append('<div class="errorPlacement">'+elementFromCache.errorMsg[0]+'</div>');
-                        $(elementFromCache.element).addClass('errorInput');
+                        $(elementFromCache.element).parent().append('<div class="validateX-errorPlacement">'+elementFromCache.errorMsg[0]+'</div>');
+                        $(elementFromCache.element).addClass('validateX-errorInput');
                     }else{
                         console.log('没有errorMsg?');
                     }
@@ -311,8 +311,8 @@
 
                 }else{
                     //如果通过
-                    $(elementFromCache.element).parent().find('.errorPlacement').remove();
-                    $(elementFromCache.element).removeClass('errorInput');
+                    $(elementFromCache.element).parent().find('.validateX-errorPlacement').remove();
+                    $(elementFromCache.element).removeClass('validateX-errorInput');
                 }
             },
 

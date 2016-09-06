@@ -179,6 +179,7 @@
 					uid:item.uid,
 					name:item.name,
 					token:item.token,
+					uurl:item.uurl ||''
 					//icon:'glyphicon glyphicon-option-horizontal'
 				});
 			} //如果是 menu，有子孙
@@ -190,7 +191,8 @@
 					name:item.name,
 					icon:'glyphicon glyphicon-grain',
 					token:item.token,
-					nodes:Tree.dataAdaptor(item.menu)
+					nodes:Tree.dataAdaptor(item.menu),
+					uurl:item.uurl || ''
 				});
 
 			}

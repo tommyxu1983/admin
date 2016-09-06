@@ -1,0 +1,151 @@
+/* =========================================================
+ * bootstrap-treeview.css v1.2.0
+ * =========================================================
+ * Copyright 2013 Jonathan Miles 
+ * Project URL : http://www.jondmiles.com/bootstrap-treeview
+ *	
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ========================================================= */
+
+.treeview .list-group-item {
+
+	border:0px;
+	padding-top: 0px;
+	padding-bottom:0px;
+	margin-bottom: 0px;
+	cursor: pointer;
+	background-color: #424A5D;
+	color: #bdbdbd;
+
+	height:52px;
+	line-height: 52px;
+	/*vertical-align: middle;*/
+
+	font-size:16px;
+
+	border-bottom: 2px solid #515773;
+
+}
+
+.treeview .list-group-item:hover{
+	color:white;
+}
+
+.treeview .list-group-item:first-child {
+
+	border-top:2px solid #5f6784;
+
+}
+
+
+
+.treeview .list-group-item span.indent {
+
+
+	display: inline-block;
+
+
+	line-height: 50px ;
+
+	width:25px;
+
+
+	border-left:1px dotted white;
+	/*margin-left: 10px;*/
+	/*margin-right: 10px;*/
+}
+
+.treeview .list-group-item span.last-indent {
+
+
+	display: inline-block;
+
+
+	line-height: 50px ;
+	height:50px;
+	width:15px;
+
+
+	border-left:1px dotted white;
+	/*margin-left: 10px;*/
+	/*margin-right: 10px;*/
+}
+
+
+.treeview .list-group-item span.last-indent span.h-dotLine{
+	/*postion:relative;*/
+	/*display: inline-block;*/
+	/*height:30px;*/
+	/*width:1px;*/
+	/*line-height: 20px ;*/
+	display:inline-block;
+	vertical-align:middle;
+	height: 1px;
+	width: 10px;
+	border-top: 1px #fef3fa dotted;
+
+}
+
+.treeview .list-group-item span.text-node {
+
+	display: inline-block;
+	/*vertical-align: middle;*/
+	line-height: 50px ;
+	font-size: 0.8em;
+
+
+}
+
+.treeview .list-group-item span.expand-icon {
+	display: inline-block;
+
+	positin:relative;
+	float:right;
+	line-height: 50px ;
+	margin-right: 5px;
+}
+
+/*.treeview span.icon {*/
+	/*width: 12px;*/
+	/*margin-right: 5px;*/
+/*}*/
+
+/*xul added*/
+.treeview span.upAndDownIcon {
+	float: right;
+	display: inline-block;
+	visibility: visible;
+	width:24px;
+	height:12px;
+    color: lightgrey;
+	transition:All 0.4s ease-in-out;
+	-webkit-transition:All 0.4s ease-in-out;
+	-moz-transition:All 0.4s ease-in-out;
+	-o-transition:All 0.4s ease-in-out;
+}
+
+/*xul added*/
+.treeview span.upAndDownIcon:hover {
+	transform:scale(2);
+    color: dodgerblue;
+	-webkit-transform:scale(2);
+	-moz-transform:scale(2);
+	-o-transform:scale(2);
+	-ms-transform:scale(2);
+}
+
+
+.treeview .node-disabled {
+	color: silver;
+	cursor: not-allowed;
+}

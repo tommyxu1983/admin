@@ -49,7 +49,7 @@
                 this.$container=$(this.settings.container);
                 this.popUpTarget=$(this.settings.popUpTarget);
                 this.$msgDiv=$('<div>'+ this.settings.successMsg +'</div>').addClass('popUpMsg-msgTip');
-                this.$overLay=$('<div><div class="overLayMsg" >加载中</div></div>').addClass('popUpMsg-overlay');
+                this.$overLay=$('<div><div class="popUpMsg-overLayMsg" >加载中</div></div>').addClass('popUpMsg-overlay');
                 this.$toolTipMsg=$('<div></div>').append(this.settings.tooTipMsg).addClass('popUpMsg-toolTip');
 
                 this.$msgDivWClose=$(

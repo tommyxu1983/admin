@@ -3,187 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-
+    <link rel="stylesheet" href="puMenu.css">
 
     <style>
-        /*------------------- pupupMsg Begin------------------------*/
-        .messageTip{
-            position:fixed;
-            top:49%;
-            right:48%;
-            max-width: 250px;
-            border-radius: 5px;
-            text-align: center;
-            padding: 10px;
-            background-color:#000000;
-            background-color: rgba(47, 109, 166, 0.66);
-            z-index:1000000;
-            color:whitesmoke;
-        }
 
-        .popUpMsg-msgTip{
-            position:absolute;
-            display: none;
-            top:49%;
-            left:48%;
-            max-width: 250px;
-            border-radius: 5px;
-            text-align: center;
-            padding: 10px;
-            background-color:#000000;
-            background-color: rgba(0, 150, 0, 0.66);
-            z-index:20001;
-            color:whitesmoke;
-        }
-
-        .popUpMsg-overlay{
-            position:absolute;
-            display: none;
-            top:0px;
-            left:0px;
-            width:100%;
-            height:100%;
-            z-index:20000;
-            background-color: rgba(128, 128, 128, 0.5);
-            color:white;
-
-        }
-
-
-        .overLayMsg{
-            position: absolute;
-            top:49%;
-            left:48%;
-        }
-
-
-
-        .popUpMsg-errorTip{
-            position:absolute;
-            display: none;
-            top:49%;
-            left:48%;
-            max-width: 250px;
-            border-radius: 5px;
-            text-align: center;
-            padding: 10px;
-            background-color:#000000;
-            background-color: rgba(255, 61, 22, 0.5);
-            z-index:20001;
-            color:whitesmoke;
-        }
-
-
-        .popUpMsg-errorTip  .errorTipClose{
-            display:inline-block;
-            width:30px;
-            height:20px;
-            margin-left:5px;
-            cursor: pointer;
-        }
-
-        .popUpMsg-errorTip  .errorTipClose:hover{
-            transition:All 0.4s ease-in-out;
-            -webkit-transition:All 0.4s ease-in-out;
-            -moz-transition:All 0.4s ease-in-out;
-            -o-transition:All 0.4s ease-in-out;
-
-            transform:rotate(180deg);
-            -webkit-transform:rotate(180deg);
-            -moz-transform:rotate(180deg);
-            -o-transform:rotate(180deg);
-            -ms-transform:rotate(180deg);
-        }
-
-        .popUpMsg-errorTip .errorMsg{
-            display: inline-block;
-        }
-
-        .popUpMsg-toolTip{
-            background-color: rgba(47, 109, 166, 0.66);
-            z-index:1000000;
-            color:whitesmoke;
-            padding:5px;
-            border-radius: 5px;
-            max-width: 75px;
-        }
-
-
-
-        /* -----------------pupupMsg End-------------------------*/
-
-
-
-
-
-        /*-----------------------------PopUP menu begin--------------------------*/
-
-
-        .PUMenu-allMenuContainer   .PUMenu-menuContainer{
-            position:fixed;
-            background-color:#3C8DBC;
-            border-radius: 5px;
-            border: 1px solid;
-            z-index: 10002;
-            /*  display: none;*/
-        }
-
-
-        .PUMenu-allMenuContainer   .PUMenu-menuContainer>ul{
-            list-style-type:none;
-            padding:0px;
-        }
-
-        .PUMenu-allMenuContainer  .PUMenu-menuContainer>ul{
-            list-style-type:none;
-            margin:10px 0px 10px 0px;
-        }
-
-        .PUMenu-allMenuContainer   .PUMenu-menuContainer>ul>li{
-            display: list-item;
-            padding:0px 10px 0px 10px;
-
-        }
-
-        .PUMenu-allMenuContainer  .PUMenu-menuContainer>ul>li:hover{
-            background-color: #3a81ae;
-            vertical-align: middle;
-            cursor: pointer;
-        }
-
-        .PUMenu-allMenuContainer   .PUMenu-menuContainer>ul>li>a.text{
-            color:white;
-            display: inline-block;
-            min-width:100px;
-            padding-top: 5px;
-            padding-bottom: 5px;
-        }
-
-        .PUMenu-allMenuContainer  .PUMenu-menuContainer>ul>li>a.arrow{
-            display: inline-block;
-            color:white;
-            float:right;
-            padding: 5px 10px  5px  10px;
-            vertical-align: middle;
-        }
-
-        .PUMenu-allMenuContainer .PUMenu-overLay{
-            display: none;
-            position: fixed;
-            top:0px;
-            left:0px;
-            width:100%;
-            height:100%;
-            /*background-color: rgba(103, 177, 104, 0.56);*/
-            z-index: 10000;
-        }
-        /*-----------------------------PopUP menu End--------------------------*/
     </style>
 
 
 
     <script type="text/javascript" src="../../jsLib/jquery-1.12.3.js"></script>
-    <script type="text/javascript" src="../popUpMsg/popUpMsg.js"></script>
+<!--    <script type="text/javascript" src="../popUpMsg/popUpMsg.js"></script>-->
     <script type="text/javascript" src="puMenu.js"></script>
 </head>
 
@@ -691,11 +520,11 @@
 
     });
 
-    var pMsg= new PUMsg();
+/*    var pMsg= new PUMsg();
     window.onerror = function(errorMessage, scriptURI, lineNumber) {
                 pMsg.setErrorMsg('error: ' + errorMessage);
                 pMsg.showErrorMsg();
-            }
+            }*/
 
 </script>
 

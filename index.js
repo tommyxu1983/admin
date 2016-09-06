@@ -89,18 +89,14 @@ require.config({
         'datepicker':'plugins/datepicker/bootstrap-datepicker',
         'datepickerCN':'plugins/datepicker/locales/bootstrap-datepicker.zh-CN',
         'Chartjs':'plugins/chart/Chart',
-
-
-        'BuildWin':'plugins/buildWin/buildWin',
-        'echarts':'plugins/echart/echarts'
-
+        'BuildWin':'plugins/buildWin/buildWin'
     }
 
 });
 
 
 
-require(['jquery','bootstrap-dialog','BuildWin','PUMsg','echarts','dMenu','slimscroll','treeview','puMenu'], function ($,BootstrapDialog,BW){
+require(['jquery','bootstrap-dialog','BuildWin','PUMsg','dMenu','slimscroll','treeview','puMenu'], function ($,BootstrapDialog,BW){
 
 
     $('#menu-LeftTopPush').dMenu({
@@ -208,7 +204,7 @@ require(['jquery','bootstrap-dialog','BuildWin','PUMsg','echarts','dMenu','slims
                         });
                     req.url=globalSetting.uurl+'?fmname='+node.name+'&fmtoken='+globalSetting.token;
                     if(node.nodes && $.isArray(node.nodes) && node.nodes.length>0){
-                        //memnu（nodes） 下有子菜单你哦的是
+
                     }else{
                         getAjax(req,getMenuContentSuccess,undefined,undefined,{pMessage:pMsg});
                          pMsg.showOverLay();

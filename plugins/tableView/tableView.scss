@@ -1,0 +1,278 @@
+/*-----------------------tableView Begin-------------------------------------------------------*/
+
+
+/*tableView*/
+/*    .table-responsive{
+        padding:3px 10px;
+    }
+
+    .table-responsive .tableView-paginationContainer{
+        background-color: #00CCFF;
+    }
+    .table-responsive .tableView-paginationContainer .pull-left{
+
+    }
+    .table-responsive .tableView-paginationContainer  .pull-left select{
+        border: 1px solid #cccccc;
+        border-radius: 5px;
+        padding:6px 12px;
+        color: #797979;
+        text-align: left;
+    }
+    .table-responsive .tableView-paginationContainer  .pull-left select:hover{
+        border: 1px solid cornflowerblue;
+        background-color: #ededed;
+
+    }*/
+
+.table-responsive{
+  margin-top:10px;
+  padding:3px 10px;
+}
+.table-responsive .tableView-paginationContainer{
+  margin: 2px 0px 20px 0px;
+  width:100%;
+  height:45px;
+  line-height:45px;
+  text-align: center;
+}
+
+.table-responsive .tableView-trHead{
+  background-color: #337AB7;
+  color:white;
+
+}
+
+
+.tableView-trHeadFloat{
+  position: fixed;
+  top:100px;
+
+}
+
+
+
+.table-responsive td{
+  vertical-align: middle !important;
+  text-align: center !important;
+}
+
+.table-responsive th{
+  vertical-align: middle !important;
+  text-align: center !important;
+}
+
+.table-responsive td img{
+  width: 60px;
+}
+
+.table-responsive .tableView-paginationContainer .tableView-paginationDetail{
+  display: inline-block;
+  margin-left:2px;
+  height:40px;
+  line-height: 40px;
+  color: #797979;
+  text-align: left;
+}
+
+
+
+.table-responsive .tableView-paginationContainer .tableView-paginationDetail span{
+  display: inline-block;
+
+}
+
+.table-responsive .tableView-paginationContainer .tableView-paginationChange{
+  display: inline-block;
+  position:relative;
+  margin-right:5px;
+  height:40px;
+  line-height:40px;
+}
+
+.table-responsive .tableView-paginationContainer .tableView-paginationChange>ul{
+  display: inline-block;
+  height:40px;
+  line-height: 40px;
+}
+
+.table-responsive .tableView-paginationContainer .tableView-paginationChange>ul>li{
+  display: inline-block;
+  height:40px;
+  margin-right: 2px;
+  display:inline-block;
+}
+
+
+
+.table-responsive .tableView-paginationContainer .tableView-paginationChange>ul>li>a{
+  display: inline-block;
+  height:38px;
+  padding-left: 15px;
+  padding-right:15px;
+  min-width:38px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  text-align:center;
+}
+
+.table-responsive .tableView-paginationContainer .tableView-paginationChange>ul>li>a:hover{
+  background-color: lightgrey;
+  display: inline-block;
+}
+
+.table-responsive .tableView-paginationContainer .tableView-paginationChange>ul>li>a.tableView-activePage {
+  background-color: #337AB7;
+  color:white;
+}
+.table-responsive .tableView-paginationContainer .tableView-paginationChange>ul>li>a.tableView-activePage:hover {
+  background-color: #286090;
+
+}
+.table-responsive .tableView-paginationContainer .tableView-paginationChange>ul>li>a>input{
+  display: inline-block;
+  margin:1px 0px 1px 5px;
+  width:60px;
+  height:26px;
+}
+
+
+/*force the icon button not changed the line*/
+.table-responsive .tableView-buttonContainer{
+  white-space:nowrap;
+}
+
+
+/*
+    .table-responsive .tableView-paginationContainer .tableView-paginationRowsPerPage{
+        display: inline-block;
+
+        height:40px;
+        line-height: 40px;
+    }
+
+    .table-responsive .tableView-paginationContainer  .tableView-paginationRowsPerPage select{
+        height:40px;
+        border: 1px solid #cccccc;
+        border-radius: 5px;
+        padding:6px 12px;
+        color: #797979;
+        text-align: left;
+    }
+    .table-responsive .tableView-paginationContainer  .tableView-paginationRowsPerPage select:hover{
+        border: 1px solid cornflowerblue;
+        background-color: #ededed;
+
+        !*border-radius: 5px;*!
+        !*padding:6px 12px;*!
+        !*color: #797979;*!
+        !*text-align: left;*!
+    }*/
+
+
+
+/*---------------floating pagination begin------------------*/
+
+.paginationFixBottomMid{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  text-align: center;
+  background-color: rgba(119, 119, 119, 0.75);
+  visibility: hidden;
+
+}
+
+.hidePagination{
+  visibility: hidden;
+}
+
+.showPagination{
+  visibility:visible;
+}
+
+
+
+/*pagination div */
+
+.paginationFixBottomMid .tableView-paginationChange{
+  display: inline-block;
+  position:relative;
+  margin-right:5px;
+  height:50px;
+  line-height:50px;
+}
+
+
+.paginationFixBottomMid .tableView-paginationChange>ul{
+
+  display: inline-block;
+  height:40px;
+  line-height: 40px;
+}
+.paginationFixBottomMid .tableView-paginationChange>ul>li{
+  display: inline-block;
+  height:40px;
+  margin-right: 2px;
+  display:inline-block;
+}
+
+.paginationFixBottomMid  .tableView-paginationChange>ul>li>a{
+  display: inline-block;
+  height:38px;
+  padding-left: 15px;
+  padding-right:15px;
+  min-width:38px;
+  border: 1px solid #cccccc;
+  background-color: #EDEDED;
+  border-radius: 5px;
+  text-align:center;
+}
+
+.paginationFixBottomMid  .tableView-paginationChange>ul>li>a:hover{
+  background-color: lightgrey;
+  display: inline-block;
+}
+
+.paginationFixBottomMid  .tableView-paginationChange>ul>li>a.tableView-activePage {
+  background-color: #337AB7;
+  color:white;
+}
+.paginationFixBottomMid .tableView-paginationChange>ul>li>a.tableView-activePage:hover {
+  background-color: #286090;
+
+}
+.paginationFixBottomMid .tableView-paginationChange>ul>li>a>input{
+  display: inline-block;
+  margin:1px 0px 1px 5px;
+  width:60px;
+  height:26px;
+}
+
+/*pagination div */
+
+
+
+
+/*total pages div */
+.paginationFixBottomMid .tableView-paginationDetail{
+  display: inline-block;
+  margin-left:2px;
+  height:40px;
+  line-height: 40px;
+  font-weight:900;
+  color: white;
+  text-align: left;
+}
+
+.paginationFixBottomMid .tableView-paginationDetail span{
+  display: inline-block;
+}
+/*total pages div */
+
+
+/*---------------floating pagination end*/
+
+
+/*-------------------tableView----End------------------------------------------------*/
