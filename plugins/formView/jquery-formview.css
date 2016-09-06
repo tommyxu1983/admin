@@ -1,0 +1,136 @@
+/*---------formView-----Begin--------------------*/
+.formviewContainer {
+  padding: 0px 0px 5px 0px;
+  margin: 10px;
+  border: 2px rgba(166, 166, 166, 0.56) solid;
+  border-radius: 5px; }
+  .formviewContainer .formviewTitle {
+    background-color: #3C8DBC;
+    margin: 0px 0px 10px 0px;
+    padding: 5px;
+    width: 100%;
+    min-height: 22px;
+    text-align: center;
+    color: whitesmoke;
+    font-size: 1.2em; }
+  .formviewContainer .formviewForm {
+    padding-right: 5%; }
+  .formviewContainer .merged-input {
+    width: auto;
+    display: inline-block;
+    width: 45%; }
+  .formviewContainer .merged-label {
+    width: auto;
+    display: inline-block;
+    width: 10%;
+    text-align: center; }
+  .formviewContainer .multiChoice {
+    background-color: white;
+    border: 1px solid #b6b6b6;
+    border-radius: 5px;
+    padding: 10px 5px 10px 5px;
+    text-align: left; }
+    .formviewContainer .multiChoice:hover {
+      border: 1px solid rgba(102, 175, 233, 0.75);
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.75);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.75); }
+    .formviewContainer .multiChoice label {
+      margin-left: 5px;
+      padding-top: 0px; }
+  .formviewContainer .formviewFormCollapse {
+    font-size: 1.2em;
+    float: right;
+    cursor: pointer;
+    width: 30px;
+    color: whitesmoke; }
+    .formviewContainer .formviewFormCollapse:hover {
+      color: indianred;
+      transition: All 0.4s ease-in-out;
+      -webkit-transition: All 0.4s ease-in-out;
+      -moz-transition: All 0.4s ease-in-out;
+      -o-transition: All 0.4s ease-in-out;
+      transform: rotate(180deg);
+      -webkit-transform: rotate(180deg);
+      -moz-transform: rotate(180deg);
+      -o-transform: rotate(180deg);
+      -ms-transform: rotate(180deg); }
+  .formviewContainer img {
+    width: 50%;
+    /*    height:200px;*/ }
+    .formviewContainer img .landscape {
+      width: 100%;
+      /*    height:200px;*/ }
+    .formviewContainer img .PORTRAIT {
+      width: 200px;
+      height: 300px; }
+
+/*-----------------------*/
+.stepsView {
+  display: inline-block;
+  list-style: none;
+  /* margin-bottom:0px;*/
+  width: 100%; }
+
+.stepsView > li {
+  float: left;
+  color: gray; }
+
+.stepsView > li div.txtContainer {
+  /*width:100%;
+  height:50px;
+  background-color: #00b3ee;*/
+  color: grey; }
+
+.stepsView > li div.dotBarContainer {
+  position: relative;
+  width: 100%;
+  height: 30px; }
+
+.stepsView > li div.dotBarContainer .dot {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #bfbfbf;
+  border: 1px solid rgba(103, 103, 103, 0.5);
+  z-index: 1000; }
+
+.stepsView > li div.dotBarContainer .bar {
+  display: inline-block;
+  position: absolute;
+  top: 13px;
+  left: 30px;
+  height: 4px;
+  width: 100%;
+  border-top: 1px solid rgba(103, 103, 103, 0.5);
+  border-bottom: 1px solid rgba(103, 103, 103, 0.5); }
+
+.stepsView > li .text-done {
+  color: #3C8DBC !important; }
+
+.stepsView > li .text-active {
+  color: green !important; }
+
+.stepsView > li .step-done {
+  background-color: #4790c6 !important; }
+
+.stepsView > li .step-active {
+  background-color: #009600 !important; }
+
+.stepsView > li .dot-active {
+  -webkit-animation: twinkling 1s infinite ease-in-out;
+  animation: twinkling 2s infinite ease-in-out; }
+
+@-webkit-keyframes twinkling {
+  0% {
+    opacity: 0.3; }
+  100% {
+    opacity: 1; } }
+@-webkit-keyframes twinkling {
+  0% {
+    opacity: 0.3; }
+  100% {
+    opacity: 1; } }
+/*---------formView------End--------------------*/
+
+/*# sourceMappingURL=jquery-formview.css.map */
