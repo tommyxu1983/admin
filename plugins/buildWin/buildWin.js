@@ -804,9 +804,6 @@
 
                 },this));
 
-
-
-
             }else {
                 logError('please make  function buildModuleButtons  buttonsData is passed in by array');
                 buttonsArray=[];

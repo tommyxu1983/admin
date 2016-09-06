@@ -494,7 +494,7 @@
                     }
 
                     //验证时间是否正确
-                    if(! /([0-1][0-9]:[0-5][0-9])|([2][0-3]:[0-5][0-9])/.test(YYYYMMDD_Time[1]) ){
+                    if(! /([0-1][0-9]:[0-5][0-9]:[0-5][0-9])|([2][0-3]:[0-5][0-9]:[0-5][0-9])/.test(YYYYMMDD_Time[1]) ){
                         isFinalCorrect=false;
                     }
 
@@ -506,7 +506,7 @@
 
             time: function( value, element , param ){
                 //按照时间格式： 23：34
-                var isTime = /([0-1][0-9]:[0-5][0-9])|([2][0-3]:[0-5][0-9])/.test(value);
+                var isTime = /([0-1][0-9]:[0-5][0-9]:[0-5][0-9])|([2][0-3]:[0-5][0-9]:[0-5][0-9])/.test(value);
                 return isTime;
             },
 
@@ -555,10 +555,10 @@
             digits: "Please enter only digits.",
             equalTo: "Please enter the same value again.",
             time:function(){
-                return "请按照正确的 时间格式 填写。 如：下午2点12分  \"14:12\"";
+                return "请按照正确的 时间格式 填写。 如：下午2点12分  \"14:12:12\"";
             },
             dateTime:function(){
-                return "请按照正确的 日期时间格式 填写。 如：2011年11月11日 下午2点12分 \"2011/11/11 14:12\"";
+                return "请按照正确的 日期时间格式 填写。 如：2011年11月11日 下午2点12分12秒 \"2011/11/11 14:12:12\"";
             },
             maxlength: function(parameter){
                 return "请不要超过"+parameter+"个字";
