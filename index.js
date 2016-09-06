@@ -206,8 +206,15 @@ require(['jquery','bootstrap-dialog','BuildWin','PUMsg','dMenu','slimscroll','tr
                     if(node.nodes && $.isArray(node.nodes) && node.nodes.length>0){
 
                     }else{
-                        getAjax(req,getMenuContentSuccess,undefined,undefined,{pMessage:pMsg});
-                         pMsg.showOverLay();
+
+                        //有uurl跳出窗口，用户权限
+                        if( node.uurl && typeof node.uurl==='string' && node.uurl.length>0 ){
+                            window.open(node.uurl);
+                        }else{
+                            getAjax(req,getMenuContentSuccess,undefined,undefined,{pMessage:pMsg});
+                            pMsg.showOverLay();
+                        }
+
                     }
 
 
