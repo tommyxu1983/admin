@@ -436,13 +436,9 @@
 
                 }
 
-
-
             }else{
                 logError('there is no data for module.winmodfields');
             }
-
-
         };
 
         BuildWin.prototype.buildReport=function(module,$moduleDiv,preRequest){
@@ -803,9 +799,6 @@
 
 
                 },this));
-
-
-
 
             }else {
                 logError('please make  function buildModuleButtons  buttonsData is passed in by array');
