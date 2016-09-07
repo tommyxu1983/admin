@@ -755,11 +755,9 @@
                                             size: BootstrapDialog.SIZE_WIDE,
                                         });
 
-                                        var req={
-                                            url:'../../treeViewList.html',
-                                            dataType:"html",
-                                            type:'get'
-                                        };
+                                        var req={}, replaceurl;
+                                        replaceurl =  data4Button.uurl.replace(/_ROW_DATA_GUID_/g,_this.data.DataGUID);
+                                        req.url=replaceurl;
 
                                         _this.sendAjax( req, $.proxy(_this.on5k6kButtonSuccess,_this) , undefined ,undefined , newDialog);
 
@@ -1126,6 +1124,26 @@
 
             if( !! ( singleValidator=validator.isInValidateCache(element) )  ){
                 if(data.code>=0){
+
+                    //如果等于 100，
+                    if(data.code=='100'){
+                        if(beforeAjaxData.$form instanceof $){
+                            var preID= beforeAjaxData.$form.attr('id'),
+                                ID,
+                                $item;
+
+                            $.each(data.fieldinfo,function(index,item){
+                                ID = preID+'-'+item.FDefName;
+                                $item = beforeAjaxData.$form.find('#'+ID);
+                                if($item.length>0){
+                                    $item.val(item.FValueX);
+                                }
+
+
+                            });
+
+                        }
+                    }
                     singleValidator.isValid=true;
                 }else{
                     singleValidator.isValid=false;
