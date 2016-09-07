@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AutoComplete</title>
+    <script type="text/javascript" src="../../jsLib/jquery-1.12.3.js"></script>
+    <!--    <script text="text/javascript" src="../validate/locales/messages_zh.js"></script>-->
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="autoComplete.css">
+    <style>
+        html, body{width:100%}
+    </style>
+</head>
+<body>
+<div class="formViewContainer"></div>
+
+
+<form style="margin: 100px">
+    <input style="width:200px" id = 'autoCompleteInput' type="text">
+
+    <ul style=" ">
+        <li>
+            <哈哈></哈哈>
+        </li>
+        <li>
+            <哈哈></哈哈>
+        </li>
+        <li>
+            <哈哈></哈哈>
+        </li>
+        <li>
+            <哈哈></哈哈>
+        </li>
+        <li>
+            <哈哈></哈哈>
+        </li>
+        <li>
+            <哈哈></哈哈>
+        </li>
+        <li>
+            <哈哈></哈哈>
+        </li>
+        <li>
+            <哈哈></哈哈>
+        </li>
+    </ul>
+
+</form>
+
+<script type="text/javascript" src="autoComplete.js"></script>
+
+</body>
+<script>
+
+
+    $('#autoCompleteInput').autoComplete({
+    data: [{id:'1',caption:'老师'},{id:'2',caption:'工人'},{id:'3',caption:'作家'},{id:'4',caption:'老师法'},{id:'5',caption:'硬度'},{id:'6',caption:'作家哈哈'}]
+    });
+
+
+    function jsonData() {
+        return {
+
+            formID: '123456789', formTitle: '员工表',
+
+
+            controlList: [
+                {
+                    label: '姓名',
+                    isLabelDisplay: true,
+                    dataType: 'text',
+                    placeholder: '请填写姓名',
+                    dataID: 'name',
+                    data: '张三',
+                    dataOption: '',
+                    readonly: 1,
+                    multiline: 1,
+                    validateRules: {required: true, maxlength: '4'}
+                },
+                {
+                    label: '生日',
+                    isLabelDisplay: true,
+                    dataType: 'dateTime',
+                    placeholder: '',
+                    dataID: 'birthday',
+                    data: '1986/04/08 23:54:56',
+                    dataOption: '',
+                    validateRules: {dateTime: true}
+                },
+                {
+                    label: '时间',
+                    isLabelDisplay: true,
+                    dataType: 'time',
+                    placeholder: '',
+                    dataID: 'time',
+                    data: '23:54:56',
+                    dataOption: '',
+                    validateRules: {time: true}
+                },
+                {
+                    label: '用户名',
+                    isLabelDisplay: true,
+                    dataType: 'text',
+                    placeholder: '请填写用户名',
+                    dataID: 'userName',
+                    data: '',
+                    dataOption: '',
+                    validateRules: {required: true, 'minlength': '2', maxlength: 5}
+                },
+                {
+                    label: '称昵',
+                    isLabelDisplay: true,
+                    dataType: 'text',
+                    placeholder: '请填写称昵',
+                    dataID: 'nickName',
+                    data: '',
+                    dataOption: ''
+                },
+                {
+                    label: '邮箱',
+                    isLabelDisplay: true,
+                    dataType: 'email',
+                    placeholder: '请填写邮箱',
+                    dataID: 'email',
+                    data: '',
+                    dataOption: ''
+                },
+                {
+                    label: '密码',
+                    isLabelDisplay: true,
+                    dataType: 'psw',
+                    placeholder: '',
+                    dataID: 'password',
+                    data: '',
+                    dataOption: ''
+                },
+                {
+                    label: '确认密码',
+                    isLabelDisplay: true,
+                    dataType: 'psw',
+                    placeholder: '',
+                    dataID: 'passwordC',
+                    data: '',
+                    dataOption: ''
+                },
+                {
+                    label: '性别',
+                    isLabelDisplay: true,
+                    dataType: 'bool',
+                    placeholder: 'male',
+                    dataID: 'gender',
+                    data: 'male',
+                    dataOption: [{id: 'male', caption: '男'}, {id: 'female', caption: '女'}]
+                },
+                {
+                    label: '工种',
+                    isLabelDisplay: true,
+                    dataType: 'option',
+                    placeholder: 'worker',
+                    dataID: 'profession',
+                    data: 'writer',
+                    dataOption: [{id: 'teacher', caption: '老师'}, {id: 'worker', caption: '工人'}, {
+                        id: 'writer',
+                        caption: '作家'
+                    }]
+                },
+                {
+                    label: '工种',
+                    isLabelDisplay: true,
+                    dataType: 'multi',
+                    placeholder: 'worker',
+                    dataID: 'profession',
+                    data: 'writer',
+                    dataOption: [{id: 'teacher', caption: '老师', checked: 1}, {
+                        id: 'worker',
+                        caption: '工人',
+                        checked: 0
+                    }, {id: 'writer', caption: '作家', checked: 1}]
+                },
+
+                {
+                    label: '部门',
+                    isLabelDisplay: true,
+                    dataType: 'text',
+                    placeholder: '',
+                    dataID: 'department',
+                    data: '',
+                    dataOption: {}
+                },
+                {
+                    label: '注册资金',
+                    isLabelDisplay: true,
+                    dataType: 'text',
+                    currencyType: '',
+                    placeholder: '',
+                    dataID: 'companyRegister',
+                    data: '2000',
+                    dataOption: {}
+                }
+            ]
+        }
+    }
+
+
+
+</script>
+
+</html>

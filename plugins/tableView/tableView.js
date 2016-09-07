@@ -86,12 +86,12 @@
 
     var _bs={
 
-            table_responsive:'table-responsive',
+            table_responsive: 'table-responsive',
             table: 'table',
-            table_striped:'table-striped',
-            table_condensed:'table-condensed',
+            table_striped: 'table-striped',
+            table_condensed: 'table-condensed',
             table_bordered : 'table-bordered',
-            table_hover:' table-hover',
+            table_hover: 'table-hover',
 
             pagination:'pagination',
             pull_left:'pull-left',

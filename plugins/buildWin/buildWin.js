@@ -473,8 +473,11 @@
                         //如果到达页码不等于当前页码，执行！
                         if(pageIndex>=0 && pageIndex != pSetting.pageIndex ){
                             this.writeBack();
+                            _this.data.PageIndex = pageIndex ;
+
                             reqGotoPage={
                                 url:'http://'+pSetting.url+'?fmname='+pSetting.funModName+'&fmctrlid=3033&fmpageindex='+pageIndex+'&fmtoken='+globalSetting.token,
+
                                 data:JSON.stringify(_this.data)
                             }
                             _this.sendAjax( reqGotoPage, $.proxy(_this.onGoToPageSuccess,_this) , undefined , undefined,{tableContainer:$moduleDiv});
@@ -747,17 +750,21 @@
                                 else{
                                     //销毁验证 里的 事件和 setInterval
                                     validateX.destroy();
-
+                                    var req, replaceurl;
 
                                     if(data4Button.ctrlid>=5000 && data4Button.ctrlid<6000 ){
                                         //alert('>=5000  <6000');
                                         var newDialog=new BootstrapDialog({
                                             size: BootstrapDialog.SIZE_WIDE,
                                         });
+                                        //批量操作
 
-                                        var req={}, replaceurl;
                                         replaceurl =  data4Button.uurl.replace(/_ROW_DATA_GUID_/g,_this.data.DataGUID);
-                                        req.url=replaceurl;
+                                        _this.writeBack();
+                                        req={
+                                            data: JSON.stringify(_this.data),
+                                            url: replaceurl
+                                        }
 
                                         _this.sendAjax( req, $.proxy(_this.on5k6kButtonSuccess,_this) , undefined ,undefined , newDialog);
 
@@ -771,9 +778,17 @@
                                         //如果按钮带uurl，执行某些特定功能
                                         var data=( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)?  '': _this.data;
                                         data.token=globalSetting.token;
+                                        if(_this.data.DataGUID && _this.data.DataGUID.length>0 ){
+                                            replaceurl =  url.replace(/_ROW_DATA_GUID_/g,_this.data.DataGUID);
+                                        }else{
+                                            replaceurl= url
+                                        }
+
+
                                         var req={
-                                            url: url,//+'&fmtoken='+globalSetting.token
-                                            data:JSON.stringify(data)
+                                            url: replaceurl,//+'&fmtoken='+globalSetting.toke
+
+                                            data:JSON.stringify(_this.data)
                                         };
 
                                         if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
@@ -781,12 +796,17 @@
 
                                         //如果传过来参数 dialog 存在，则关闭 dialog
                                         if(!!dialog && dialog instanceof BootstrapDialog){
-                                            dialog.close();
+
+                                            if( data4Button.ctrlid>=3040 && data4Button.ctrlid<=3059 ){
+
+                                            }else{
+                                                dialog.close();
+                                            }
+
                                         }
                                     }
 
                                 }
-
 
                             }
 
@@ -871,6 +891,18 @@
                             break;
                         case _ctrl.create:
                             new BuildWin(data,0 );
+                            break;
+                        default:
+                            if(parseInt(data.ctrlid)>=3040 && parseInt(data.ctrlid)<=3059 ){
+                                if(!!beforeAjaxData.dialog && beforeAjaxData.dialog instanceof BootstrapDialog){
+                                    beforeAjaxData.dialog.close();
+                                    new BuildWin(data,0 );
+                                }else{
+                                    this.closeTabView();
+                                    this.update(data,0);
+                                }
+
+                            }
                             break;
                     }
                     msgTip.setSuccMsg('操作成功： '+ data.msg);
