@@ -103,7 +103,7 @@
                             }
 
                         });
-                    },100);
+                    },500);
 
                 }
 
@@ -114,10 +114,12 @@
             //初始化  this.validateCache=[];
             initValidateEleCache:function(){
                 for(var key in this.ClassNameOfRules ){
-                    if(this.$form.find('input[name='+ key+']').length && this.$form.find('input[name='+ key+']').length>0){
+                    var ID=this.$form.attr('id')+'-'+key;
+
+                    if(this.$form.find('#'+ID).length && this.$form.find('#'+ID).length>0){
 
                        var  singleItem={
-                                element: this.$form.find('input[name='+ key+']')[0],
+                                element: this.$form.find('#'+ID)[0],
                                 ClassName4Rules:key,
                                 rules: this.ClassNameOfRules[key],
                                 isValid:false,
@@ -125,7 +127,7 @@
                         };
 
                         if(this.ClassNameOfRules[key]['validateOnServer']){
-                            singleItem.value=this.$form.find('input[name='+ key+']')[0].value;
+                            singleItem.value=this.$form.find('#'+ID)[0].value;
                             singleItem.isValidateOnServer=true;
                             this.hasItemValidateOnServer=true;
                         }
@@ -538,7 +540,10 @@
             },
 
             validateOnServer:function(value, element, param){
-                this.$form.trigger('onValidateAtServer',[{element:element,validator:this, url: param}]);
+               if( $._data(element).events && $._data(element).events['change']){
+                   $(element).trigger('change');
+               }
+                this.$form.trigger('onValidateAtServer',[{element:element,validator:this, $form:this.$form,url: param}]);
             }
 
 
