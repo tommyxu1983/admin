@@ -2023,5 +2023,44 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
 /*total pages div */
 /*---------------floating pagination end*/
 /*-------------------tableView----End------------------------------------------------*/
+ul.autoComplete {
+  position: fixed;
+  margin-top: 2px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10003;
+  list-style-type: none;
+  padding: 0px;
+  background-color: #EDEDED;
+  border: 1px solid rgba(51, 101, 182, 0.61);
+  box-shadow: 0 0 10px rgba(71, 144, 198, 0.65); }
+  ul.autoComplete > li {
+    display: block;
+    min-height: 30px;
+    width: 100%;
+    line-height: 30px;
+    font-size: 15px;
+    /* margin-left:-40px; //remove li indend
+     margin-right:40px;*/ }
+    ul.autoComplete > li > a {
+      display: block;
+      color: black;
+      min-height: 30px;
+      width: 100%;
+      padding: 0px 10px 0px 10px;
+      text-decoration: none; }
+      ul.autoComplete > li > a > span.highlight {
+        color: #ff2216; }
+      ul.autoComplete > li > a:hover {
+        background-color: lightgrey;
+        cursor: pointer; }
+      ul.autoComplete > li > a:focus {
+        background-color: blue;
+        vertical-align: middle;
+        cursor: pointer; }
+    ul.autoComplete > li > a.active {
+      width: 100%;
+      background-color: lightgrey;
+      vertical-align: middle; }
 
 /*# sourceMappingURL=index.css.map */

@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,aAAa;EACX,UAAU,EAAC,GAAG;EACd,MAAM,EAAC,mBAAmB;EAC1B,MAAM,EAAC,KAAK;EACZ,KAAK,EAAC,KAAK;EACX,UAAU,EAAE,IAAI",
-"sources": ["autoComplete.scss"],
-"names": [],
-"file": "autoComplete.css"
-}

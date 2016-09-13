@@ -43,8 +43,8 @@
 
                 row:'row',
 
-                col_first:'col-sm-2',
-                col_second:'col-sm-8',
+                col_sm_3:'col-sm-2',
+                col_sm_8:'col-sm-8',
                 offset_2col:'col-sm-offset-2'
             }
         };
@@ -73,7 +73,7 @@
             }
         };
 
-        var BuildWin=function(data, windowsIndex ,selector,preRequest){
+        var BuildWin=function(data, windowsIndex ,selector){
             if($.isArray(data.windows) && data.windows[windowsIndex] ){
                 this.data=data;
                 this.winData=data.windows[windowsIndex];
@@ -91,7 +91,7 @@
               /*  this.updateElement=[];*///{key:this.winData.uid, element: htmlElement}
 
 
-                this.init(this.winData, this.data.DataGUID ,selector,preRequest);
+                this.init(this.winData, this.data.DataGUID ,selector);
 
                /* var validator=this.$selector.validateX({
                     onkeyup:function(a,b,c){
@@ -111,8 +111,8 @@
             }
         };
         
-        BuildWin.prototype.init=function(winData, windowID ,selector,preRequest){
-            ((selector) && ( typeof selector==='string' || (selector instanceof jQuery && selector.length ) ) ) ? this.buildInTabView(winData,windowID,selector,preRequest)  : this.buildInDialog(winData,preRequest);
+        BuildWin.prototype.init=function(winData, windowID ,selector){
+            ((selector) && ( typeof selector==='string' || (selector instanceof jQuery && selector.length ) ) ) ? this.buildInTabView(winData,windowID,selector)  : this.buildInDialog(winData);
         };
 
         BuildWin.prototype.update=function(data, windowsIndex, $updateModuleDiv) {
@@ -166,7 +166,7 @@
         };
 
         //在dialog(跳出窗口) 建窗口
-        BuildWin.prototype.buildInDialog=function(winData,preRequest){
+        BuildWin.prototype.buildInDialog=function(winData){
             var _this=this,hasForminModules=false;
             var $modules_Div=$(_html.div).addClass(_cssClass.modulesContainer);
 
@@ -192,7 +192,7 @@
                            case _moduleType.form:
                                _this.modulesAdptData[_this.modulesAdptData.length-1].mtype=_moduleType.form;
                                //建立 表单
-                               _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1,newDialog,preRequest);
+                               _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1,newDialog);
                                hasForminModules=true;
                                break;
 
@@ -228,7 +228,7 @@
 
             //窗口按钮
             if( ! hasForminModules){
-                var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
+                var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_sm_8);
                 this.buildModuleButtons(winData.buttons,$buttons_Div);
                 $panelContent.append($buttons_Div);
             }
@@ -244,7 +244,7 @@
         };
 
         //在 tab里建窗口
-        BuildWin.prototype.buildInTabView=function(winData,windowID,selector,preRequest){
+        BuildWin.prototype.buildInTabView=function(winData,windowID,selector){
 
             $(selector).length<1 && logError('buildInTabView 没有元素被选中哇');
 
@@ -269,7 +269,7 @@
                                 _this.modulesAdptData[_this.modulesAdptData.length-1].mtype=_moduleType.form;
                                 hasFormInModules=true;
                                 //建立 表单
-                                _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1,preRequest);
+                                _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1);
                                 break;
 
                             //如果是 grid(表格)
@@ -296,9 +296,9 @@
                 .addClass(_cssClass.panelContent)
                 .css({'background-color': '#ededed'});
 
-            //窗口按钮: 如果数据里有form,就不进入。
+            //用来建立module按钮(不包括form, table里的按钮): 如果数据里有form,就不进入。
             if( ! hasFormInModules){
-                var $buttons_Div=$(_html.div).addClass(_cssClass.buttonsContainer);/*.addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);*/
+                var $buttons_Div=$(_html.div).addClass(_cssClass.buttonsContainer);/*.addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_sm_8);*/
 
                 this.buildModuleButtons(winData.buttons,$buttons_Div);
                 $panelContent.append($buttons_Div);

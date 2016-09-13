@@ -7,8 +7,19 @@ var gulp = require('gulp');
     uglify = require('gulp-uglify');
     concat = require('gulp-concat');
 
+/*function getFolders(dir) {
+    return fs.readdirSync(dir)
+        .filter(function(file) {
+            return fs.statSync(path.join(dir, file)).isDirectory();
+        });
+}*/
+
     gulp.task('scss',function(){
-        return gulp.src('')
+
+        var root= './plugins/autoComplete/';
+
+
+        return gulp.src(root+'*.scss')
             .pipe(sass())
-            .pipe(gulp.dest('dist/css'))
+            .pipe(gulp.dest(root))
     });

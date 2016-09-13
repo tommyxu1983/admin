@@ -16,34 +16,12 @@
 
 
 <form style="margin: 100px">
-    <input style="width:200px" id = 'autoCompleteInput' type="text">
+    <input style="width:200px" id = 'autoCompleteInput1' type="text">
+    <input style="width:200px" id = 'autoCompleteInput2' type="text">
+    <input style="width:200px" id = 'autoCompleteInput3' type="text">
 
-    <ul style=" ">
-        <li>
-            <哈哈></哈哈>
-        </li>
-        <li>
-            <哈哈></哈哈>
-        </li>
-        <li>
-            <哈哈></哈哈>
-        </li>
-        <li>
-            <哈哈></哈哈>
-        </li>
-        <li>
-            <哈哈></哈哈>
-        </li>
-        <li>
-            <哈哈></哈哈>
-        </li>
-        <li>
-            <哈哈></哈哈>
-        </li>
-        <li>
-            <哈哈></哈哈>
-        </li>
-    </ul>
+
+
 
 </form>
 
@@ -52,11 +30,29 @@
 </body>
 <script>
 
+var data=[]
 
-    $('#autoCompleteInput').autoComplete({
-    data: [{id:'1',caption:'老师'},{id:'2',caption:'工人'},{id:'3',caption:'作家'},{id:'4',caption:'老师法'},{id:'5',caption:'硬度'},{id:'6',caption:'作家哈哈'}]
+
+    for(var i=0; i<500; i ++){
+        data.push({id:i, caption: i.toString()});
+    }
+
+
+    $('#autoCompleteInput1').autoComplete({
+  /*  data: [{id:'1',caption:'老师'},{id:'2',caption:'工人'},{id:'3',caption:'作家'},{id:'4',caption:'老师法'},{id:'7',caption:'老师法事业师爷同学市长师长'},{id:'5',caption:'硬度'},{id:'6',caption:'作家哈哈'}]*/
+        data: [{id:'1',caption:'ch-ina'},{id:'2',caption:'ch__ile'},{id:'3',caption:'ca++na\.da'},{id:'4',caption:'ast/rul\\ian'},{id:'7',caption:'germeny'},{id:'5',caption:'usa'},{id:'6',caption:'england'}]
     });
 
+    $('#autoCompleteInput2').autoComplete({
+          data: [{id:'1',caption:'老师'},{id:'2',caption:'工人'},{id:'3',caption:'作家'},{id:'4',caption:'老师法'},{id:'7',caption:'老师法事业.师爷同学市长师长'},{id:'5',caption:'硬度'},{id:'6',caption:'作家哈哈'}]
+     /*   data: [{id:'1',caption:'china'},{id:'2',caption:'chile'},{id:'3',caption:'canada'},{id:'4',caption:'astrulian'},{id:'7',caption:'germeny'},{id:'5',caption:'usa'},{id:'6',caption:'england'}]*/
+    });
+
+
+$('#autoCompleteInput3').autoComplete({
+    data:data
+    /*   data: [{id:'1',caption:'china'},{id:'2',caption:'chile'},{id:'3',caption:'canada'},{id:'4',caption:'astrulian'},{id:'7',caption:'germeny'},{id:'5',caption:'usa'},{id:'6',caption:'england'}]*/
+});
 
     function jsonData() {
         return {

@@ -9,7 +9,7 @@
 
     //模块化
     if(typeof define==='function' && define.amd){
-        define(['jquery','datepicker','datepickerCN'],factory);
+        define(['jquery','datepicker','datepickerCN','autoComplete'],factory);
     }else if(typeof module === "object" && module.exports){
         module.exports = factory( require( "jquery" ) );
     }else{
@@ -202,6 +202,7 @@
     };
 
     FormView.prototype.buildForm=function(settings){
+        var me = this;
         this.$element.addClass(_defaultStyle.formContainer)
         this.$form=$(_html.form);
         //创建 form title
@@ -275,6 +276,32 @@
                 todayBtn: "linked",
                 language: "zh-CN"
             });
+        //系上autoComplete 插件
+        $.each(this.$form.find('input[type="option-autoComplete"]'),function(index,item){
+            $(item).autoComplete({
+                data:   $.data(item,pluginName).dataOption,
+                onListItemSelected: function(input,itemData){
+                    if(itemData){
+                        input.value = itemData[this.settings.propName];
+                        $.data(input, 'formview').data = itemData.id;
+
+                        /*$.each(me.settings.data.controlList,function(index,item){
+                            if($.data(input, 'fromview').dataID = item.dataID){
+                                item.data = itemData.id;
+                            }
+                        }); */
+
+                        this.removeList();
+                    }else{
+                        console.log('itemData:' +itemData )
+                    }
+                    /*itemData.id=*/
+                }
+            });
+
+        });
+
+
 
         //show password 事件监听
         this.$form.on('click',function(evt){
@@ -509,27 +536,53 @@
                 break;
 
             case _dataType.option:
+                if(ctlListItem.dataOption.length && ctlListItem.dataOption.length<=10){
+                      var $select=$(_html.select)
+                         .addClass(_defaultStyle.bs.form_control)
+                         .attr('id',this.settings.data.formID+'-'+ctlListItem.dataID)
+                         .on('change', function(evt){
+                         // var kk=$('option:selected',this);
+                         ctlListItem.data= this.value;
+                         });
 
-                var $select=$(_html.select)
-                    .addClass(_defaultStyle.bs.form_control)
-                    .attr('id',this.settings.data.formID+'-'+ctlListItem.dataID)
-                    .on('change', function(evt){
-                       // var kk=$('option:selected',this);
-                        ctlListItem.data= this.value;
-                    });
+                     $.each(ctlListItem.dataOption, $.proxy(function(index,item){
+                         //新建的时候，缺省为第一项
+                         if(!ctlListItem.data || ctlListItem.data.length<1   ){
+                         if(index==0 ) {ctlListItem.data= ctlListItem.dataOption[0].id;}
+                         }
+                         var $option=$(_html.option)
+                         .attr({'value':item.id, 'id':this.settings.data.formID+'-'+ctlListItem.dataID+'-'+item.id})
+                         .html(item.caption);
+                         (item.id==ctlListItem.data)&& $option.attr('selected','selected');
+                         $select.append($option);
+                     },this));
 
-                $.each(ctlListItem.dataOption, $.proxy(function(index,item){
-                    //新建的时候，缺省为第一项
-                    if(!ctlListItem.data || ctlListItem.data.length<1   ){
-                        if(index==0 ) {ctlListItem.data= ctlListItem.dataOption[0].id;}
+                     $result=$select;
+
+                }else{
+                    $input
+                        .addClass(_defaultStyle.bs.form_control)
+                        .attr('id',this.settings.data.formID+'-'+ctlListItem.dataID)
+                        .attr('type', 'option-autoComplete')
+                        .on('change', function(evt){
+                            ctlListItem.data = this.value;
+                        });
+
+                    if( ctlListItem.data && ctlListItem.data.length && ctlListItem.data.length>0   ){
+                        $.each(ctlListItem.dataOption,function(index,item){
+                            if(item.id==ctlListItem.data){
+
+                                $input[0].value=item.caption? item.caption: '';
+                            }
+                        })
                     }
-                    var $option=$(_html.option)
-                        .attr({'value':item.id, 'id':this.settings.data.formID+'-'+ctlListItem.dataID+'-'+item.id})
-                        .html(item.caption);
-                    (item.id==ctlListItem.data)&& $option.attr('selected','selected');
-                    $select.append($option);
-                },this));
-                $result=$select;
+                    $.data($input[0],pluginName,ctlListItem);
+                    $result = $input;
+                }
+
+
+
+
 
                 break;
 
