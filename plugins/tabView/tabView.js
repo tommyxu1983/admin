@@ -204,23 +204,30 @@
                 InsertData.data = eleminateDupli(InsertData.data);
             }
             //记住 原有  tabview里数据长度
-            oLength=this.settings.data.length;
+            oLength=_this.settings.data.length;
 
-            //如果是新插入的数据: 只有一条，并tabview id 已经存在
+            //如果是新插入的数据: 只有一条，并tabview id 已经存在,删除老的 tab, pannel,并移除数据
             if(InsertData.data.length=1){
-                for(var i= 0, l=this.settings.data.length; i<l;i++){
-                    if(this.settings.data[i].id==InsertData.data[0].id){
+                $.each(_this.settings.data,function(index,item){
+                    if(item.id==InsertData.data[0].id){
+                        _this.deleteItem(item.id);
+                    }
+                });
+               /* for(var i= 0, arrlength=_this.settings.data.length; i<arrlength;i++){
+                    if(_this.settings.data[i].id==InsertData.data[0].id){
 
-
-                        _this.$element.find('li').removeClass('active');
-                        _this.$element.find('#tab-'+this.settings.data[i].id).addClass('active');
+                        // 插入新数据的 id， 同时 移除所有tab active, 然后新的tab设为 active
+                    /!*    _this.$element.find('li').removeClass('active');
+                        _this.$element.find('#tab-'+InsertData.data[0].id).addClass('active');
 
 
                         _this.$panels_DIV.find('.'+_cssClass.panel).removeClass('active');
                         _this.$panels_DIV.find('#panel-'+this.settings.data[i].id).addClass('active');
-                        return;
+                        return;*!/
+
+                        _this.deleteItem(_this.settings.data[i].id);
                     }
-                }
+                }*/
 
             }
 
@@ -232,7 +239,7 @@
                 tempArr=eleminateDupli(tempArr);
             }
 
-            this.render( [].slice.call(tempArr,oLength,tempArr.length));
+            this.render( [].slice.call(tempArr,_this.settings.data.length,tempArr.length));
             this.settings.data=tempArr;
 
         }else if(typeof InsertData==='object'){

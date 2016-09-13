@@ -43,8 +43,8 @@
 
                 row:'row',
 
-                col_first:'col-sm-2',
-                col_second:'col-sm-8',
+                col_sm_3:'col-sm-2',
+                col_sm_8:'col-sm-8',
                 offset_2col:'col-sm-offset-2'
             }
         };
@@ -73,7 +73,7 @@
             }
         };
 
-        var BuildWin=function(data, windowsIndex ,selector,preRequest){
+        var BuildWin=function(data, windowsIndex ,selector){
             if($.isArray(data.windows) && data.windows[windowsIndex] ){
                 this.data=data;
                 this.winData=data.windows[windowsIndex];
@@ -91,7 +91,7 @@
               /*  this.updateElement=[];*///{key:this.winData.uid, element: htmlElement}
 
 
-                this.init(this.winData, this.data.DataGUID ,selector,preRequest);
+                this.init(this.winData, this.data.DataGUID ,selector);
 
                /* var validator=this.$selector.validateX({
                     onkeyup:function(a,b,c){
@@ -111,8 +111,8 @@
             }
         };
         
-        BuildWin.prototype.init=function(winData, windowID ,selector,preRequest){
-            ((selector) && ( typeof selector==='string' || (selector instanceof jQuery && selector.length ) ) ) ? this.buildInTabView(winData,windowID,selector,preRequest)  : this.buildInDialog(winData,preRequest);
+        BuildWin.prototype.init=function(winData, windowID ,selector){
+            ((selector) && ( typeof selector==='string' || (selector instanceof jQuery && selector.length ) ) ) ? this.buildInTabView(winData,windowID,selector)  : this.buildInDialog(winData);
         };
 
         BuildWin.prototype.update=function(data, windowsIndex, $updateModuleDiv) {
@@ -166,7 +166,7 @@
         };
 
         //在dialog(跳出窗口) 建窗口
-        BuildWin.prototype.buildInDialog=function(winData,preRequest){
+        BuildWin.prototype.buildInDialog=function(winData){
             var _this=this,hasForminModules=false;
             var $modules_Div=$(_html.div).addClass(_cssClass.modulesContainer);
 
@@ -192,7 +192,7 @@
                            case _moduleType.form:
                                _this.modulesAdptData[_this.modulesAdptData.length-1].mtype=_moduleType.form;
                                //建立 表单
-                               _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1,newDialog,preRequest);
+                               _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1,newDialog);
                                hasForminModules=true;
                                break;
 
@@ -228,7 +228,7 @@
 
             //窗口按钮
             if( ! hasForminModules){
-                var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);
+                var $buttons_Div=$(_html.div).addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_sm_8);
                 this.buildModuleButtons(winData.buttons,$buttons_Div);
                 $panelContent.append($buttons_Div);
             }
@@ -244,7 +244,7 @@
         };
 
         //在 tab里建窗口
-        BuildWin.prototype.buildInTabView=function(winData,windowID,selector,preRequest){
+        BuildWin.prototype.buildInTabView=function(winData,windowID,selector){
 
             $(selector).length<1 && logError('buildInTabView 没有元素被选中哇');
 
@@ -269,7 +269,7 @@
                                 _this.modulesAdptData[_this.modulesAdptData.length-1].mtype=_moduleType.form;
                                 hasFormInModules=true;
                                 //建立 表单
-                                _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1,preRequest);
+                                _this.buildForm(module,$module_Div,_this.modulesAdptData.length-1);
                                 break;
 
                             //如果是 grid(表格)
@@ -296,9 +296,9 @@
                 .addClass(_cssClass.panelContent)
                 .css({'background-color': '#ededed'});
 
-            //窗口按钮: 如果数据里有form,就不进入。
+            //用来建立module按钮(不包括form, table里的按钮): 如果数据里有form,就不进入。
             if( ! hasFormInModules){
-                var $buttons_Div=$(_html.div).addClass(_cssClass.buttonsContainer);/*.addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_second);*/
+                var $buttons_Div=$(_html.div).addClass(_cssClass.buttonsContainer);/*.addClass(_cssClass.buttonDiv +' ' +_defaultStyle.bs.offset_2col +' '+_defaultStyle.bs.col_sm_8);*/
 
                 this.buildModuleButtons(winData.buttons,$buttons_Div);
                 $panelContent.append($buttons_Div);
@@ -341,7 +341,7 @@
             //  }
         };
 
-        BuildWin.prototype.buildForm=function(module,$moduleDiv,moduleIndex,dialog,preRequest){
+        BuildWin.prototype.buildForm=function(module,$moduleDiv,moduleIndex,dialog){
             //  var formData={};
             var _this=this;
             (! module.uid)&& logError('form uid 缺少 module uid');
@@ -408,7 +408,7 @@
 
                 });
 
-                var formButtons= _this.winData.buttons? _this.buildFormButtons(_this.winData.buttons,dialog,preRequest):[];
+                var formButtons= _this.winData.buttons? _this.buildFormButtons(_this.winData.buttons,dialog):[];
 
 
                 //用 formview 插件，formData建立data.
@@ -441,7 +441,7 @@
             }
         };
 
-        BuildWin.prototype.buildReport=function(module,$moduleDiv,preRequest){
+        BuildWin.prototype.buildReport=function(module,$moduleDiv){
             var _this=this,
                 tableHeader=module.winmodfields.Body.Head,
                 tableData=module.winmodfields.Body.Data,
@@ -497,6 +497,7 @@
                 rowSettings:{
                     buttons: _this.getButtonsForTableRow(_this.winData),
                     onRowButtonClick: function (evt,rowIndex ,$row,rowData,buttonData) {
+                        var message4Dialog;
                         if (typeof _this.data.DataGUID =='string' && _this.data.DataGUID.length>0){
                             _this.data.DataGUID= _this.data.DataGUID + ','+ rowData[0];
                         }else{
@@ -527,12 +528,18 @@
                         }else if(ctrlID>=6000 && ctrlID<7000 ){
                             var replaceURL =buttonData.uurl.replace(/_ROW_DATA_GUID_/g,rowData[0].toString());
                             window.open(replaceURL);
-                        }else{
+                        }
+                        else{
 
                             switch(buttonData.ctrlid){
                                 case _ctrl.delete:
                                     //_this.data.ctrlid='3005';
                                     req.url='http://'+_this.data.uurl+'?fmname='+_this.data.name+'&fmctrlid='+_ctrl.delete+'&fmdatauid='+rowData[0]+'&fmtoken='+globalSetting.token;
+                                    break;
+
+                                case "3030":
+                                    //下线
+                                    req.url='http://'+_this.data.uurl+'?fmname='+_this.data.name+'&fmctrlid='+'3030'+'&fmdatauid='+rowData[0]+'&fmtoken='+globalSetting.token;
                                     break;
                                 case _ctrl.open:
                                     //  _this.data.ctrlid='3006';
@@ -553,14 +560,22 @@
                                     break;
 
                             }
-                            if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
-                            if(buttonData.ctrlid==_ctrl.delete){
+                            //3030 下线
+                            if(buttonData.ctrlid==_ctrl.delete || buttonData.ctrlid=='3030'){
+
+
+                                if(buttonData.ctrlid==_ctrl.delete){
+                                    message4Dialog='删除';
+                                }else if(buttonData.ctrlid=='3030'){
+                                    message4Dialog='下线';
+                                }
+
                                 BootstrapDialog.show(
                                     {
 
-                                        title: '删除',
+                                        title: message4Dialog,
                                         size: BootstrapDialog.SIZE_SMALL,
-                                        message: '<span style="font-size:2em; margin-left: 35%">确认删除?</span>',
+                                        message: '<span style="font-size:2em; margin-left: 35%">确认'+message4Dialog +'?</span>',
 
                                         buttons: [
 
@@ -583,7 +598,8 @@
                                         ]
                                     }
                                 );
-                            }else{
+                            }
+                            else{
                                 //用来更新 外部窗口跳出，修改外部窗口数据时，用来更新本窗口的数据
                                 var  oldUrl='http://';
                                 oldUrl +=  _this.data.uurl;
@@ -595,7 +611,7 @@
                                     data:JSON.stringify(oldData)
                                 };
                                 //用来更新
-                                _this.sendAjax( req, $.proxy(_this.onReportButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData,preRequest:{req:oldReq, oldWin:_this}});
+                                _this.sendAjax( req, $.proxy(_this.onReportButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this),{tableContainer:$moduleDiv,action:buttonData});
                             }
 
                         }
@@ -689,7 +705,7 @@
 
         };
 
-        BuildWin.prototype.buildFormButtons=function(buttonsData,dialog,preRequest){
+        BuildWin.prototype.buildFormButtons=function(buttonsData,dialog){
             var  buttonsArray=[];
 
             if($.isArray(buttonsData)){
@@ -750,7 +766,7 @@
                                 else{
                                     //销毁验证 里的 事件和 setInterval
                                     validateX.destroy();
-                                    var req, replaceurl;
+                                    var req, url,replaceurl,batchNOpenDialog;
 
                                     if(data4Button.ctrlid>=5000 && data4Button.ctrlid<6000 ){
                                         //alert('>=5000  <6000');
@@ -773,34 +789,57 @@
                                         window.open(data4Button.uurl);
                                     }
                                     else{
-                                        var  url='http://';
-                                        url += ( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)? data4Button.uurl:  _this.data.uurl;
-                                        //如果按钮带uurl，执行某些特定功能
-                                        var data=( typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)?  '': _this.data;
-                                        data.token=globalSetting.token;
-                                        if(_this.data.DataGUID && _this.data.DataGUID.length>0 ){
+                                        url='http://';
+
+                                        // 3040到 3059 批量操作：1. data4Button 带 url 就要跳页面，2. data4Button 不带 url 就要刷新页面（开tab, 关tab）
+                                        if( ( data4Button.ctrlid>=3040 && data4Button.ctrlid<=3059 ) ){
+                                           if(typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0){
+                                               url += data4Button.uurl
+                                              batchNOpenDialog = true;
+                                           }else{
+                                               batchNOpenDialog=false;
+                                               url +=  _this.data.uurl;
+                                           }
+
+
                                             replaceurl =  url.replace(/_ROW_DATA_GUID_/g,_this.data.DataGUID);
-                                        }else{
-                                            replaceurl= url
+                                            data = _this.data;
+                                            req = {
+                                                url: replaceurl,//+'&fmtoken='+globalSetting.toke
+                                                data:JSON.stringify(data)
+                                            };
+                                            _this.sendAjax( req, $.proxy(_this.onFormButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), {batchNOpenDialog:batchNOpenDialog,dialog:dialog });
                                         }
-
-
-                                        var req={
-                                            url: replaceurl,//+'&fmtoken='+globalSetting.toke
-
-                                            data:JSON.stringify(_this.data)
-                                        };
-
-                                        if(buttonData.uurl && buttonData.uurl.length>0){req.type='get'; }
-                                        _this.sendAjax( req, $.proxy(_this.onFormButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), {dialog: dialog, preRequest:preRequest,});
-
-                                        //如果传过来参数 dialog 存在，则关闭 dialog
-                                        if(!!dialog && dialog instanceof BootstrapDialog){
-
-                                            if( data4Button.ctrlid>=3040 && data4Button.ctrlid<=3059 ){
-
+                                        else //常规按钮： 比如查询,  删除
+                                        {
+                                            //如果按钮带uurl，执行某些特定功能
+                                            if(typeof data4Button.uurl==='string' && !!data4Button.uurl.length>0)
+                                            {
+                                                url += data4Button.uurl;
+                                                data = '';
                                             }else{
-                                                dialog.close();
+                                                url +=  _this.data.uurl;
+                                                data = _this.data;
+                                            }
+
+                                            data.token=globalSetting.token;
+
+                                            if(_this.data.DataGUID && _this.data.DataGUID.length>0 ) // 比如：批量删除
+                                            {
+                                                replaceurl =  url.replace(/_ROW_DATA_GUID_/g,_this.data.DataGUID);
+                                            }else{
+                                                replaceurl= url
+                                            }
+
+                                            replaceurl= url;
+                                             req={
+                                                url: replaceurl,
+                                                data:JSON.stringify(data)
+                                            };
+                                            _this.sendAjax( req, $.proxy(_this.onFormButtonsSuccess,_this) , undefined , $.proxy(_this.buttonError,_this), {dialog: dialog});
+                                            //如果传过来参数 dialog 存在，则关闭 dialog
+                                            if(!!dialog && dialog instanceof BootstrapDialog){
+                                                    dialog.close();
                                             }
 
                                         }
@@ -841,16 +880,11 @@
                             msg='保存/修改 ';
 
                             //如果是dialog 老的关掉，new  BuildWin 只传2个参数= buildWinInDialog
-                            if(!!beforeAjaxData.dialog && beforeAjaxData.dialog instanceof BootstrapDialog){
+                            /*if(!!beforeAjaxData.dialog && beforeAjaxData.dialog instanceof BootstrapDialog){
                                 if(beforeAjaxData.preRequest){
                                     this.sendAjax(beforeAjaxData.preRequest.req,onUpdatePreWin,undefined,undefined,beforeAjaxData.preRequest.oldWin)
                                 }
-                            }
-
-                            function onUpdatePreWin(data,oldWin){
-                                oldWin.closeTabView();
-                                oldWin.update(data,0);
-                            }
+                            }*/
 
 
                             break;
@@ -894,12 +928,24 @@
                             break;
                         default:
                             if(parseInt(data.ctrlid)>=3040 && parseInt(data.ctrlid)<=3059 ){
+                                //如果是 批量审批意见（审批拒绝，或审批通过），关闭 dialog, 并刷新tab页面
                                 if(!!beforeAjaxData.dialog && beforeAjaxData.dialog instanceof BootstrapDialog){
                                     beforeAjaxData.dialog.close();
-                                    new BuildWin(data,0 );
+                                    //用来 跟新 dialog(上面关闭的)相关联的tab里的数据。
+                                    //
+                                   /* if(beforeAjaxData.preRequest){
+                                        this.sendAjax(beforeAjaxData.preRequest.req,onUpdatePreWin,undefined,undefined,beforeAjaxData.preRequest.oldWin)
+                                    }*/
+                                   /* new BuildWin(data,0 );*/
                                 }else{
-                                    this.closeTabView();
-                                    this.update(data,0);
+                                    //如果是批量操作，平且按钮里有uurl: 说明要打开 new dialog
+                                    if(beforeAjaxData.batchNOpenDialog){
+                                        new BuildWin(data,0);
+                                    }else{
+                                        this.closeTabView();
+                                        this.update(data,0);
+                                    }
+
                                 }
 
                             }
@@ -920,6 +966,11 @@
                     msgTip.setErrorMsg('操作成功： '+ data.msg);
                     msgTip.showErrorMsg(2000);
                 }
+            }
+
+            function onUpdatePreWin(data,oldWin){
+                oldWin.closeTabView();
+                oldWin.update(data,0);
             }
         };
 
@@ -1076,11 +1127,11 @@
 
                         //查看
                         if(beforeAjaxData.action.ctrlid==_ctrl.open){
-                            new BuildWin(data,0,undefined,beforeAjaxData.preRequest);
+                            new BuildWin(data,0);
                         }
                         //新建
                         else if(beforeAjaxData.action.ctrlid==_ctrl.create){
-                            new BuildWin(data,0,undefined,beforeAjaxData.preRequest);
+                            new BuildWin(data,0);
                         }
                         //删除
                         else if(beforeAjaxData.action.ctrlid==_ctrl.delete){
@@ -1094,11 +1145,15 @@
                         }
                         //button ctrlID>3032
                         else if(parseInt(beforeAjaxData.action.ctrlid)>3032 && parseInt(beforeAjaxData.action.ctrlid)<4000){
-                            new BuildWin(data,0);
+
+                            // 比如点击表单里 的审核按钮，在dialog 里生成审批意见，审批完成，关闭dialog, 对tab里的数据进行更新，BuildWin,需要传入第4个 参数 beforeAjaxData.preRequest。
+                            if(parseInt(beforeAjaxData.action.ctrlid)>=3040 && parseInt(beforeAjaxData.action.ctrlid)<=3059){
+                                new BuildWin(data,0);
+                            }else{
+                                new BuildWin(data,0);
+                            }
 
                         }
-
-
 
                     }
                     else {
