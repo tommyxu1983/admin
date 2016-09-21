@@ -538,7 +538,7 @@
                 break;
 
             case _dataType.option:
-                if(ctlListItem.dataOption.length && ctlListItem.dataOption.length<=10){
+                if(ctlListItem.dataOption.length /*&& ctlListItem.dataOption.length<=10*/){
                       var $select=$(_html.select)
                          .addClass(_defaultStyle.bs.form_control)
                          .attr('id',this.settings.data.formID+'-'+ctlListItem.dataID)
@@ -561,7 +561,8 @@
 
                      $result=$select;
 
-                }else{
+                }
+                /*else{ //autocomplete
                     $input
                         .addClass(_defaultStyle.bs.form_control)
                         .attr('id',this.settings.data.formID+'-'+ctlListItem.dataID)
@@ -580,7 +581,7 @@
                     }
                     $.data($input[0],pluginName,ctlListItem);
                     $result = $input;
-                }
+                }*/
 
 
 

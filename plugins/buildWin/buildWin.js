@@ -1606,7 +1606,7 @@
 
         };
         BuildWin.prototype.exportsXHR = function(request){
-            var xhr;
+            var xhr,fileName,respHeader4File,position;
             
             //如果还有未处理完的XHR请求正在进行，就中断它
             if(xhr && xhr.readyState !=0){
@@ -1633,20 +1633,35 @@
             //将数据传送到服务器上
             xhr.send( request.data );
 
-            console.time('requestStart');
+            console.time('transfer');
 
             function readyStateChange(xhr) {
                 //状态4表示数据已经准备好了,并且请求是200OK
                 if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.timeEnd('transfer');
+
+                    respHeader4File = xhr.getResponseHeader('Content-Disposition');
+                    position = respHeader4File.search(/filename="/);
+
+                    if(position && position>10 ){
+                        //去除双引号
+                        fileName= respHeader4File.slice((position+10),respHeader4File.length-1);
+                        if( ! fileName.search(/\.xls/) > 0 ){
+                            fileName=fileName+'.xls';
+                        }
+                    }else{
+                        fileName = "exports.xls"
+                    }
+
                     var blob = new Blob([xhr.response], {type: 'xls;charset=utf-8'});
 
                     console.time('saveAs');
-                    saveAs(blob, "exports.xls");
+                    saveAs(blob, fileName);
                     console.timeEnd('saveAs');
 
                 }
 
-                console.timeEnd('requestStart');
+
             }
 
 
