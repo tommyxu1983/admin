@@ -36,9 +36,11 @@
             row:'row',
             col_part:'col-sm-',
 
-            col_first:'col-sm-3',
-            col_second:'col-sm-8',
+            col_sm_3:'col-sm-3',
+            col_sm_8:'col-sm-8',
             offset_2col:'col-sm-offset-2',
+            offset_8col: 'col-sm-offset-8',
+
 
             label:'control-label',
             form_control:'form-control',
@@ -699,8 +701,6 @@
                             bar.addClass('step-done');
                             txtContainer.addClass('text-done');
                         }
-
-
                     }
 
                     stepsUL.append(stepLI)
@@ -727,13 +727,13 @@
         var $result=$(_html.div)
             .addClass(_defaultStyle.bs.form_Group),
         $buttons_Div=$(_html.div)
-            .addClass(_defaultStyle.bs.col_second +' '+ _defaultStyle.bs.offset_2col)
+            .addClass(_defaultStyle.bs.col_sm_8 +' '+ _defaultStyle.bs.offset_2col)
             .appendTo($result);
 
         $.each(buttons, $.proxy(function(index, item){
             var $button=$(_html.button)
                 .attr('type','button')
-                .css({'margin-right':'10px'})
+                .css({'margin-right':'10px','float':'right'})
                 .addClass(_defaultStyle.bs.btn_default+ ' ' +item.cssClass)
                 .html(item.label)
                 .appendTo($buttons_Div);

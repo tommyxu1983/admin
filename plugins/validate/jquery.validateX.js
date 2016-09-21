@@ -129,6 +129,7 @@
                         if(this.ClassNameOfRules[key]['validateOnServer']){
                             singleItem.value=this.$form.find('#'+ID)[0].value;
                             singleItem.isValidateOnServer=true;
+                            singleItem.isValidateOnServerPassed=false;
                             this.hasItemValidateOnServer=true;
                         }
 
@@ -249,6 +250,7 @@
             },
 
             check:function(elementFromCache){
+
                 var element= elementFromCache.element,
                     value = this.elementValue(elementFromCache.element),
                     validFlag=true;
@@ -260,21 +262,30 @@
                         if(typeof $.validator.methods[rule]==='function'){
                             //如果 其中一个，验证出错，则改变 验证旗为false，同时推入错误信息
                             if( ! $.validator.methods[rule].call(this,value,element,elementFromCache.rules[rule]) ){
-
-                                validFlag=false;
-                                if( $.validator.messages[rule]  ){
-
-                                    if( typeof $.validator.messages[rule]==='string' ){
-                                        ( elementFromCache.errorMsg.push($.validator.messages[rule]) );
-                                    }
-                                    if( typeof $.validator.messages[rule]==='function'){
-                                        var parameters= $.isArray(elementFromCache.rules[rule])? elementFromCache.rules[rule] : [elementFromCache.rules[rule]];
-                                        elementFromCache.errorMsg.push( $.validator.messages[rule].apply(this,parameters)  ) ;
+                                /*if(elementFromCache.ClassName4Rules=='product_amount'){
+                                    if($.validator.methods[rule].name == 'validateOnServer'){
+                                        var kk=0;
                                     }
 
-                                }else{
-                                    console.log('input[name='+ elementFromCache.ClassName4Rules +'] :找不到对应的错误msg');
+                                }*/
+                                // 如果 有去服务器验证 input，要特殊对待。
+                                if(! ($.validator.methods[rule].name == 'validateOnServer' && elementFromCache.isValidateOnServerPassed) ){
+                                    validFlag=false;
+                                    if( $.validator.messages[rule]  ){
+
+                                        if( typeof $.validator.messages[rule]==='string' ){
+                                            ( elementFromCache.errorMsg.push($.validator.messages[rule]) );
+                                        }
+                                        if( typeof $.validator.messages[rule]==='function'){
+                                            var parameters= $.isArray(elementFromCache.rules[rule])? elementFromCache.rules[rule] : [elementFromCache.rules[rule]];
+                                            elementFromCache.errorMsg.push( $.validator.messages[rule].apply(this,parameters)  ) ;
+                                        }
+
+                                    }else{
+                                        console.log('input[name='+ elementFromCache.ClassName4Rules +'] 的'+$.validator.methods[rule].name+ ':找不到对应的错误msg');
+                                    }
                                 }
+
 
                             }
                         }else{
@@ -285,13 +296,21 @@
                 }
 
                 // 经过上面的循环，检查 validFlag 有没有变成 false
-                elementFromCache.isValid=validFlag;
+                if( elementFromCache.isValidateOnServer ){
+                    if(elementFromCache.isValidateOnServerPassed){
+                        elementFromCache.isValid=validFlag;
+                    }
+                }else{
+                    elementFromCache.isValid=validFlag;
+                }
+
             },
 
             checkAll:function(){
                 var _this=this;
                 $.each(_this.validateCache,function(index,each){
                     _this.check(each);
+               /*     console.log('inputName in validateCache:' + each.ClassName4Rules);*/
                 });
 
             },

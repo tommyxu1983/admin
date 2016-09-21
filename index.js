@@ -80,7 +80,7 @@ require.config({
         'validateX':'plugins/validate/jquery.validateX',
         'PUMsg':'plugins/popUpMsg/popUpMsg',
         'puMenu':'plugins/puMenu/puMenu',
-        'autoComplete':'plugins/autoComplete/autoComplete',
+        'FileSaver': 'plugins/FileSaver/FileSaver',
         //没有按 AMD 规范写的插件，需要在 require.config shim 里定义依赖和输出
         'uploader': 'plugins/uploader/uploader',
         'slimscroll':'plugins/slimScroll/jquery.slimscroll',
@@ -166,6 +166,9 @@ require(['jquery','bootstrap-dialog','BuildWin','PUMsg','dMenu','slimscroll','tr
             errorMsg.showErrorMsg();
         }
     }
+    // 创建本地 buildWin
+    var buildWin = BW('#tabViewContainer1');
+
 
 
     function getDataSuccess(data){
@@ -224,10 +227,11 @@ require(['jquery','bootstrap-dialog','BuildWin','PUMsg','dMenu','slimscroll','tr
         );
     }
 
-    function getMenuContentSuccess(data,preAjaxData){
-        if(data.code>=0){
+    function getMenuContentSuccess(li_dataPack,preAjaxData){
+        if(li_dataPack.code>=0){
 
-            BW(data,0,'.tabViewContainer');
+            /*BW(data,0,'.tabViewContainer');*/
+            buildWin.buildTab(li_dataPack);
             if(preAjaxData.pMessage instanceof PUMsg){
 
                 preAjaxData.pMessage.removeOverLay();
@@ -278,6 +282,8 @@ require(['jquery','bootstrap-dialog','BuildWin','PUMsg','dMenu','slimscroll','tr
         });
 
     }
+
+
 });
 
 
