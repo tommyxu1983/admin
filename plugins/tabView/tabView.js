@@ -22,8 +22,8 @@
         isDataWritable:false, //true,  直接 把 this.settings.data 指向  options.data,  任何数据改动，直接改动传入的数据（options.data）
         hasClose:false,   //有没有关闭功能
         closeIcon:undefined, //  tab关闭按钮 icon
-        allowDuplicateId:false
-
+        allowDuplicateId:false,
+        onTabClose:undefined,
     };
 
     var _html={
@@ -111,6 +111,13 @@
         var _ulClass= this.settings.hasOwnCss? _cssClass.tabsHolder : (_cssClass.tabsHolder+' '+'nav nav-tabs');
         this.$tabs_UL.addClass(_ulClass);
 
+        //外部事件：
+        if(typeof this.settings.onTabClose ==='function'){
+            this.$tabs_UL.on('tabClose', this.settings.onTabClose);
+        }
+
+
+
         //初始化 panels
         this.$panels_DIV=$(_html.div);
         this.$panels_DIV.addClass(_cssClass.panelsHolder);
@@ -141,7 +148,7 @@
                 var $li=$(_html.li)
                     .addClass(isActive)
                     .addClass(_cssClass.tab)
-                    .attr('id','tab-'+itemContent.id)
+                    .attr({'id':'tab-'+itemContent.id, 'dataPackGuID':itemContent.dataPackGuID})
                     .append($a)
                     .append($span_icon);
 
@@ -162,9 +169,10 @@
                 //点击关闭按钮
 
                 $span_icon.on('click',function(evt){
-                    _this.deleteItem(itemContent.id);
 
+                    _this.deleteItem(itemContent.id);
                 });
+
 
 
             },this));
@@ -265,6 +273,7 @@
         //在移除前设置 focus
         var $currentTab= this.$tabs_UL.find( '#tab-'+ID),
             $currentPanel=this.$panels_DIV.find('#panel-'+ID),
+            dataPKGUID= $currentTab.attr('dataPackGuID');
             $focusTab=undefined;
 
         //检查关闭的tab，是不是 active. 如果是active在关闭前设置 前面一个为active, 如果关闭的tab是第一个，那就设置下一个。
@@ -280,6 +289,7 @@
 
 
         //移除 element
+        _this.$tabs_UL.trigger('tabClose', [{dataPackGuIDFromTab:dataPKGUID}]);
         $currentTab.remove();
         $currentPanel.remove();
         //移除数据
